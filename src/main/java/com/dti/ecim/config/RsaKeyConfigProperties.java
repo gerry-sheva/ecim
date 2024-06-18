@@ -6,5 +6,5 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
 @ConfigurationProperties(prefix = "rsa")
-public record RsaKeyConfigProperties(RSAPublicKey rsaPublicKey, RSAPrivateKey rsaPrivateKey) {
+public record RsaKeyConfigProperties(RSAPublicKey publicKey, RSAPrivateKey privateKey) {
 }
