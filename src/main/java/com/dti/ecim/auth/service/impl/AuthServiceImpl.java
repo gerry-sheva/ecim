@@ -7,6 +7,7 @@ import com.dti.ecim.auth.repository.UserAuthRepository;
 import com.dti.ecim.auth.service.AuthService;
 import com.dti.ecim.user.entity.User;
 import com.dti.ecim.user.repository.UserRepository;
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -64,6 +66,14 @@ public class AuthServiceImpl implements AuthService {
         res.setToken(generateToken(auth));
         res.setMessage("Login successful");
         return res;
+    }
+
+    @Override
+    public HttpHeaders saveTokenToCookie(AuthResponseDto res) {
+        Cookie cookie = new Cookie("sid", res.getToken());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Set-Cookie", cookie.getName() + "=" + cookie.getValue() + "; Path=/; HttpOnly");
+        return headers;
     }
 
     private String generateToken(Authentication auth) {

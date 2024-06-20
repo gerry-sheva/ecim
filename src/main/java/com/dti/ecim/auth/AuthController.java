@@ -3,7 +3,6 @@ package com.dti.ecim.auth;
 import com.dti.ecim.auth.dto.AuthRequestDto;
 import com.dti.ecim.auth.dto.AuthResponseDto;
 import com.dti.ecim.auth.service.AuthService;
-import jakarta.servlet.http.Cookie;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
@@ -25,10 +24,14 @@ public class AuthController {
     @Transactional
     public ResponseEntity<AuthResponseDto> register(@RequestBody AuthRequestDto registerRequestDto) throws BadRequestException {
         AuthResponseDto res =  authService.registerUser(registerRequestDto);
+        HttpHeaders headers = authService.saveTokenToCookie(res);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(res);
+    }
 
-        Cookie cookie = new Cookie("sid", res.getToken());
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", cookie.getName() + "=" + cookie.getValue() + "; Path=/; HttpOnly");
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponseDto> login(@RequestBody AuthRequestDto loginRequestDto) {
+        AuthResponseDto res = authService.authenticateUser(loginRequestDto);
+        HttpHeaders headers = authService.saveTokenToCookie(res);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(res);
     }
 
