@@ -21,14 +21,14 @@ public class User {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "createdAt")
+    @Column(name = "created_at")
     @CreationTimestamp
     private Instant createdAt;
 
-    @Column(name = "updatedAt")
+    @Column(name = "updated_at")
     @UpdateTimestamp
     private Instant updatedAt;
 
-    @Column(name = "deletedAt")
+    @Column(name = "deleted_at")
     private Instant deletedAt;
 }
