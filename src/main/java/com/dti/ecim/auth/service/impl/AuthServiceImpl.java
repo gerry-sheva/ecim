@@ -1,7 +1,8 @@
 package com.dti.ecim.auth.service.impl;
 
-import com.dti.ecim.auth.dto.AuthRequestDto;
 import com.dti.ecim.auth.dto.AuthResponseDto;
+import com.dti.ecim.auth.dto.LoginRequestDto;
+import com.dti.ecim.auth.dto.RegisterRequestDto;
 import com.dti.ecim.auth.entity.UserAuth;
 import com.dti.ecim.auth.repository.UserAuthRepository;
 import com.dti.ecim.auth.service.AuthService;
@@ -36,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtEncoder jwtEncoder;
 
     @Override
-    public AuthResponseDto registerUser(AuthRequestDto requestDto) throws BadRequestException{
+    public AuthResponseDto registerUser(RegisterRequestDto requestDto) throws BadRequestException{
         if (!requestDto.getPassword().equals(requestDto.getConfirmPassword())) {
             throw new BadRequestException("Passwords do not match");
         }
@@ -47,13 +48,13 @@ public class AuthServiceImpl implements AuthService {
         userAuth.setEmail(requestDto.getEmail());
         userAuth.setPassword(password);
         userAuthRepository.save(userAuth);
-        AuthResponseDto res = authenticateUser(requestDto);
+        AuthResponseDto res = authenticateUser(new LoginRequestDto(requestDto.getEmail(), requestDto.getPassword()));
         res.setMessage("Registered user");
         return res;
     }
 
     @Override
-    public AuthResponseDto authenticateUser(AuthRequestDto requestDto) {
+    public AuthResponseDto authenticateUser(LoginRequestDto requestDto) {
         var auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         requestDto.getEmail(),

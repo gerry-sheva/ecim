@@ -1,7 +1,8 @@
 package com.dti.ecim.auth;
 
-import com.dti.ecim.auth.dto.AuthRequestDto;
 import com.dti.ecim.auth.dto.AuthResponseDto;
+import com.dti.ecim.auth.dto.LoginRequestDto;
+import com.dti.ecim.auth.dto.RegisterRequestDto;
 import com.dti.ecim.auth.service.AuthService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +23,14 @@ public class AuthController {
 
     @PostMapping("/register")
     @Transactional
-    public ResponseEntity<AuthResponseDto> register(@RequestBody AuthRequestDto registerRequestDto) throws BadRequestException {
+    public ResponseEntity<AuthResponseDto> register(@RequestBody RegisterRequestDto registerRequestDto) throws BadRequestException {
         AuthResponseDto res =  authService.registerUser(registerRequestDto);
         HttpHeaders headers = authService.saveTokenToCookie(res);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(res);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDto> login(@RequestBody AuthRequestDto loginRequestDto) {
+    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
         AuthResponseDto res = authService.authenticateUser(loginRequestDto);
         HttpHeaders headers = authService.saveTokenToCookie(res);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(res);
