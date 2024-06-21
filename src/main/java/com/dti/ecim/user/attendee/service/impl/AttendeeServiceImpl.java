@@ -7,12 +7,10 @@ import com.dti.ecim.user.attendee.dto.CreateAttendeeDto;
 import com.dti.ecim.user.attendee.entity.Attendee;
 import com.dti.ecim.user.attendee.repository.AttendeeRepository;
 import com.dti.ecim.user.attendee.service.AttendeeService;
-import com.dti.ecim.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
