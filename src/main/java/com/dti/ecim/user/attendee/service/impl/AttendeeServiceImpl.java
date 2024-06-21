@@ -2,6 +2,7 @@ package com.dti.ecim.user.attendee.service.impl;
 
 import com.dti.ecim.auth.entity.UserAuth;
 import com.dti.ecim.auth.repository.UserAuthRepository;
+import com.dti.ecim.dto.ResponseDto;
 import com.dti.ecim.exceptions.DataNotFoundException;
 import com.dti.ecim.user.attendee.dto.CreateAttendeeDto;
 import com.dti.ecim.user.attendee.entity.Attendee;
@@ -29,7 +30,7 @@ public class AttendeeServiceImpl implements AttendeeService {
     private final UserAuthRepository userAuthRepository;
 
     @Override
-    public Attendee createAttendee(CreateAttendeeDto createAttendeeDto) throws NoSuchAlgorithmException {
+    public ResponseDto createAttendee(CreateAttendeeDto createAttendeeDto) throws NoSuchAlgorithmException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Optional<UserAuth> userAuthOptional = userAuthRepository.findByEmail(authentication.getName());
         if (userAuthOptional.isEmpty()) {
@@ -43,7 +44,8 @@ public class AttendeeServiceImpl implements AttendeeService {
         newAttendee.setRefCode(generateReferralCode(authentication.getName()));
         newAttendee.setPoints(0L);
         newAttendee.setContact(createAttendeeDto.getContact());
-        return attendeeRepository.save(newAttendee);
+        attendeeRepository.save(newAttendee);
+        return new ResponseDto("Attendee created successfully");
     }
 
     private String generateReferralCode(String email) throws NoSuchAlgorithmException {
