@@ -1,5 +1,6 @@
 package com.dti.ecim.user.entity;
 
+import com.dti.ecim.auth.entity.UserAuth;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,4 +32,8 @@ public class User {
 
     @Column(name = "deleted_at")
     private Instant deletedAt;
+
+    @OneToOne
+    @JoinColumn(name = "id", referencedColumnName = "user_id")
+    private UserAuth auth;
 }

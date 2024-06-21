@@ -24,12 +24,11 @@ import java.util.List;
 public class UserAuth implements UserDetails {
 
     @Id
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "user_id")
+    private Long userId;
 
-    @OneToOne
+    @OneToOne(mappedBy = "auth")
     @MapsId
-    @JoinColumn(name = "id")
     private User user;
 
     @Email
@@ -40,7 +39,6 @@ public class UserAuth implements UserDetails {
     @Column(name = "password", nullable = true)
     private String password;
 
-    @NotBlank
     @Column(name = "pin", nullable = true)
     private String pin;
 
