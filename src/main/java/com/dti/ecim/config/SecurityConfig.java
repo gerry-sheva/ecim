@@ -20,6 +20,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -36,8 +37,7 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 @Log
 public class SecurityConfig {
 
-//    TODO: implement userDetailsService
-//    private final UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
     private final RsaKeyConfigProperties rsaKeyConfigProperties;
 
     @Bean
@@ -48,8 +48,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager() {
         var daoProvider = new DaoAuthenticationProvider();
-//        TODO: setUserDetailsService
-//        daoProvider.setUserDetailsService(userDetailsService);
+        daoProvider.setUserDetailsService(userDetailsService);
         daoProvider.setPasswordEncoder(passwordEncoder());
         return new ProviderManager(daoProvider);
     }
@@ -91,8 +90,7 @@ public class SecurityConfig {
                         return null;
                     });
                 })
-//                TODO: implement userDetailsService
-//                .userDetailsService(userDetailsService)
+                .userDetailsService(userDetailsService)
                 .httpBasic(Customizer.withDefaults())
                 .build();
     }
