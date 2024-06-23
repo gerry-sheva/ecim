@@ -15,7 +15,7 @@ import java.security.NoSuchAlgorithmException;
 @RequiredArgsConstructor
 @RestController
 @Log
-@RequestMapping("/api/v1/user/attendee")
+@RequestMapping("/api/v1/attendee")
 public class AttendeeController {
     private final AttendeeService attendeeService;
 
