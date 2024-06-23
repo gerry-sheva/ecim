@@ -19,4 +19,6 @@ public class CreateAttendeeDto {
 
     @NotBlank
     private String contact;
+
+    private String referralCode;
 }

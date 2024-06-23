@@ -6,13 +6,18 @@ import com.dti.ecim.dto.ResponseDto;
 import com.dti.ecim.exceptions.DataNotFoundException;
 import com.dti.ecim.user.attendee.dto.CreateAttendeeDto;
 import com.dti.ecim.user.attendee.entity.Attendee;
+import com.dti.ecim.user.attendee.referral.entity.Referral;
+import com.dti.ecim.user.attendee.referral.repository.ReferralRepository;
+import com.dti.ecim.user.attendee.referral.service.ReferralService;
 import com.dti.ecim.user.attendee.repository.AttendeeRepository;
 import com.dti.ecim.user.attendee.service.AttendeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.apache.coyote.BadRequestException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -28,9 +33,12 @@ import java.util.Optional;
 public class AttendeeServiceImpl implements AttendeeService {
     private final AttendeeRepository attendeeRepository;
     private final UserAuthRepository userAuthRepository;
+    private final ReferralService referralService;
+    private final ReferralRepository referralRepository;
 
     @Override
-    public ResponseDto createAttendee(CreateAttendeeDto createAttendeeDto) throws NoSuchAlgorithmException {
+    @Transactional
+    public ResponseDto createAttendee(CreateAttendeeDto createAttendeeDto) throws NoSuchAlgorithmException, BadRequestException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Optional<UserAuth> userAuthOptional = userAuthRepository.findByEmail(authentication.getName());
         if (userAuthOptional.isEmpty()) {
@@ -45,6 +53,24 @@ public class AttendeeServiceImpl implements AttendeeService {
         newAttendee.setPoints(0L);
         newAttendee.setContact(createAttendeeDto.getContact());
         attendeeRepository.save(newAttendee);
+
+        if (createAttendeeDto.getReferralCode() != null) {
+            log.info("Attempting to add referral using code: " + createAttendeeDto.getReferralCode());
+            Optional<Attendee> referral = attendeeRepository.findByRefCode(createAttendeeDto.getReferralCode());
+            if (referral.isEmpty()) {
+                throw new BadRequestException("Referral code is invalid");
+            }
+            boolean isAlreadyExists = referralService.isAlreadyExists(referral.get().getUserId(), userAuthOptional.get().getUserId());
+            if (!isAlreadyExists) {
+                log.info("Adding referral using code: " + createAttendeeDto.getReferralCode());
+                Referral newReferral = new Referral();
+                newReferral.setReferralId(referral.get().getUserId());
+                newReferral.setReferral(referral.get());
+                newReferral.setReferreeId(userAuthOptional.get().getUserId());
+                newReferral.setReferree(newAttendee);
+                referralRepository.save(newReferral);
+            }
+        }
         return new ResponseDto("Attendee created successfully");
     }
 
