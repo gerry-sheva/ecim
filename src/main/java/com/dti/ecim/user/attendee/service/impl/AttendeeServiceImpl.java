@@ -1,7 +1,9 @@
 package com.dti.ecim.user.attendee.service.impl;
 
+import com.dti.ecim.auth.dto.AddUserRoleDto;
 import com.dti.ecim.auth.entity.UserAuth;
 import com.dti.ecim.auth.repository.UserAuthRepository;
+import com.dti.ecim.auth.service.UserRoleService;
 import com.dti.ecim.dto.ResponseDto;
 import com.dti.ecim.exceptions.DataNotFoundException;
 import com.dti.ecim.user.attendee.dto.CreateAttendeeDto;
@@ -35,6 +37,7 @@ public class AttendeeServiceImpl implements AttendeeService {
     private final UserAuthRepository userAuthRepository;
     private final ReferralService referralService;
     private final ReferralRepository referralRepository;
+    private final UserRoleService userRoleService;
 
     @Override
     @Transactional
@@ -71,6 +74,8 @@ public class AttendeeServiceImpl implements AttendeeService {
                 referralRepository.save(newReferral);
             }
         }
+
+        userRoleService.addUserRole(new AddUserRoleDto(userAuthOptional.get().getUserId(), 1L));
         return new ResponseDto("Attendee created successfully");
     }
 
