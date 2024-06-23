@@ -23,7 +23,7 @@ public class Attendee {
 
     @OneToOne
     @MapsId
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @NotBlank
