@@ -38,10 +38,10 @@ public class Referral {
     private Instant deletedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "referral")
+    @JoinColumn(name = "referral_id", referencedColumnName = "userId", insertable = false, updatable = false)
     private Attendee referral;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "referree")
+    @JoinColumn(name = "referree_id", referencedColumnName = "userId", insertable = false, updatable = false)
     private Attendee referree;
 }
