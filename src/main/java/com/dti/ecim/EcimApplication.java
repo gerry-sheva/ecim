@@ -5,13 +5,14 @@ import lombok.extern.java.Log;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.ComponentScan;
 
 @EnableConfigurationProperties(RsaKeyConfigProperties.class)
 @SpringBootApplication
+@ComponentScan(basePackages = {"com.dti.ecim", "com.dti.ecim.config"})
 @Log
 public class EcimApplication {
     public static void main(String[] args) {
         SpringApplication.run(EcimApplication.class, args);
     }
-
 }

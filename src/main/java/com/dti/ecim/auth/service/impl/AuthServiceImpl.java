@@ -4,6 +4,7 @@ import com.dti.ecim.auth.dto.AuthResponseDto;
 import com.dti.ecim.auth.dto.LoginRequestDto;
 import com.dti.ecim.auth.dto.RegisterRequestDto;
 import com.dti.ecim.auth.entity.UserAuth;
+import com.dti.ecim.auth.repository.AuthRedisRepository;
 import com.dti.ecim.auth.repository.UserAuthRepository;
 import com.dti.ecim.auth.service.AuthService;
 import com.dti.ecim.user.entity.User;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -35,6 +37,7 @@ import java.util.stream.Collectors;
 public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final UserAuthRepository userAuthRepository;
+    private final AuthRedisRepository authRedisRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtEncoder jwtEncoder;
@@ -63,11 +66,16 @@ public class AuthServiceImpl implements AuthService {
                         requestDto.getEmail(),
                         requestDto.getPassword())
         );
+
         var ctx = SecurityContextHolder.getContext();
         ctx.setAuthentication(auth);
         AuthResponseDto res = new AuthResponseDto();
-        res.setToken(generateToken(auth));
+        String token;
+        Optional<String> jwtKeyOptional = authRedisRepository.getJwtKey(requestDto.getEmail());
+        token = jwtKeyOptional.orElseGet(() -> generateToken(auth));
+        res.setToken(token);
         res.setMessage("Login successful");
+        authRedisRepository.saveJwtKey(requestDto.getEmail(), token);
         return res;
     }
 
@@ -90,7 +98,7 @@ public class AuthServiceImpl implements AuthService {
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
-                .expiresAt(now.plus(6, ChronoUnit.HOURS))
+                .expiresAt(now.plus(1, ChronoUnit.HOURS))
                 .subject(auth.getName())
                 .claim("scope", scope)
                 .build();
