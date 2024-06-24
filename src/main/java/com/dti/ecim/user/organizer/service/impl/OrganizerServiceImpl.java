@@ -1,7 +1,9 @@
 package com.dti.ecim.user.organizer.service.impl;
 
+import com.dti.ecim.auth.dto.AddUserRoleDto;
 import com.dti.ecim.auth.entity.UserAuth;
 import com.dti.ecim.auth.repository.UserAuthRepository;
+import com.dti.ecim.auth.service.UserRoleService;
 import com.dti.ecim.dto.ResponseDto;
 import com.dti.ecim.exceptions.DataNotFoundException;
 import com.dti.ecim.user.organizer.dto.CreateOrganizerDto;
@@ -13,6 +15,7 @@ import lombok.extern.java.Log;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -22,8 +25,10 @@ import java.util.Optional;
 public class OrganizerServiceImpl implements OrganizerService {
     private final OrganizerRepository organizerRepository;
     private final UserAuthRepository userAuthRepository;
+    private final UserRoleService userRoleService;
 
     @Override
+    @Transactional
     public ResponseDto createOrganizer(CreateOrganizerDto createOrganizerDto) {
         log.info("Creating organizer " + createOrganizerDto.getName());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -36,6 +41,7 @@ public class OrganizerServiceImpl implements OrganizerService {
         organizer.setName(createOrganizerDto.getName());
         organizer.setAvatar(createOrganizerDto.getAvatar());
         organizerRepository.save(organizer);
+        userRoleService.addUserRole(new AddUserRoleDto(userAuthOptional.get().getUserId(), 2L));
         return new ResponseDto("Organizer created successfully");
     }
 }
