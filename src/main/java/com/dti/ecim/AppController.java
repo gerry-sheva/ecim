@@ -12,4 +12,9 @@ public class AppController {
     public String ping() {
         return "pong";
     }
+
+    @GetMapping("/secure")
+    public String secure() {
+        return "secure";
+    }
 }

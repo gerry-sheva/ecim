@@ -10,6 +10,7 @@ import com.dti.ecim.user.entity.User;
 import com.dti.ecim.user.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.apache.coyote.BadRequestException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,10 +26,12 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
+@Log
 public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final UserAuthRepository userAuthRepository;

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
@@ -53,15 +54,18 @@ public class UserAuth implements UserDetails {
     @Column(name = "deleted_at")
     private Instant deletedAt;
 
+    @Transient
+    private Collection<? extends GrantedAuthority> authorities;
+
     @Override
     public String getUsername() {
         return this.email;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
-    }
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        return List.of(new SimpleGrantedAuthority("PLON"));
+//    }
 
     @Override
     public boolean isAccountNonExpired() {

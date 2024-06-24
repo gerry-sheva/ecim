@@ -24,4 +24,14 @@ public class AttendeeController {
         ResponseDto res = attendeeService.createAttendee(createAttendeeDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(res);
     }
+
+    @GetMapping
+    public String plon() {
+        return "plin plin plon";
+    }
+
+    @GetMapping("/secure")
+    public String plin() {
+        return "Plin Plin Plon";
+    }
 }
