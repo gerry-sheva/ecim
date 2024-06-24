@@ -1,6 +1,6 @@
-package com.dti.ecim.user.attendee.referral.repository;
+package com.dti.ecim.user.repository;
 
-import com.dti.ecim.user.attendee.referral.entity.Referral;
+import com.dti.ecim.user.entity.Referral;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

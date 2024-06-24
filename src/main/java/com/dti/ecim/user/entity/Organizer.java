@@ -1,6 +1,5 @@
-package com.dti.ecim.user.organizer.entity;
+package com.dti.ecim.user.entity;
 
-import com.dti.ecim.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

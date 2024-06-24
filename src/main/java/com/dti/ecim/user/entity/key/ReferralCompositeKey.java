@@ -1,4 +1,4 @@
-package com.dti.ecim.user.attendee.referral.entity.key;
+package com.dti.ecim.user.entity.key;
 
 
 import lombok.AllArgsConstructor;

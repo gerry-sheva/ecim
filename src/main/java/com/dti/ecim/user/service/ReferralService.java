@@ -1,4 +1,4 @@
-package com.dti.ecim.user.attendee.referral.service;
+package com.dti.ecim.user.service;
 
 import org.apache.coyote.BadRequestException;
 

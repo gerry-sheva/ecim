@@ -1,9 +1,9 @@
-package com.dti.ecim.user.organizer.controller;
+package com.dti.ecim.user.controller;
 
 
 import com.dti.ecim.dto.ResponseDto;
-import com.dti.ecim.user.organizer.dto.CreateOrganizerDto;
-import com.dti.ecim.user.organizer.service.OrganizerService;
+import com.dti.ecim.user.dto.CreateOrganizerDto;
+import com.dti.ecim.user.service.OrganizerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;

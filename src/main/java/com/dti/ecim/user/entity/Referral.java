@@ -1,7 +1,6 @@
-package com.dti.ecim.user.attendee.referral.entity;
+package com.dti.ecim.user.entity;
 
-import com.dti.ecim.user.attendee.entity.Attendee;
-import com.dti.ecim.user.attendee.referral.entity.key.ReferralCompositeKey;
+import com.dti.ecim.user.entity.key.ReferralCompositeKey;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package com.dti.ecim.user.organizer.service.impl;
+package com.dti.ecim.user.service.impl;
 
 import com.dti.ecim.auth.dto.AddUserRoleDto;
 import com.dti.ecim.auth.entity.UserAuth;
@@ -6,10 +6,10 @@ import com.dti.ecim.auth.repository.UserAuthRepository;
 import com.dti.ecim.auth.service.UserRoleService;
 import com.dti.ecim.dto.ResponseDto;
 import com.dti.ecim.exceptions.DataNotFoundException;
-import com.dti.ecim.user.organizer.dto.CreateOrganizerDto;
-import com.dti.ecim.user.organizer.entity.Organizer;
-import com.dti.ecim.user.organizer.repository.OrganizerRepository;
-import com.dti.ecim.user.organizer.service.OrganizerService;
+import com.dti.ecim.user.dto.CreateOrganizerDto;
+import com.dti.ecim.user.entity.Organizer;
+import com.dti.ecim.user.repository.OrganizerRepository;
+import com.dti.ecim.user.service.OrganizerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.security.core.Authentication;

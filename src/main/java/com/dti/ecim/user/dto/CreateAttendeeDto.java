@@ -1,4 +1,4 @@
-package com.dti.ecim.user.attendee.dto;
+package com.dti.ecim.user.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

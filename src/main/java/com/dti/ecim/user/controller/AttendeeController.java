@@ -1,8 +1,8 @@
-package com.dti.ecim.user.attendee.controller;
+package com.dti.ecim.user.controller;
 
 import com.dti.ecim.dto.ResponseDto;
-import com.dti.ecim.user.attendee.dto.CreateAttendeeDto;
-import com.dti.ecim.user.attendee.service.AttendeeService;
+import com.dti.ecim.user.dto.CreateAttendeeDto;
+import com.dti.ecim.user.service.AttendeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.apache.coyote.BadRequestException;

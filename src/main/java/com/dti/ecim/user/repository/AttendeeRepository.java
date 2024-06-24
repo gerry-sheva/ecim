@@ -1,6 +1,6 @@
-package com.dti.ecim.user.attendee.repository;
+package com.dti.ecim.user.repository;
 
-import com.dti.ecim.user.attendee.entity.Attendee;
+import com.dti.ecim.user.entity.Attendee;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
