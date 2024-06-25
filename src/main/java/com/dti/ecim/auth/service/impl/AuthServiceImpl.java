@@ -95,6 +95,7 @@ public class AuthServiceImpl implements AuthService {
         authRedisRepository.saveBlacklistKey(jwtKey);
         log.info("Removing jwtKey from cache: " + jwtKey);
         authRedisRepository.deleteJwtKey(auth.getName());
+        SecurityContextHolder.clearContext();
     }
 
     private String generateToken(Authentication auth) {
