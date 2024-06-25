@@ -88,8 +88,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void logoutUser(String jwtKey) {
+        var context = SecurityContextHolder.getContext();
+        Authentication auth = context.getAuthentication();
+        log.info("Logging out " + auth.getName());
         log.info("Adding jwtKey to blocklist: " + jwtKey);
         authRedisRepository.saveBlacklistKey(jwtKey);
+        log.info("Removing jwtKey from cache: " + jwtKey);
+        authRedisRepository.deleteJwtKey(auth.getName());
     }
 
     private String generateToken(Authentication auth) {
