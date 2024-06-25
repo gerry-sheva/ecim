@@ -73,7 +73,7 @@ public class SecurityConfig {
 
     @Bean
     @Order(1)
-    public FilterRegistrationBean<JwtFilter> loggingFilterRegistration(AuthRedisRepository authRedisRepository) {
+    public FilterRegistrationBean<JwtFilter> jwtFilterFilterRegistrationBean(AuthRedisRepository authRedisRepository) {
         FilterRegistrationBean<JwtFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new JwtFilter(authRedisRepository));
         registrationBean.addUrlPatterns("/*");
