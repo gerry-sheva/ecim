@@ -22,7 +22,6 @@ public class Organizer {
 
     @OneToOne
     @MapsId
-    @JoinColumn(name = "userId")
     private User user;
 
     @NotBlank
