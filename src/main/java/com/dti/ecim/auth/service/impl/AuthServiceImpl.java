@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -85,6 +84,12 @@ public class AuthServiceImpl implements AuthService {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Set-Cookie", cookie.getName() + "=" + cookie.getValue() + "; Path=/; HttpOnly");
         return headers;
+    }
+
+    @Override
+    public void logoutUser(String jwtKey) {
+        log.info("Adding jwtKey to blocklist: " + jwtKey);
+        authRedisRepository.saveBlacklistKey(jwtKey);
     }
 
     private String generateToken(Authentication auth) {

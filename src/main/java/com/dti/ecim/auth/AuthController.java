@@ -4,16 +4,14 @@ import com.dti.ecim.auth.dto.AuthResponseDto;
 import com.dti.ecim.auth.dto.LoginRequestDto;
 import com.dti.ecim.auth.dto.RegisterRequestDto;
 import com.dti.ecim.auth.service.AuthService;
+import com.dti.ecim.dto.ResponseDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -36,4 +34,10 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(res);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<ResponseDto> logout(@CookieValue("sid") String jwtKey) {
+        authService.logoutUser(jwtKey);
+        ResponseDto res = new ResponseDto("Logged out successfully");
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
 }

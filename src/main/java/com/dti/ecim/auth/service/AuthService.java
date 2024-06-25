@@ -11,4 +11,5 @@ public interface AuthService {
     AuthResponseDto registerUser(RegisterRequestDto requestDto) throws BadRequestException;
     AuthResponseDto authenticateUser(LoginRequestDto requestDto);
     HttpHeaders saveTokenToCookie(AuthResponseDto responseDto);
+    void logoutUser(String jwtKey);
 }
