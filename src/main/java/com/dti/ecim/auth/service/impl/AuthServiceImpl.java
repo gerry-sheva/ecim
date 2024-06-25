@@ -3,10 +3,13 @@ package com.dti.ecim.auth.service.impl;
 import com.dti.ecim.auth.dto.AuthResponseDto;
 import com.dti.ecim.auth.dto.LoginRequestDto;
 import com.dti.ecim.auth.dto.RegisterRequestDto;
+import com.dti.ecim.auth.dto.ResetPasswordRequestDto;
 import com.dti.ecim.auth.entity.UserAuth;
 import com.dti.ecim.auth.repository.AuthRedisRepository;
 import com.dti.ecim.auth.repository.UserAuthRepository;
 import com.dti.ecim.auth.service.AuthService;
+import com.dti.ecim.dto.ResponseDto;
+import com.dti.ecim.exceptions.DataNotFoundException;
 import com.dti.ecim.user.entity.User;
 import com.dti.ecim.user.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
@@ -114,5 +117,21 @@ public class AuthServiceImpl implements AuthService {
                 .claim("scope", scope)
                 .build();
         return jwtEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue();
+    }
+
+    @Override
+    public ResponseDto resetPassword(ResetPasswordRequestDto requestDto) throws BadRequestException {
+        if (!requestDto.getPassword().equals(requestDto.getConfirmPassword())) {
+            throw new BadRequestException("Password doesn't match");
+        }
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Optional<UserAuth> userAuthOptional = userAuthRepository.findByEmail(auth.getName());
+        if (userAuthOptional.isEmpty()) {
+            throw new DataNotFoundException("User not found");
+        }
+        UserAuth userAuth = userAuthOptional.get();
+        userAuth.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+        userAuthRepository.save(userAuth);
+        return new ResponseDto("Password reset successful");
     }
 }

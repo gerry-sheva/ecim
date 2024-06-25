@@ -3,6 +3,7 @@ package com.dti.ecim.auth;
 import com.dti.ecim.auth.dto.AuthResponseDto;
 import com.dti.ecim.auth.dto.LoginRequestDto;
 import com.dti.ecim.auth.dto.RegisterRequestDto;
+import com.dti.ecim.auth.dto.ResetPasswordRequestDto;
 import com.dti.ecim.auth.service.AuthService;
 import com.dti.ecim.dto.ResponseDto;
 import jakarta.transaction.Transactional;
@@ -38,6 +39,12 @@ public class AuthController {
     public ResponseEntity<ResponseDto> logout(@CookieValue("sid") String jwtKey) {
         authService.logoutUser(jwtKey);
         ResponseDto res = new ResponseDto("Logged out successfully");
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
+    @PostMapping("/reset")
+    public ResponseEntity<ResponseDto> resetPassword(@RequestBody ResetPasswordRequestDto resetPasswordRequestDto) throws BadRequestException {
+        ResponseDto res = authService.resetPassword(resetPasswordRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 }
