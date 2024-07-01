@@ -1,6 +1,7 @@
 package com.dti.ecim.event.service.impl;
 
 import com.dti.ecim.event.dto.CreateEventDto;
+import com.dti.ecim.event.dto.UpdateEventDto;
 import com.dti.ecim.event.entity.Event;
 import com.dti.ecim.event.repository.EventRepository;
 import com.dti.ecim.event.service.EventService;
@@ -65,5 +66,19 @@ public class EventServiceImpl implements EventService {
         ZoneId zoneId = ZoneId.of("Asia/Jakarta");
         ZonedDateTime zonedDateTime = localDateTime.atZone(zoneId);
         return zonedDateTime.toInstant();
+    }
+
+    @Override
+    public Event updateEvent(Long id, UpdateEventDto updateEventDto) {
+        Category category = categoryService.findById(updateEventDto.getCategoryId());
+        Interest interest = interestService.findById(updateEventDto.getInterestId());
+        Event event = findEventById(id);
+        event.setTitle(updateEventDto.getTitle());
+        event.setDescription(updateEventDto.getDescription());
+        event.setCategory(category);
+        event.setInterest(interest);
+        event.setStartingDate(stringToInstant(updateEventDto.getStartingDate()));
+        event.setEndingDate(stringToInstant(updateEventDto.getEndingDate()));
+        return eventRepository.save(event);
     }
 }

@@ -37,6 +37,8 @@ public class EventServiceImplIntegrationTest {
         UpdateEventDto updateEventDto = new UpdateEventDto();
         updateEventDto.setTitle("updated");
         updateEventDto.setDescription("updated");
+        updateEventDto.setStartingDate("09:15:30 PM, Sun 06/30/2024");
+        updateEventDto.setEndingDate("09:15:30 PM, Sun 07/07/2024");
         updateEventDto.setCategoryId(9L);
         updateEventDto.setInterestId(71L);
 
