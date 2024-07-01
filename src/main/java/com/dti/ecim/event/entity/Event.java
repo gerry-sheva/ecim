@@ -4,6 +4,7 @@ import com.dti.ecim.metadata.entity.Category;
 import com.dti.ecim.metadata.entity.Interest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,11 +33,11 @@ public class Event {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @NotBlank
+    @NotNull
     @Column(name = "starting_date", nullable = false)
     private Instant startingDate;
 
-    @NotBlank
+    @NotNull
     @Column(name = "ending_date", nullable = false)
     private Instant endingDate;
 
