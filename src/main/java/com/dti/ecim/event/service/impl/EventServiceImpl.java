@@ -19,6 +19,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event createEvent(CreateEventDto createEventDto) {
+
         return null;
     }
 
