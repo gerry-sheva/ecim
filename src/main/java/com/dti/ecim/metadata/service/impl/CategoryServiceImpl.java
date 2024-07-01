@@ -24,4 +24,13 @@ public class CategoryServiceImpl implements CategoryService {
         }
         return categoryOptional.get();
     }
+
+    @Override
+    public Category findByName(String name) {
+        Optional<Category> categoryOptional = categoryRepository.findByName(name);
+        if (categoryOptional.isEmpty()) {
+            throw new DataNotFoundException("Category with name " + name + " not found");
+        }
+        return categoryOptional.get();
+    }
 }

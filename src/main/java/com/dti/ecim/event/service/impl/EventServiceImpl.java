@@ -4,6 +4,7 @@ import com.dti.ecim.event.dto.CreateEventDto;
 import com.dti.ecim.event.dto.UpdateEventDto;
 import com.dti.ecim.event.entity.Event;
 import com.dti.ecim.event.repository.EventRepository;
+import com.dti.ecim.event.repository.EventSpecifications;
 import com.dti.ecim.event.service.EventService;
 import com.dti.ecim.exceptions.DataNotFoundException;
 import com.dti.ecim.metadata.entity.Category;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -22,7 +24,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -85,8 +86,21 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Page<Event> displayEvents(Pageable pageable) {
-        Page<Event> events = eventRepository.findAll(pageable);
+    public Page<Event> displayEvents(Pageable pageable, String title, String category, String interest) {
+//        Long categoryId = null;
+//        Long interestId = null;
+//        if (category != null) {
+//            Category cat = categoryService.findByName(category);
+//            categoryId = cat.getId();
+//        }
+//        if (interest != null) {
+//            Interest interestI = interestService.findByName(interest);
+//            interestId = interestI.getId();
+//        }
+        Specification<Event> specification = Specification.where(EventSpecifications.byTitle(title))
+                .and(EventSpecifications.byCategory(category))
+                .and(EventSpecifications.byInterest(interest));
+        Page<Event> events = eventRepository.findAll(specification, pageable);
         return events;
     }
 }

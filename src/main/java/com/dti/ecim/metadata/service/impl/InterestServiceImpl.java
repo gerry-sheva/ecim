@@ -25,4 +25,13 @@ public class InterestServiceImpl implements InterestService {
         }
         return interestOptional.get();
     }
+
+    @Override
+    public Interest findByName(String name) {
+        Optional<Interest> interestOptional = interestRepository.findByName(name);
+        if (interestOptional.isEmpty()) {
+            throw new DataNotFoundException("Interest with name " + name + " not found");
+        }
+        return interestOptional.get();
+    }
 }
