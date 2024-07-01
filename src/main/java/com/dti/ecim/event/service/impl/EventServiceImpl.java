@@ -86,6 +86,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Page<Event> displayEvents(Pageable pageable) {
-        return null;
+        Page<Event> events = eventRepository.findAll(pageable);
+        return events;
     }
 }

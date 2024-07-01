@@ -58,6 +58,10 @@ public class EventServiceImplIntegrationTest {
     public void testDisplayEvents() {
         Pageable pageable = PageRequest.of(0,20);
         Page<Event> eventPage = eventService.displayEvents(pageable);
-        assertEquals(20, eventPage.getTotalElements());
+        assertEquals(20, eventPage.stream().count());
+
+        Pageable pageable2 = PageRequest.of(0,10);
+        Page<Event> eventPage2 = eventService.displayEvents(pageable2);
+        assertEquals(10, eventPage2.stream().count());
     }
 }
