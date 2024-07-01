@@ -2,6 +2,7 @@ package com.dti.ecim.event;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.dti.ecim.event.dto.CreateEventDto;
+import com.dti.ecim.event.dto.UpdateEventDto;
 import com.dti.ecim.event.entity.Event;
 import com.dti.ecim.event.service.EventService;
 import org.junit.jupiter.api.Test;
@@ -31,5 +32,25 @@ public class EventServiceImplIntegrationTest {
         assertEquals(expectedEvent.getDescription(), actualEvent.getDescription());
     }
 
+    @Test
+    public void testUpdateEvent() {
+        UpdateEventDto updateEventDto = new UpdateEventDto();
+        updateEventDto.setTitle("updated");
+        updateEventDto.setDescription("updated");
+        updateEventDto.setCategoryId(9L);
+        updateEventDto.setInterestId(71L);
 
+        Event expected = eventService.updateEvent(1L, updateEventDto);
+        Event actual   = eventService.findEventById(1L);
+
+        assertEquals(actual.getTitle(), "updated");
+        assertEquals(actual.getDescription(), "updated");
+        assertEquals(actual.getCategory().getId(), 9L);
+        assertEquals(actual.getInterest().getId(), 71L);
+    }
+
+    @Test
+    public void testDisplayEvent() {
+
+    }
 }
