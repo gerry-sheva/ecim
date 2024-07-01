@@ -26,7 +26,10 @@ public class EventServiceImplIntegrationTest {
         Event expectedEvent = eventService.createEvent(createEventDto);
         Event actualEvent = eventService.findEventById(expectedEvent.getId());
 
-//        assertEquals(expectedEvent, actualEvent);
         assertEquals(expectedEvent.getId(), actualEvent.getId());
+        assertEquals(expectedEvent.getTitle(), actualEvent.getTitle());
+        assertEquals(expectedEvent.getDescription(), actualEvent.getDescription());
     }
+
+
 }
