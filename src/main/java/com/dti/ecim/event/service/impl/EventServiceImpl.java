@@ -12,6 +12,8 @@ import com.dti.ecim.metadata.service.CategoryService;
 import com.dti.ecim.metadata.service.InterestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -80,5 +82,10 @@ public class EventServiceImpl implements EventService {
         event.setStartingDate(stringToInstant(updateEventDto.getStartingDate()));
         event.setEndingDate(stringToInstant(updateEventDto.getEndingDate()));
         return eventRepository.save(event);
+    }
+
+    @Override
+    public Page<Event> displayEvents(Pageable pageable) {
+        return null;
     }
 }
