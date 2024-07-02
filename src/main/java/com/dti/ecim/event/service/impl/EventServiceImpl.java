@@ -83,16 +83,7 @@ public class EventServiceImpl implements EventService {
             throw new DataNotFoundException("Event with id " + id + " not found");
         }
         Event event = eventOptional.get();
-        RetrieveEventDto retrieveEventDto = new RetrieveEventDto();
-//        retrieveEventDto.setTitle(event.getTitle());
-//        retrieveEventDto.setDescription(event.getDescription());
-//        retrieveEventDto.setStartingDate(event.getStartingDate());
-//        retrieveEventDto.setEndingDate(event.getEndingDate());
-//        retrieveEventDto.setCity(event.getLocation().getCity());
-//        retrieveEventDto.setState(event.getLocation().getState());
-//        retrieveEventDto.setCategory(event.getCategory().getName());
-//        retrieveEventDto.setInterest(event.getInterest().getName());
-        return retrieveEventDto;
+        return modelMapper.map(event, RetrieveEventDto.class);
     }
 
     private Instant stringToInstant(String time) {
