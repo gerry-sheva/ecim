@@ -97,17 +97,20 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event updateEvent(Long id, UpdateEventDto updateEventDto) {
-//        Category category = categoryService.findById(updateEventDto.getCategoryId());
-//        Interest interest = interestService.findById(updateEventDto.getInterestId());
-//        Event event = findEventById(id);
-//        event.setTitle(updateEventDto.getTitle());
-//        event.setDescription(updateEventDto.getDescription());
-//        event.setCategory(category);
-//        event.setInterest(interest);
-//        event.setStartingDate(stringToInstant(updateEventDto.getStartingDate()));
-//        event.setEndingDate(stringToInstant(updateEventDto.getEndingDate()));
-//        return eventRepository.save(event);
-        return null;
+        Category category = categoryService.findById(updateEventDto.getCategoryId());
+        Interest interest = interestService.findById(updateEventDto.getInterestId());
+        Optional<Event> eventOptional = eventRepository.findById(id);
+        if (eventOptional.isEmpty()) {
+            throw new DataNotFoundException("Event with id " + id + " not found");
+        }
+        Event event = eventOptional.get();
+        event.setTitle(updateEventDto.getTitle());
+        event.setDescription(updateEventDto.getDescription());
+        event.setCategory(category);
+        event.setInterest(interest);
+        event.setStartingDate(stringToInstant(updateEventDto.getStartingDate()));
+        event.setEndingDate(stringToInstant(updateEventDto.getEndingDate()));
+        return eventRepository.save(event);
     }
 
     @Override
