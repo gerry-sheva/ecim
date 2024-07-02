@@ -12,6 +12,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -63,4 +64,7 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "interest_id")
     private Interest interest;
+
+    @OneToMany(mappedBy = "event")
+    private Set<EventOffering> offerings;
 }
