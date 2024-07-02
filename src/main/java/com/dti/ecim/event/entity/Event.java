@@ -52,6 +52,10 @@ public class Event {
     @Column(name = "deleted_at")
     private Instant deletedAt;
 
+    @OneToOne
+    @JoinColumn(name = "id", referencedColumnName = "event_id")
+    private Event event;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
