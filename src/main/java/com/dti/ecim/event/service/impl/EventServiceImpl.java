@@ -101,21 +101,12 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Page<Event> displayEvents(Pageable pageable, String title, String category, String interest) {
-//        Long categoryId = null;
-//        Long interestId = null;
-//        if (category != null) {
-//            Category cat = categoryService.findByName(category);
-//            categoryId = cat.getId();
-//        }
-//        if (interest != null) {
-//            Interest interestI = interestService.findByName(interest);
-//            interestId = interestI.getId();
-//        }
+    public Page<Event> displayEvents(Pageable pageable, String title, String category, String interest, String city, String state) {
         Specification<Event> specification = Specification.where(EventSpecifications.byTitle(title))
                 .and(EventSpecifications.byCategory(category))
-                .and(EventSpecifications.byInterest(interest));
-        Page<Event> events = eventRepository.findAll(specification, pageable);
-        return events;
+                .and(EventSpecifications.byInterest(interest))
+                .and(EventSpecifications.byCity(city))
+                .and(EventSpecifications.byState(state));
+        return eventRepository.findAll(specification, pageable);
     }
 }

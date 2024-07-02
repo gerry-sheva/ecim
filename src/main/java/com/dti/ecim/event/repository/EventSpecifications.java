@@ -18,8 +18,6 @@ public class EventSpecifications {
             if (category == null) {
                 return cb.conjunction();
             }
-//            Join<Event, Category> join = root.join("category");
-//            return cb.equal(join.get("category_id"), category);
             return cb.equal(cb.lower(root.get("category").get("name")), category.toLowerCase());
         });
     }
@@ -29,9 +27,25 @@ public class EventSpecifications {
             if (interest == null) {
                 return cb.conjunction();
             }
-//            Join<Event, Interest> join = root.join("interest");
-//            return cb.equal(join.get("interest_id"), interest);
             return cb.equal(cb.lower(root.get("interest").get("name")), interest.toLowerCase());
         });
+    }
+
+    public static Specification<Event> byCity(String city) {
+        return ((root, query, cb) -> {
+            if (city == null) {
+                return cb.conjunction();
+            }
+            return cb.equal(cb.lower(root.get("location").get("city")), city.toLowerCase());
+        });
+    }
+
+    public static Specification<Event> byState(String state) {
+        return (((root, query, cb) -> {
+            if (state == null) {
+                return cb.conjunction();
+            }
+            return cb.equal(cb.lower(root.get("location").get("state")), state.toLowerCase());
+        }));
     }
 }

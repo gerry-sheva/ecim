@@ -14,5 +14,11 @@ public interface EventService {
     Event findEventById(Long id);
     List<Event> findAllEvents();
     Event updateEvent(Long id, UpdateEventDto updateEventDto);
-    Page<Event> displayEvents(Pageable pageable, String title, String category, String interest);
+    Page<Event> displayEvents(
+            Pageable pageable,
+            String title,
+            String category,
+            String interest,
+            String city,
+            String state);
 }

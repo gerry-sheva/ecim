@@ -23,11 +23,20 @@ public class EventController {
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String interest,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) String state,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        var res = eventService.displayEvents(pageable, title, category, interest);
+        var res = eventService.displayEvents(
+                pageable,
+                title,
+                category,
+                interest,
+                city,
+                state
+        );
         return ResponseEntity.ok(res);
     }
 }
