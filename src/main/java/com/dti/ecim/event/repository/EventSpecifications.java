@@ -1,9 +1,6 @@
 package com.dti.ecim.event.repository;
 
 import com.dti.ecim.event.entity.Event;
-import com.dti.ecim.metadata.entity.Category;
-import com.dti.ecim.metadata.entity.Interest;
-import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
 
 public class EventSpecifications {
