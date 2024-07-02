@@ -8,9 +8,6 @@ import com.dti.ecim.event.service.EventService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 @SpringBootTest
 public class EventServiceImplIntegrationTest {
@@ -31,16 +28,17 @@ public class EventServiceImplIntegrationTest {
         createEventDto.setCity("City");
         createEventDto.setState("State");
 
-        Event actualEvent = eventService.createEvent(createEventDto);
+        Event event = eventService.createEvent(createEventDto);
+        Event actualEvent = eventService.findEventById(event.getId());
 
         assertEquals("test", actualEvent.getTitle());
         assertEquals("description", actualEvent.getDescription());
         assertEquals(1L, actualEvent.getCategory().getId());
         assertEquals(1L, actualEvent.getInterest().getId());
-        assertEquals("Street 1", actualEvent.getEventLocation().getStreet1());
-        assertEquals("Street 2", actualEvent.getEventLocation().getStreet2());
-        assertEquals("City", actualEvent.getEventLocation().getCity());
-        assertEquals("State", actualEvent.getEventLocation().getState());
+        assertEquals("Street 1", actualEvent.getLocation().getStreet1());
+        assertEquals("Street 2", actualEvent.getLocation().getStreet2());
+        assertEquals("City", actualEvent.getLocation().getCity());
+        assertEquals("State", actualEvent.getLocation().getState());
     }
 
     @Test

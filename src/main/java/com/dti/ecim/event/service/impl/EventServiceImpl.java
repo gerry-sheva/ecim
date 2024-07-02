@@ -3,6 +3,8 @@ package com.dti.ecim.event.service.impl;
 import com.dti.ecim.event.dto.CreateEventDto;
 import com.dti.ecim.event.dto.UpdateEventDto;
 import com.dti.ecim.event.entity.Event;
+import com.dti.ecim.event.entity.EventLocation;
+import com.dti.ecim.event.repository.EventLocationRepository;
 import com.dti.ecim.event.repository.EventRepository;
 import com.dti.ecim.event.repository.EventSpecifications;
 import com.dti.ecim.event.service.EventService;
@@ -31,6 +33,7 @@ import java.util.Optional;
 @Log
 public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
+    private final EventLocationRepository eventLocationRepository;
     private final CategoryService categoryService;
     private final InterestService interestService;
 
@@ -45,7 +48,19 @@ public class EventServiceImpl implements EventService {
         event.setInterest(interest);
         event.setStartingDate(stringToInstant(createEventDto.getStartingDate()));
         event.setEndingDate(stringToInstant(createEventDto.getEndingDate()));
-        return eventRepository.save(event);
+        Event createdEvent = eventRepository.save(event);
+
+        EventLocation eventLocation = new EventLocation();
+        eventLocation.setEventId(event.getId());
+        eventLocation.setEvent(event);
+        eventLocation.setStreet1(createEventDto.getStreet1());
+        eventLocation.setStreet2(createEventDto.getStreet2());
+        eventLocation.setCity(createEventDto.getCity());
+        eventLocation.setState(createEventDto.getState());
+        eventLocationRepository.save(eventLocation);
+
+        createdEvent.setLocation(eventLocation);
+        return createdEvent;
     }
 
     @Override
