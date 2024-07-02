@@ -1,6 +1,7 @@
 package com.dti.ecim.config;
 
 import lombok.extern.java.Log;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -16,5 +17,10 @@ public class AppConfig {
         template.setConnectionFactory(connectionFactory);
 
         return template;
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 }

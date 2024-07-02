@@ -18,6 +18,7 @@ import com.dti.ecim.metadata.service.CategoryService;
 import com.dti.ecim.metadata.service.InterestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -41,6 +42,7 @@ public class EventServiceImpl implements EventService {
     private final EventLocationRepository eventLocationRepository;
     private final CategoryService categoryService;
     private final InterestService interestService;
+    private final ModelMapper modelMapper;
 
     @Override
     @Transactional
@@ -82,20 +84,15 @@ public class EventServiceImpl implements EventService {
         }
         Event event = eventOptional.get();
         RetrieveEventDto retrieveEventDto = new RetrieveEventDto();
-        retrieveEventDto.setTitle(event.getTitle());
-        retrieveEventDto.setDescription(event.getDescription());
-        retrieveEventDto.setStartingDate(event.getStartingDate());
-        retrieveEventDto.setEndingDate(event.getEndingDate());
-        retrieveEventDto.setCity(event.getLocation().getCity());
-        retrieveEventDto.setState(event.getLocation().getState());
-        retrieveEventDto.setCategory(event.getCategory().getName());
-        retrieveEventDto.setInterest(event.getInterest().getName());
+//        retrieveEventDto.setTitle(event.getTitle());
+//        retrieveEventDto.setDescription(event.getDescription());
+//        retrieveEventDto.setStartingDate(event.getStartingDate());
+//        retrieveEventDto.setEndingDate(event.getEndingDate());
+//        retrieveEventDto.setCity(event.getLocation().getCity());
+//        retrieveEventDto.setState(event.getLocation().getState());
+//        retrieveEventDto.setCategory(event.getCategory().getName());
+//        retrieveEventDto.setInterest(event.getInterest().getName());
         return retrieveEventDto;
-    }
-
-    @Override
-    public List<Event> findAllEvents() {
-        return List.of();
     }
 
     private Instant stringToInstant(String time) {
@@ -123,12 +120,13 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Page<Event> displayEvents(Pageable pageable, String title, String category, String interest, String city, String state) {
+    public Page<RetrieveEventDto> displayEvents(Pageable pageable, String title, String category, String interest, String city, String state) {
         Specification<Event> specification = Specification.where(EventSpecifications.byTitle(title))
                 .and(EventSpecifications.byCategory(category))
                 .and(EventSpecifications.byInterest(interest))
                 .and(EventSpecifications.byCity(city))
                 .and(EventSpecifications.byState(state));
-        return eventRepository.findAll(specification, pageable);
+        Page<Event> events = eventRepository.findAll(specification, pageable);
+        return events.map(event -> modelMapper.map(event, RetrieveEventDto.class));
     }
 }

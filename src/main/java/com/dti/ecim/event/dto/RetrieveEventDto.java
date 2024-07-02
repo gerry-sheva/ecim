@@ -17,11 +17,42 @@ public class RetrieveEventDto {
 
     private Instant endingDate;
 
-    private String city;
+    private LocationDto location;
 
-    private String state;
+    private CategoryDto category;
 
-    private String category;
+    private InterestDto interest;
 
-    private String interest;
+    @Data
+    public static class LocationDto {
+        private String street1;
+        private String street2;
+        private String city;
+        private String state;
+
+        public LocationDto() {
+            this.street1 = "";
+            this.street2 = "";
+            this.city = "";
+            this.state = "";
+        }
+    }
+
+    @Data
+    public static class CategoryDto {
+        private String name;
+
+        public CategoryDto() {
+            this.name = "";
+        }
+    }
+
+    @Data
+    public static class InterestDto {
+        private String name;
+
+        public InterestDto() {
+            this.name = "";
+        }
+    }
 }

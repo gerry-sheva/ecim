@@ -13,9 +13,8 @@ import java.util.Optional;
 public interface EventService {
     Event createEvent(CreateEventDto createEventDto);
     RetrieveEventDto findEventById(Long id);
-    List<Event> findAllEvents();
     Event updateEvent(Long id, UpdateEventDto updateEventDto);
-    Page<Event> displayEvents(
+    Page<RetrieveEventDto> displayEvents(
             Pageable pageable,
             String title,
             String category,
