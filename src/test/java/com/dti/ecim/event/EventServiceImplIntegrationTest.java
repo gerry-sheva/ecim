@@ -26,13 +26,21 @@ public class EventServiceImplIntegrationTest {
         createEventDto.setEndingDate("09:15:30 PM, Sun 07/07/2024");
         createEventDto.setCategoryId(1L);
         createEventDto.setInterestId(1L);
+        createEventDto.setStreet1("Street 1");
+        createEventDto.setStreet2("Street 2");
+        createEventDto.setCity("City");
+        createEventDto.setState("State");
 
-        Event expectedEvent = eventService.createEvent(createEventDto);
-        Event actualEvent = eventService.findEventById(expectedEvent.getId());
+        Event actualEvent = eventService.createEvent(createEventDto);
 
-        assertEquals(expectedEvent.getId(), actualEvent.getId());
-        assertEquals(expectedEvent.getTitle(), actualEvent.getTitle());
-        assertEquals(expectedEvent.getDescription(), actualEvent.getDescription());
+        assertEquals("test", actualEvent.getTitle());
+        assertEquals("description", actualEvent.getDescription());
+        assertEquals(1L, actualEvent.getCategory().getId());
+        assertEquals(1L, actualEvent.getInterest().getId());
+        assertEquals("Street 1", actualEvent.getEventLocation().getStreet1());
+        assertEquals("Street 2", actualEvent.getEventLocation().getStreet2());
+        assertEquals("City", actualEvent.getEventLocation().getCity());
+        assertEquals("State", actualEvent.getEventLocation().getState());
     }
 
     @Test

@@ -19,4 +19,12 @@ public class CreateEventDto {
     private Long categoryId;
     @NotBlank
     private Long interestId;
+    @NotBlank
+    private String street1;
+    @NotBlank
+    private String street2;
+    @NotBlank
+    private String city;
+    @NotBlank
+    private String state;
 }

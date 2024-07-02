@@ -54,7 +54,7 @@ public class Event {
 
     @OneToOne
     @JoinColumn(name = "id", referencedColumnName = "event_id")
-    private Event event;
+    private EventLocation eventLocation;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
