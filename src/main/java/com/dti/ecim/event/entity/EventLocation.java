@@ -16,7 +16,9 @@ public class EventLocation {
     @Column(name = "event_id")
     private Long eventId;
 
-    @OneToOne(mappedBy = "location")
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "event_id")
     private Event event;
 
     @NotBlank

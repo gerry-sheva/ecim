@@ -1,12 +1,15 @@
 package com.dti.ecim.event.service.impl;
 
 import com.dti.ecim.event.dto.CreateEventDto;
+import com.dti.ecim.event.dto.CreateEventOfferingDto;
+import com.dti.ecim.event.dto.RetrieveEventDto;
 import com.dti.ecim.event.dto.UpdateEventDto;
 import com.dti.ecim.event.entity.Event;
 import com.dti.ecim.event.entity.EventLocation;
 import com.dti.ecim.event.repository.EventLocationRepository;
 import com.dti.ecim.event.repository.EventRepository;
 import com.dti.ecim.event.repository.EventSpecifications;
+import com.dti.ecim.event.service.EventOfferingService;
 import com.dti.ecim.event.service.EventService;
 import com.dti.ecim.exceptions.DataNotFoundException;
 import com.dti.ecim.metadata.entity.Category;
@@ -19,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -33,11 +37,13 @@ import java.util.Optional;
 @Log
 public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
+    private final EventOfferingService eventOfferingService;
     private final EventLocationRepository eventLocationRepository;
     private final CategoryService categoryService;
     private final InterestService interestService;
 
     @Override
+    @Transactional
     public Event createEvent(CreateEventDto createEventDto) {
         Category category = categoryService.findById(createEventDto.getCategoryId());
         Interest interest = interestService.findById(createEventDto.getInterestId());
@@ -50,26 +56,41 @@ public class EventServiceImpl implements EventService {
         event.setEndingDate(stringToInstant(createEventDto.getEndingDate()));
         Event createdEvent = eventRepository.save(event);
 
+        log.info("Created event: " + createdEvent.getId());
+
         EventLocation eventLocation = new EventLocation();
-        eventLocation.setEventId(event.getId());
-        eventLocation.setEvent(event);
+        eventLocation.setEvent(createdEvent);
         eventLocation.setStreet1(createEventDto.getStreet1());
         eventLocation.setStreet2(createEventDto.getStreet2());
         eventLocation.setCity(createEventDto.getCity());
         eventLocation.setState(createEventDto.getState());
         eventLocationRepository.save(eventLocation);
 
-        createdEvent.setLocation(eventLocation);
+        List<CreateEventOfferingDto> createEventOfferingDtoList = createEventDto.getOfferings();
+        for (CreateEventOfferingDto createEventOfferingDto : createEventOfferingDtoList) {
+            eventOfferingService.createEventOffering(createEventOfferingDto, createdEvent);
+        }
+
         return createdEvent;
     }
 
     @Override
-    public Event findEventById(Long id) {
+    public RetrieveEventDto findEventById(Long id) {
         Optional<Event> eventOptional = eventRepository.findById(id);
         if (eventOptional.isEmpty()) {
             throw new DataNotFoundException("Event with id " + id + " not found");
         }
-        return eventOptional.get();
+        Event event = eventOptional.get();
+        RetrieveEventDto retrieveEventDto = new RetrieveEventDto();
+        retrieveEventDto.setTitle(event.getTitle());
+        retrieveEventDto.setDescription(event.getDescription());
+        retrieveEventDto.setStartingDate(event.getStartingDate());
+        retrieveEventDto.setEndingDate(event.getEndingDate());
+        retrieveEventDto.setCity(event.getLocation().getCity());
+        retrieveEventDto.setState(event.getLocation().getState());
+        retrieveEventDto.setCategory(event.getCategory().getName());
+        retrieveEventDto.setInterest(event.getInterest().getName());
+        return retrieveEventDto;
     }
 
     @Override
@@ -88,16 +109,17 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event updateEvent(Long id, UpdateEventDto updateEventDto) {
-        Category category = categoryService.findById(updateEventDto.getCategoryId());
-        Interest interest = interestService.findById(updateEventDto.getInterestId());
-        Event event = findEventById(id);
-        event.setTitle(updateEventDto.getTitle());
-        event.setDescription(updateEventDto.getDescription());
-        event.setCategory(category);
-        event.setInterest(interest);
-        event.setStartingDate(stringToInstant(updateEventDto.getStartingDate()));
-        event.setEndingDate(stringToInstant(updateEventDto.getEndingDate()));
-        return eventRepository.save(event);
+//        Category category = categoryService.findById(updateEventDto.getCategoryId());
+//        Interest interest = interestService.findById(updateEventDto.getInterestId());
+//        Event event = findEventById(id);
+//        event.setTitle(updateEventDto.getTitle());
+//        event.setDescription(updateEventDto.getDescription());
+//        event.setCategory(category);
+//        event.setInterest(interest);
+//        event.setStartingDate(stringToInstant(updateEventDto.getStartingDate()));
+//        event.setEndingDate(stringToInstant(updateEventDto.getEndingDate()));
+//        return eventRepository.save(event);
+        return null;
     }
 
     @Override

@@ -1,15 +1,13 @@
 package com.dti.ecim.event.controller;
 
+import com.dti.ecim.event.dto.CreateEventDto;
 import com.dti.ecim.event.service.EventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -37,6 +35,18 @@ public class EventController {
                 city,
                 state
         );
+        return ResponseEntity.ok(res);
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createEvent(@RequestBody CreateEventDto createEventDto) {
+        var res = eventService.createEvent(createEventDto);
+        return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> displayEvent(@PathVariable Long id) {
+        var res = eventService.findEventById(id);
         return ResponseEntity.ok(res);
     }
 }

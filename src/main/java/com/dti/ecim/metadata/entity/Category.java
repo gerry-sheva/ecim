@@ -35,7 +35,4 @@ public class Category {
 
     @Column(name = "deleted_at")
     private Instant deletedAt;
-
-    @OneToMany(mappedBy = "category")
-    private Set<Interest> interests;
 }

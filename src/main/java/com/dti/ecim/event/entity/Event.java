@@ -64,7 +64,4 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "interest_id")
     private Interest interest;
-
-    @OneToMany(mappedBy = "event")
-    private Set<EventOffering> offerings;
 }
