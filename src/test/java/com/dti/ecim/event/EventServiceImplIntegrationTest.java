@@ -1,7 +1,12 @@
 package com.dti.ecim.event;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import com.dti.ecim.event.entity.EventOffering;
+import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 import com.dti.ecim.event.dto.CreateEventDto;
+import com.dti.ecim.event.dto.CreateEventOfferingDto;
 import com.dti.ecim.event.dto.UpdateEventDto;
 import com.dti.ecim.event.entity.Event;
 import com.dti.ecim.event.service.EventService;
@@ -28,6 +33,18 @@ public class EventServiceImplIntegrationTest {
         createEventDto.setCity("City");
         createEventDto.setState("State");
 
+        CreateEventOfferingDto createVIPOfferingDto = new CreateEventOfferingDto();
+        createVIPOfferingDto.setName("VIP");
+        createVIPOfferingDto.setDescription("description");
+        createVIPOfferingDto.setPrice(1000000L);
+        createVIPOfferingDto.setCapacity(100);
+
+        CreateEventOfferingDto createRegOfferingDto = new CreateEventOfferingDto();
+        createRegOfferingDto.setName("Reg");
+        createRegOfferingDto.setDescription("description");
+        createRegOfferingDto.setPrice(1000L);
+        createRegOfferingDto.setCapacity(1000);
+
         Event event = eventService.createEvent(createEventDto);
         Event actualEvent = eventService.findEventById(event.getId());
 
@@ -39,6 +56,9 @@ public class EventServiceImplIntegrationTest {
         assertEquals("Street 2", actualEvent.getLocation().getStreet2());
         assertEquals("City", actualEvent.getLocation().getCity());
         assertEquals("State", actualEvent.getLocation().getState());
+        assertEquals(2, actualEvent.getOfferings().size());
+        assertThat(actualEvent.getOfferings()).extracting(EventOffering::getName)
+                .containsExactly("VIP", "Reg");
     }
 
     @Test
