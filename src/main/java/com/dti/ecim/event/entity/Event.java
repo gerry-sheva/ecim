@@ -5,16 +5,16 @@ import com.dti.ecim.metadata.entity.Interest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -61,7 +61,15 @@ public class Event {
     @JoinColumn(name = "interest_id")
     private Interest interest;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "event_id")
-    private Set<EventOffering> offerings;
+    @OneToMany(mappedBy = "event",cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<EventOffering> offerings = new HashSet<>();
+
+    public void addOffering(EventOffering offering) {
+        offerings.add(offering);
+        offering.setEvent(this);
+    }
+    public void removeOffering(EventOffering offering) {
+        offerings.remove(offering);
+        offering.setEvent(null);
+    }
 }

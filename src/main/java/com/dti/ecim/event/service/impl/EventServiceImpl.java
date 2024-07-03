@@ -58,15 +58,13 @@ public class EventServiceImpl implements EventService {
         event.setStartingDate(stringToInstant(createEventDto.getStartingDate()));
         event.setEndingDate(stringToInstant(createEventDto.getEndingDate()));
 
-        Set<EventOffering> offerings = new HashSet<>();
         List<CreateEventOfferingDto> createEventOfferingDtoList = createEventDto.getOfferings();
         for (CreateEventOfferingDto createEventOfferingDto : createEventOfferingDtoList) {
 //            eventOfferingService.createEventOffering(createEventOfferingDto, createdEvent);
             EventOffering eventOffering = modelMapper.map(createEventOfferingDto, EventOffering.class);
             eventOffering.setAvailability(createEventOfferingDto.getCapacity());
-            offerings.add(eventOffering);
+            event.addOffering(eventOffering);
         }
-        event.setOfferings(offerings);
         Event createdEvent = eventRepository.save(event);
 
         log.info("Created event: " + createdEvent.getId());

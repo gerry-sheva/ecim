@@ -48,11 +48,11 @@ public class RetrieveEventDto {
     @Data
     public static class InterestDto {
         private String name;
-        private CategoryDto category;
+//        private CategoryDto category;
 
         public InterestDto() {
             this.name = "";
-            this.category = new CategoryDto();
+//            this.category = new CategoryDto();
         }
     }
 }
