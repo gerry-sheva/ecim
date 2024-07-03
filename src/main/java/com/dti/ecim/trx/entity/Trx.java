@@ -1,4 +1,4 @@
-package com.dti.ecim.order.entity;
+package com.dti.ecim.trx.entity;
 
 import com.dti.ecim.user.entity.Attendee;
 import jakarta.persistence.*;
@@ -12,11 +12,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "order")
-public class Order {
+@Table(name = "trx")
+public class Trx {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_id_gen")
-    @SequenceGenerator(name = "order_id_gen", sequenceName = "order_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trx_id_gen")
+    @SequenceGenerator(name = "trx_id_gen", sequenceName = "trx_id_seq")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

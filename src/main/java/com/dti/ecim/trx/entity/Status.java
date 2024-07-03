@@ -1,4 +1,4 @@
-package com.dti.ecim.order.entity;
+package com.dti.ecim.trx.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
