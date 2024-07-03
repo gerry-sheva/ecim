@@ -60,12 +60,8 @@ public class EventServiceImpl implements EventService {
 
         log.info("Created event: " + createdEvent.getId());
 
-        EventLocation eventLocation = new EventLocation();
+        EventLocation eventLocation = modelMapper.map(createEventDto.getLocation(), EventLocation.class);
         eventLocation.setEvent(createdEvent);
-        eventLocation.setStreet1(createEventDto.getLocation().getStreet1());
-        eventLocation.setStreet2(createEventDto.getLocation().getStreet2());
-        eventLocation.setCity(createEventDto.getLocation().getCity());
-        eventLocation.setState(createEventDto.getLocation().getState());
         eventLocationRepository.save(eventLocation);
 
         List<CreateEventOfferingDto> createEventOfferingDtoList = createEventDto.getOfferings();
