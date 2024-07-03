@@ -19,8 +19,6 @@ public class RetrieveEventDto {
 
     private LocationDto location;
 
-    private CategoryDto category;
-
     private InterestDto interest;
 
     @Data
@@ -50,9 +48,11 @@ public class RetrieveEventDto {
     @Data
     public static class InterestDto {
         private String name;
+        private CategoryDto category;
 
         public InterestDto() {
             this.name = "";
+            this.category = new CategoryDto();
         }
     }
 }
