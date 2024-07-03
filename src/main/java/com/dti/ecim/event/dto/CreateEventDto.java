@@ -28,17 +28,8 @@ public class CreateEventDto {
     @NotBlank
     private Long interestId;
 
-    @NotBlank
-    private String street1;
-
-    @NotBlank
-    private String street2;
-
-    @NotBlank
-    private String city;
-
-    @NotBlank
-    private String state;
+    @NotNull
+    private CreateEventLocationDto location;
 
     @NotNull
     private List<CreateEventOfferingDto> offerings;

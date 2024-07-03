@@ -2,13 +2,11 @@ package com.dti.ecim.event;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.dti.ecim.event.dto.RetrieveEventDto;
+import com.dti.ecim.event.dto.*;
 import com.dti.ecim.event.entity.EventOffering;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
-import com.dti.ecim.event.dto.CreateEventDto;
-import com.dti.ecim.event.dto.CreateEventOfferingDto;
-import com.dti.ecim.event.dto.UpdateEventDto;
+
 import com.dti.ecim.event.entity.Event;
 import com.dti.ecim.event.service.EventService;
 import org.junit.jupiter.api.Test;
@@ -32,10 +30,13 @@ public class EventServiceImplIntegrationTest {
         createEventDto.setEndingDate("09:15:30 PM, Sun 07/07/2024");
         createEventDto.setCategoryId(1L);
         createEventDto.setInterestId(1L);
-        createEventDto.setStreet1("Street 1");
-        createEventDto.setStreet2("Street 2");
-        createEventDto.setCity("City");
-        createEventDto.setState("State");
+
+        CreateEventLocationDto locationDto = new CreateEventLocationDto();
+        locationDto.setStreet1("Street 1");
+        locationDto.setStreet2("Street 2");
+        locationDto.setCity("City");
+        locationDto.setState("State");
+        createEventDto.setLocation(locationDto);
 
         List<CreateEventOfferingDto> offeringDtos = new ArrayList<>();
         CreateEventOfferingDto createVIPOfferingDto = new CreateEventOfferingDto();

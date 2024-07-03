@@ -62,10 +62,10 @@ public class EventServiceImpl implements EventService {
 
         EventLocation eventLocation = new EventLocation();
         eventLocation.setEvent(createdEvent);
-        eventLocation.setStreet1(createEventDto.getStreet1());
-        eventLocation.setStreet2(createEventDto.getStreet2());
-        eventLocation.setCity(createEventDto.getCity());
-        eventLocation.setState(createEventDto.getState());
+        eventLocation.setStreet1(createEventDto.getLocation().getStreet1());
+        eventLocation.setStreet2(createEventDto.getLocation().getStreet2());
+        eventLocation.setCity(createEventDto.getLocation().getCity());
+        eventLocation.setState(createEventDto.getLocation().getState());
         eventLocationRepository.save(eventLocation);
 
         List<CreateEventOfferingDto> createEventOfferingDtoList = createEventDto.getOfferings();
