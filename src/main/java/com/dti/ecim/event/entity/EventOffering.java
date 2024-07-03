@@ -33,9 +33,4 @@ public class EventOffering {
 
     @PositiveOrZero
     private int availability;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id")
-    private Event event;
-
 }

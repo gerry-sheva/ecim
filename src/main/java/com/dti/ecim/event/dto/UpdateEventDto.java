@@ -1,6 +1,5 @@
 package com.dti.ecim.event.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

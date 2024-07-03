@@ -21,7 +21,7 @@ public class EventOfferingServiceImpl implements EventOfferingService {
     public EventOffering createEventOffering(CreateEventOfferingDto createEventOfferingDto, Event event) {
         EventOffering eventOffering =  modelMapper.map(createEventOfferingDto, EventOffering.class);
         eventOffering.setAvailability(createEventOfferingDto.getCapacity());
-        eventOffering.setEvent(event);
+//        eventOffering.setEvent(event);
         return eventOfferingRepository.save(eventOffering);
     }
 }

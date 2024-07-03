@@ -6,6 +6,7 @@ import com.dti.ecim.event.dto.RetrieveEventDto;
 import com.dti.ecim.event.dto.UpdateEventDto;
 import com.dti.ecim.event.entity.Event;
 import com.dti.ecim.event.entity.EventLocation;
+import com.dti.ecim.event.entity.EventOffering;
 import com.dti.ecim.event.repository.EventLocationRepository;
 import com.dti.ecim.event.repository.EventRepository;
 import com.dti.ecim.event.repository.EventSpecifications;
@@ -30,8 +31,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -54,6 +57,16 @@ public class EventServiceImpl implements EventService {
         event.setInterest(interest);
         event.setStartingDate(stringToInstant(createEventDto.getStartingDate()));
         event.setEndingDate(stringToInstant(createEventDto.getEndingDate()));
+
+        Set<EventOffering> offerings = new HashSet<>();
+        List<CreateEventOfferingDto> createEventOfferingDtoList = createEventDto.getOfferings();
+        for (CreateEventOfferingDto createEventOfferingDto : createEventOfferingDtoList) {
+//            eventOfferingService.createEventOffering(createEventOfferingDto, createdEvent);
+            EventOffering eventOffering = modelMapper.map(createEventOfferingDto, EventOffering.class);
+            eventOffering.setAvailability(createEventOfferingDto.getCapacity());
+            offerings.add(eventOffering);
+        }
+        event.setOfferings(offerings);
         Event createdEvent = eventRepository.save(event);
 
         log.info("Created event: " + createdEvent.getId());
@@ -61,11 +74,6 @@ public class EventServiceImpl implements EventService {
         EventLocation eventLocation = modelMapper.map(createEventDto.getLocation(), EventLocation.class);
         eventLocation.setEvent(createdEvent);
         eventLocationRepository.save(eventLocation);
-
-        List<CreateEventOfferingDto> createEventOfferingDtoList = createEventDto.getOfferings();
-        for (CreateEventOfferingDto createEventOfferingDto : createEventOfferingDtoList) {
-            eventOfferingService.createEventOffering(createEventOfferingDto, createdEvent);
-        }
 
         return createdEvent;
     }

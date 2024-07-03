@@ -60,4 +60,8 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "interest_id")
     private Interest interest;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "event_id")
+    private Set<EventOffering> offerings;
 }
