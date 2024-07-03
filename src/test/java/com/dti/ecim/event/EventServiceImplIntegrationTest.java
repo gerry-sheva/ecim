@@ -28,7 +28,6 @@ public class EventServiceImplIntegrationTest {
         createEventDto.setDescription("description");
         createEventDto.setStartingDate("09:15:30 PM, Sun 06/30/2024");
         createEventDto.setEndingDate("09:15:30 PM, Sun 07/07/2024");
-        createEventDto.setCategoryId(1L);
         createEventDto.setInterestId(1L);
 
         CreateEventLocationDto locationDto = new CreateEventLocationDto();

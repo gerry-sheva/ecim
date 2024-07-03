@@ -47,12 +47,10 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional
     public Event createEvent(CreateEventDto createEventDto) {
-        Category category = categoryService.findById(createEventDto.getCategoryId());
         Interest interest = interestService.findById(createEventDto.getInterestId());
         Event event = new Event();
         event.setTitle(createEventDto.getTitle());
         event.setDescription(createEventDto.getDescription());
-        event.setCategory(category);
         event.setInterest(interest);
         event.setStartingDate(stringToInstant(createEventDto.getStartingDate()));
         event.setEndingDate(stringToInstant(createEventDto.getEndingDate()));
@@ -93,7 +91,6 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event updateEvent(Long id, UpdateEventDto updateEventDto) {
-        Category category = categoryService.findById(updateEventDto.getCategoryId());
         Interest interest = interestService.findById(updateEventDto.getInterestId());
         Optional<Event> eventOptional = eventRepository.findById(id);
         if (eventOptional.isEmpty()) {
@@ -102,7 +99,6 @@ public class EventServiceImpl implements EventService {
         Event event = eventOptional.get();
         event.setTitle(updateEventDto.getTitle());
         event.setDescription(updateEventDto.getDescription());
-        event.setCategory(category);
         event.setInterest(interest);
         event.setStartingDate(stringToInstant(updateEventDto.getStartingDate()));
         event.setEndingDate(stringToInstant(updateEventDto.getEndingDate()));

@@ -23,9 +23,6 @@ public class CreateEventDto {
     private String endingDate;
 
     @NotBlank
-    private Long categoryId;
-
-    @NotBlank
     private Long interestId;
 
     @NotNull
