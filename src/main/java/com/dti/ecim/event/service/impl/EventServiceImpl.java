@@ -121,4 +121,10 @@ public class EventServiceImpl implements EventService {
         Page<Event> events = eventRepository.findAll(specification, pageable);
         return events.map(event -> modelMapper.map(event, RetrieveEventDto.class));
     }
+
+    @Override
+    public Event dumpEvent(Long id) {
+
+        return eventRepository.findById(id).orElse(null);
+    }
 }

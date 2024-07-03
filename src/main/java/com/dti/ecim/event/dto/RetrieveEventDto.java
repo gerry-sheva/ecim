@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -20,6 +21,8 @@ public class RetrieveEventDto {
     private LocationDto location;
 
     private InterestDto interest;
+
+    private Set<OfferingDto> offerings;
 
     @Data
     public static class LocationDto {
@@ -48,11 +51,28 @@ public class RetrieveEventDto {
     @Data
     public static class InterestDto {
         private String name;
-//        private CategoryDto category;
+        private CategoryDto category;
 
         public InterestDto() {
             this.name = "";
-//            this.category = new CategoryDto();
+            this.category = new CategoryDto();
+        }
+    }
+
+    @Data
+    public static class OfferingDto {
+        private String name;
+        private String description;
+        private Long price;
+        private int capacity;
+        private int availability;
+
+        public OfferingDto() {
+            this.name = "";
+            this.description = "";
+            this.price = 0L;
+            this.capacity = 0;
+            this.availability = 0;
         }
     }
 }

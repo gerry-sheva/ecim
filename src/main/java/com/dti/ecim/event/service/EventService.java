@@ -21,4 +21,5 @@ public interface EventService {
             String interest,
             String city,
             String state);
+    Event dumpEvent(Long id);
 }
