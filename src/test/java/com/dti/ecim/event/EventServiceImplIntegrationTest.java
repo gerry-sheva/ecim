@@ -2,6 +2,7 @@ package com.dti.ecim.event;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.dti.ecim.event.dto.RetrieveEventDto;
 import com.dti.ecim.event.entity.EventOffering;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,6 +14,9 @@ import com.dti.ecim.event.service.EventService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootTest
 public class EventServiceImplIntegrationTest {
@@ -33,32 +37,32 @@ public class EventServiceImplIntegrationTest {
         createEventDto.setCity("City");
         createEventDto.setState("State");
 
+        List<CreateEventOfferingDto> offeringDtos = new ArrayList<>();
         CreateEventOfferingDto createVIPOfferingDto = new CreateEventOfferingDto();
         createVIPOfferingDto.setName("VIP");
         createVIPOfferingDto.setDescription("description");
         createVIPOfferingDto.setPrice(1000000L);
         createVIPOfferingDto.setCapacity(100);
+        offeringDtos.add(createVIPOfferingDto);
 
         CreateEventOfferingDto createRegOfferingDto = new CreateEventOfferingDto();
         createRegOfferingDto.setName("Reg");
         createRegOfferingDto.setDescription("description");
         createRegOfferingDto.setPrice(1000L);
         createRegOfferingDto.setCapacity(1000);
+        offeringDtos.add(createRegOfferingDto);
+
+        createEventDto.setOfferings(offeringDtos);
 
         Event event = eventService.createEvent(createEventDto);
-//        Event actualEvent = eventService.findEventById(event.getId());
+        RetrieveEventDto actualEvent = eventService.findEventById(event.getId());
 
-//        assertEquals("test", actualEvent.getTitle());
-//        assertEquals("description", actualEvent.getDescription());
-//        assertEquals(1L, actualEvent.getCategory().getId());
-//        assertEquals(1L, actualEvent.getInterest().getId());
-//        assertEquals("Street 1", actualEvent.getLocation().getStreet1());
-//        assertEquals("Street 2", actualEvent.getLocation().getStreet2());
-//        assertEquals("City", actualEvent.getLocation().getCity());
-//        assertEquals("State", actualEvent.getLocation().getState());
-//        assertEquals(2, actualEvent.getOfferings().size());
-//        assertThat(actualEvent.getOfferings()).extracting(EventOffering::getName)
-//                .containsExactly("VIP", "Reg");
+        assertEquals("test", actualEvent.getTitle());
+        assertEquals("description", actualEvent.getDescription());
+        assertEquals("Street 1", actualEvent.getLocation().getStreet1());
+        assertEquals("Street 2", actualEvent.getLocation().getStreet2());
+        assertEquals("City", actualEvent.getLocation().getCity());
+        assertEquals("State", actualEvent.getLocation().getState());
     }
 
     @Test
