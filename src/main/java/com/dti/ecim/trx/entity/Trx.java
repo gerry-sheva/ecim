@@ -1,6 +1,5 @@
 package com.dti.ecim.trx.entity;
 
-import com.dti.ecim.tix.entity.Tix;
 import com.dti.ecim.user.entity.Attendee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

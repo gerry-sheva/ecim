@@ -1,11 +1,10 @@
 package com.dti.ecim.trx.service.impl;
 
-import com.dti.ecim.auth.entity.UserAuth;
 import com.dti.ecim.event.dto.EventOfferingResponseDto;
 import com.dti.ecim.event.entity.EventOffering;
 import com.dti.ecim.event.service.EventOfferingService;
 import com.dti.ecim.exceptions.DataNotFoundException;
-import com.dti.ecim.tix.entity.Tix;
+import com.dti.ecim.trx.entity.Tix;
 import com.dti.ecim.trx.dto.CreateTixDto;
 import com.dti.ecim.trx.dto.CreateTrxRequestDto;
 import com.dti.ecim.trx.dto.TrxResponseDto;
@@ -18,15 +17,11 @@ import com.dti.ecim.user.entity.Attendee;
 import com.dti.ecim.user.service.AttendeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
-import org.apache.coyote.BadRequestException;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 import java.util.Set;
 

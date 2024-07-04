@@ -1,7 +1,6 @@
-package com.dti.ecim.tix.entity;
+package com.dti.ecim.trx.entity;
 
 import com.dti.ecim.event.entity.EventOffering;
-import com.dti.ecim.trx.entity.Trx;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

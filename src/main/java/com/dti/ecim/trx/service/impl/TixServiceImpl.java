@@ -1,8 +1,8 @@
-package com.dti.ecim.tix.service.impl;
+package com.dti.ecim.trx.service.impl;
 
-import com.dti.ecim.tix.entity.Tix;
-import com.dti.ecim.tix.repository.TixRepository;
-import com.dti.ecim.tix.service.TixService;
+import com.dti.ecim.trx.entity.Tix;
+import com.dti.ecim.trx.repository.TixRepository;
+import com.dti.ecim.trx.service.TixService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
