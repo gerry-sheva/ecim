@@ -10,6 +10,7 @@ import com.dti.ecim.trx.dto.CreateTrxRequestDto;
 import com.dti.ecim.trx.dto.TrxResponseDto;
 import com.dti.ecim.trx.entity.Status;
 import com.dti.ecim.trx.entity.Trx;
+import com.dti.ecim.trx.helper.TrxHelper;
 import com.dti.ecim.trx.repository.TrxRepository;
 import com.dti.ecim.trx.repository.StatusRepository;
 import com.dti.ecim.trx.service.TrxService;
@@ -22,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 import java.util.Set;
 
@@ -42,7 +44,7 @@ public class TrxServiceImpl implements TrxService {
     }
 
     @Override
-    public TrxResponseDto createTrx(CreateTrxRequestDto createTrxRequestDto) {
+    public TrxResponseDto createTrx(CreateTrxRequestDto createTrxRequestDto) throws NoSuchAlgorithmException {
         var ctx = SecurityContextHolder.getContext();
         Authentication authentication = ctx.getAuthentication();
         Attendee attendee = attendeeService.findAttendeeByEmail(authentication.getName());
@@ -59,7 +61,7 @@ public class TrxServiceImpl implements TrxService {
             EventOfferingResponseDto eventOffering = eventOfferingService.getEventOffering(tixDto.getOfferingId());
             for (int i = 0; i < tixDto.getQuantity(); i++) {
                 Tix tix = new Tix();
-                tix.setCode("hehe");
+                tix.setCode(TrxHelper.generateTixCode(eventOffering.getName()));
                 tix.setEventOffering(modelMapper.map(eventOffering, EventOffering.class));
                 trx.addTix(tix);
             }

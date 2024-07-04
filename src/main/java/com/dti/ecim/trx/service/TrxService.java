@@ -9,7 +9,7 @@ import java.security.NoSuchAlgorithmException;
 
 public interface TrxService {
     Trx retrieveTrx(Long trxId) throws BadRequestException, NoSuchAlgorithmException;
-    TrxResponseDto createTrx(CreateTrxRequestDto createTrxRequestDto);
+    TrxResponseDto createTrx(CreateTrxRequestDto createTrxRequestDto) throws NoSuchAlgorithmException;
     Trx updateTrx(Trx trx);
     void deleteTrx(Trx trx);
 }

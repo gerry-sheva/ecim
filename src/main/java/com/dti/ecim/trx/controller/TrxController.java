@@ -9,6 +9,8 @@ import lombok.extern.java.Log;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.NoSuchAlgorithmException;
+
 @RequiredArgsConstructor
 @RestController
 @Log
@@ -17,7 +19,7 @@ public class TrxController {
     private final TrxService trxService;
 
     @PostMapping
-    public TrxResponseDto createTrx(@RequestBody CreateTrxRequestDto createTrxRequestDto) {
+    public TrxResponseDto createTrx(@RequestBody CreateTrxRequestDto createTrxRequestDto) throws NoSuchAlgorithmException {
         log.info("Creating new trx");
         TrxResponseDto trx = trxService.createTrx(createTrxRequestDto);
         return trx;
