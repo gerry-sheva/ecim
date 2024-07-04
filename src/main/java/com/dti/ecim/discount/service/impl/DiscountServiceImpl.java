@@ -1,5 +1,9 @@
 package com.dti.ecim.discount.service.impl;
 
+import com.dti.ecim.discount.entity.Discount;
+import com.dti.ecim.discount.entity.EventDiscount;
+import com.dti.ecim.discount.entity.GlobalDiscount;
+import com.dti.ecim.discount.entity.RedeemedDiscount;
 import com.dti.ecim.discount.repository.ClaimedDiscountRepository;
 import com.dti.ecim.discount.repository.DiscountRepository;
 import com.dti.ecim.discount.repository.PointRepository;
@@ -15,6 +19,24 @@ import org.springframework.stereotype.Service;
 public class DiscountServiceImpl implements DiscountService {
     private final DiscountRepository discountRepository;
     private final ClaimedDiscountRepository claimedDiscountRepository;
-    private final RedeemedDiscountRepository redemedDiscountRepository;
+    private final RedeemedDiscountRepository redeemedDiscountRepository;
     private final PointRepository pointRepository;
+
+    @Override
+    public void createGlobalEvent(GlobalDiscount globalDiscount) {
+    }
+
+    @Override
+    public void createEventDiscount(EventDiscount eventDiscount) {
+    }
+
+    @Override
+    public void redeemDiscount(Discount discount) {
+
+    }
+
+    @Override
+    public void claimDiscount(RedeemedDiscount redeemedDiscount) {
+
+    }
 }
