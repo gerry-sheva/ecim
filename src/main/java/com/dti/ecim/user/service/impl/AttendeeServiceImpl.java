@@ -79,6 +79,28 @@ public class AttendeeServiceImpl implements AttendeeService {
         return new ResponseDto("Attendee created successfully");
     }
 
+    @Override
+    public Attendee findAttendeeById(Long id) {
+        Optional<Attendee> attendeeOptional = attendeeRepository.findById(id);
+        if (attendeeOptional.isEmpty()) {
+            throw new DataNotFoundException("Attendee with id " + id + " not found");
+        }
+        return attendeeOptional.get();
+    }
+
+    @Override
+    public Attendee findAttendeeByEmail(String email) {
+        Optional<UserAuth> userAuthOptional = userAuthRepository.findByEmail(email);
+        if (userAuthOptional.isEmpty()) {
+            throw new DataNotFoundException("User not found");
+        }
+        Optional<Attendee> attendeeOptional = attendeeRepository.findById(userAuthOptional.get().getUserId());
+        if (attendeeOptional.isEmpty()) {
+            throw new DataNotFoundException("Attendee with id " + userAuthOptional.get().getUserId() + " not found");
+        }
+        return attendeeOptional.get();
+    }
+
     private String generateReferralCode(String email) throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] hash = digest.digest(email.getBytes(StandardCharsets.UTF_8));

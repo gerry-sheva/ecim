@@ -8,6 +8,7 @@ import com.dti.ecim.trx.repository.TrxRepository;
 import com.dti.ecim.trx.service.impl.TrxServiceImpl;
 
 import com.dti.ecim.user.entity.Attendee;
+import com.dti.ecim.user.service.AttendeeService;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -24,7 +25,8 @@ public class RetrievetrxTest {
     public void test_retrieve_existing_transaction_by_valid_id() {
         TrxRepository trxRepository = mock(TrxRepository.class);
         StatusRepository statusRepository = mock(StatusRepository.class);
-        TrxServiceImpl trxService = new TrxServiceImpl(trxRepository, statusRepository);
+        AttendeeService attendeeService = mock(AttendeeService.class);
+        TrxServiceImpl trxService = new TrxServiceImpl(trxRepository, statusRepository, attendeeService);
 
         Trx expectedTrx = new Trx();
         expectedTrx.setId(1L);
@@ -41,7 +43,8 @@ public class RetrievetrxTest {
     public void test_return_transaction_with_all_associated_entities() {
         TrxRepository trxRepository = mock(TrxRepository.class);
         StatusRepository statusRepository = mock(StatusRepository.class);
-        TrxServiceImpl trxService = new TrxServiceImpl(trxRepository, statusRepository);
+        AttendeeService attendeeService = mock(AttendeeService.class);
+        TrxServiceImpl trxService = new TrxServiceImpl(trxRepository, statusRepository, attendeeService);
 
         Attendee attendee = new Attendee();
         Status status = new Status();
@@ -63,7 +66,8 @@ public class RetrievetrxTest {
     public void test_retrieve_transaction_with_non_existent_id() {
         TrxRepository trxRepository = mock(TrxRepository.class);
         StatusRepository statusRepository = mock(StatusRepository.class);
-        TrxServiceImpl trxService = new TrxServiceImpl(trxRepository, statusRepository);
+        AttendeeService attendeeService = mock(AttendeeService.class);
+        TrxServiceImpl trxService = new TrxServiceImpl(trxRepository, statusRepository, attendeeService);
 
         when(trxRepository.findById(999L)).thenReturn(Optional.empty());
 
@@ -77,7 +81,8 @@ public class RetrievetrxTest {
     public void test_handle_null_id_input() {
         TrxRepository trxRepository = mock(TrxRepository.class);
         StatusRepository statusRepository = mock(StatusRepository.class);
-        TrxServiceImpl trxService = new TrxServiceImpl(trxRepository, statusRepository);
+        AttendeeService attendeeService = mock(AttendeeService.class);
+        TrxServiceImpl trxService = new TrxServiceImpl(trxRepository, statusRepository, attendeeService);
 
         assertThrows(IllegalArgumentException.class, () -> {
             trxService.retrieveTrx(null);
@@ -89,7 +94,8 @@ public class RetrievetrxTest {
     public void test_handle_negative_id_input() {
         TrxRepository trxRepository = mock(TrxRepository.class);
         StatusRepository statusRepository = mock(StatusRepository.class);
-        TrxServiceImpl trxService = new TrxServiceImpl(trxRepository, statusRepository);
+        AttendeeService attendeeService = mock(AttendeeService.class);
+        TrxServiceImpl trxService = new TrxServiceImpl(trxRepository, statusRepository, attendeeService);
 
         assertThrows(IllegalArgumentException.class, () -> {
             trxService.retrieveTrx(-1L);
