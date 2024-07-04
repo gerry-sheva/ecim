@@ -1,5 +1,6 @@
 package com.dti.ecim.discount.entity;
 
+import com.dti.ecim.user.entity.Organizer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -53,5 +54,4 @@ public class Discount {
     @Column(name = "updated_at")
     @UpdateTimestamp
     private Instant updatedAt;
-
 }

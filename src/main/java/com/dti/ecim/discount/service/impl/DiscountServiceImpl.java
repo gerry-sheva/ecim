@@ -1,5 +1,7 @@
 package com.dti.ecim.discount.service.impl;
 
+import com.dti.ecim.discount.dto.CreateEventDiscountRequestDto;
+import com.dti.ecim.discount.dto.CreateGlobalDiscountRequestDto;
 import com.dti.ecim.discount.entity.Discount;
 import com.dti.ecim.discount.entity.EventDiscount;
 import com.dti.ecim.discount.entity.GlobalDiscount;
@@ -9,9 +11,15 @@ import com.dti.ecim.discount.repository.DiscountRepository;
 import com.dti.ecim.discount.repository.PointRepository;
 import com.dti.ecim.discount.repository.RedeemedDiscountRepository;
 import com.dti.ecim.discount.service.DiscountService;
+import com.dti.ecim.user.service.impl.OrganizerServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @RequiredArgsConstructor
 @Service
@@ -21,13 +29,25 @@ public class DiscountServiceImpl implements DiscountService {
     private final ClaimedDiscountRepository claimedDiscountRepository;
     private final RedeemedDiscountRepository redeemedDiscountRepository;
     private final PointRepository pointRepository;
+    private final OrganizerServiceImpl organizerService;
+    private final ModelMapper modelMapper;
 
     @Override
-    public void createGlobalEvent(GlobalDiscount globalDiscount) {
+    public void createGlobalDiscount(CreateGlobalDiscountRequestDto requestDto) {
+        GlobalDiscount globalDiscount= modelMapper.map(requestDto, GlobalDiscount.class);
+        globalDiscount.setCode(requestDto.getCode().toUpperCase());
+        globalDiscount.setAmount_percent(requestDto.getAmount_percent());
+        createEvent(globalDiscount);
     }
 
     @Override
-    public void createEventDiscount(EventDiscount eventDiscount) {
+    public void createEventDiscount(CreateEventDiscountRequestDto requestDto) {
+        createEvent(modelMapper.map(requestDto, EventDiscount.class));
+    }
+
+    private void createEvent(Discount discount) {
+        discount.setExpiredAt(Instant.now().plus(discount.getExpiresInDays(), ChronoUnit.DAYS));
+        discountRepository.save(discount);
     }
 
     @Override

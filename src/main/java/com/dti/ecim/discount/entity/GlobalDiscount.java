@@ -12,7 +12,5 @@ import lombok.Setter;
 @Entity
 @DiscriminatorValue("GLOBAL")
 public class GlobalDiscount extends Discount {
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organizer_id")
-    private Organizer organizer;
+
 }
