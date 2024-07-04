@@ -1,5 +1,6 @@
 package com.dti.ecim.trx.entity;
 
+import com.dti.ecim.event.entity.Event;
 import com.dti.ecim.user.entity.Attendee;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -23,6 +24,9 @@ public class Trx {
     @SequenceGenerator(name = "trx_id_gen", sequenceName = "trx_id_seq")
     private Long id;
 
+    @Column(name = "event_id")
+    private Long eventId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "attendee_id")
     private Attendee attendee;
@@ -36,6 +40,10 @@ public class Trx {
 
     @OneToMany(mappedBy = "trx", cascade = CascadeType.ALL,fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Tix> tixes = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id", insertable = false, updatable = false)
+    private Event event;
 
     public void addTix(Tix t) {
         tixes.add(t);

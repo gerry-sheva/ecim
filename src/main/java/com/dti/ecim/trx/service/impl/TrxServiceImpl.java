@@ -53,6 +53,7 @@ public class TrxServiceImpl implements TrxService {
             throw new DataNotFoundException("Data is not found");
         }
         Trx trx = new Trx();
+        trx.setEventId(createTrxRequestDto.getEventId());
         Long totalPrice = 0L;
         log.info(attendee.getFname());
         trx.setAttendee(attendee);
