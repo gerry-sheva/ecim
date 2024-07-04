@@ -34,19 +34,21 @@ public class DiscountServiceImpl implements DiscountService {
 
     @Override
     public void createGlobalDiscount(CreateGlobalDiscountRequestDto requestDto) {
-        GlobalDiscount globalDiscount= modelMapper.map(requestDto, GlobalDiscount.class);
-        globalDiscount.setCode(requestDto.getCode().toUpperCase());
-        globalDiscount.setAmount_percent(requestDto.getAmount_percent());
-        createEvent(globalDiscount);
+        createEvent(modelMapper.map(requestDto, GlobalDiscount.class));
     }
 
     @Override
     public void createEventDiscount(CreateEventDiscountRequestDto requestDto) {
-        createEvent(modelMapper.map(requestDto, EventDiscount.class));
+//        createEvent(modelMapper.map(requestDto, EventDiscount.class));
+        EventDiscount eventDiscount = modelMapper.map(requestDto, EventDiscount.class);
+        eventDiscount.setEventId(requestDto.getEventId());
+        log.info(requestDto.getAmountFlat().toString());
+        createEvent(eventDiscount);
     }
 
     private void createEvent(Discount discount) {
         discount.setExpiredAt(Instant.now().plus(discount.getExpiresInDays(), ChronoUnit.DAYS));
+        discount.setCode(discount.getCode().toUpperCase());
         discountRepository.save(discount);
     }
 

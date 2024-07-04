@@ -12,7 +12,10 @@ import lombok.Setter;
 @Entity
 @DiscriminatorValue("EVENT")
 public class EventDiscount extends Discount {
+    @Column(name = "event_id")
+    private Long eventId;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id")
+    @JoinColumn(name = "event_id", insertable = false, updatable = false)
     private Event event;
 }
