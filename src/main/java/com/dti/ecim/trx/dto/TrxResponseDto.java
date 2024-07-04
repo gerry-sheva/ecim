@@ -9,6 +9,6 @@ import java.util.Set;
 @NoArgsConstructor
 public class TrxResponseDto {
     private Long id;
-
+    private Long price;
     private Set<TixResponseDto> tixes;
 }

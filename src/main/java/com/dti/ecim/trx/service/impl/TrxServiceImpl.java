@@ -53,6 +53,7 @@ public class TrxServiceImpl implements TrxService {
             throw new DataNotFoundException("Data is not found");
         }
         Trx trx = new Trx();
+        Long totalPrice = 0L;
         log.info(attendee.getFname());
         trx.setAttendee(attendee);
         trx.setStatus(waiting.get());
@@ -64,8 +65,10 @@ public class TrxServiceImpl implements TrxService {
                 tix.setCode(TrxHelper.generateTixCode(eventOffering.getName()));
                 tix.setEventOffering(modelMapper.map(eventOffering, EventOffering.class));
                 trx.addTix(tix);
+                totalPrice += eventOffering.getPrice();
             }
         }
+        trx.setPrice(totalPrice);
         Trx savedTrx = trxRepository.save(trx);
         return modelMapper.map(savedTrx, TrxResponseDto.class);
     }
