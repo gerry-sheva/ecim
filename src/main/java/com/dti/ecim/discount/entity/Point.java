@@ -33,6 +33,9 @@ public class Point {
     @CreationTimestamp
     private Instant createdAt;
 
+    @Column(name = "expired_at")
+    private Instant expiredAt;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trx_id")
     private Trx trx;

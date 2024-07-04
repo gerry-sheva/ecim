@@ -2,6 +2,7 @@ package com.dti.ecim.discount.entity;
 
 import com.dti.ecim.user.entity.Attendee;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,4 +32,7 @@ public class RedeemedDiscount {
     @Column(name = "created_at")
     @CreationTimestamp
     private Instant createdAt;
+
+    @NotNull
+    private Instant expiredAt;
 }
