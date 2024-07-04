@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -29,6 +31,18 @@ public class Tix {
     private EventOffering eventOffering;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trx_id")
     private Trx trx;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tix tix = (Tix) o;
+        return Objects.equals(id, tix.id) && Objects.equals(code, tix.code) && Objects.equals(eventOffering, tix.eventOffering);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, code, eventOffering);
+    }
 }

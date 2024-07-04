@@ -1,7 +1,14 @@
 package com.dti.ecim.trx.service.impl;
 
 import com.dti.ecim.auth.entity.UserAuth;
+import com.dti.ecim.event.dto.EventOfferingResponseDto;
+import com.dti.ecim.event.entity.EventOffering;
+import com.dti.ecim.event.service.EventOfferingService;
 import com.dti.ecim.exceptions.DataNotFoundException;
+import com.dti.ecim.tix.entity.Tix;
+import com.dti.ecim.trx.dto.CreateTixDto;
+import com.dti.ecim.trx.dto.CreateTrxRequestDto;
+import com.dti.ecim.trx.dto.TrxResponseDto;
 import com.dti.ecim.trx.entity.Status;
 import com.dti.ecim.trx.entity.Trx;
 import com.dti.ecim.trx.repository.TrxRepository;
@@ -12,6 +19,7 @@ import com.dti.ecim.user.service.AttendeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.apache.coyote.BadRequestException;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -28,6 +37,9 @@ public class TrxServiceImpl implements TrxService {
     private final TrxRepository trxRepository;
     private final StatusRepository statusRepository;
     private final AttendeeService attendeeService;
+    private final EventOfferingService eventOfferingService;
+    private final ModelMapper modelMapper;
+
 
     @Override
     public Trx retrieveTrx(Long trxId) {
@@ -35,7 +47,7 @@ public class TrxServiceImpl implements TrxService {
     }
 
     @Override
-    public Trx createTrx() {
+    public TrxResponseDto createTrx(CreateTrxRequestDto createTrxRequestDto) {
         var ctx = SecurityContextHolder.getContext();
         Authentication authentication = ctx.getAuthentication();
         Attendee attendee = attendeeService.findAttendeeByEmail(authentication.getName());
@@ -46,9 +58,19 @@ public class TrxServiceImpl implements TrxService {
         Trx trx = new Trx();
         log.info(attendee.getFname());
         trx.setAttendee(attendee);
-
         trx.setStatus(waiting.get());
-        return trxRepository.save(trx);
+        Set<CreateTixDto> tixDtos = createTrxRequestDto.getTixes();
+        for (CreateTixDto tixDto : tixDtos) {
+            EventOfferingResponseDto eventOffering = eventOfferingService.getEventOffering(tixDto.getOfferingId());
+            for (int i = 0; i < tixDto.getQuantity(); i++) {
+                Tix tix = new Tix();
+                tix.setCode("hehe");
+                tix.setEventOffering(modelMapper.map(eventOffering, EventOffering.class));
+                trx.addTix(tix);
+            }
+        }
+        Trx savedTrx = trxRepository.save(trx);
+        return modelMapper.map(savedTrx, TrxResponseDto.class);
     }
 
     @Override

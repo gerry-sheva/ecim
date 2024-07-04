@@ -1,14 +1,13 @@
 package com.dti.ecim.trx.controller;
 
+import com.dti.ecim.trx.dto.CreateTrxRequestDto;
+import com.dti.ecim.trx.dto.TrxResponseDto;
 import com.dti.ecim.trx.entity.Trx;
 import com.dti.ecim.trx.service.TrxService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -18,9 +17,9 @@ public class TrxController {
     private final TrxService trxService;
 
     @PostMapping
-    public Trx createTrx() {
+    public TrxResponseDto createTrx(@RequestBody CreateTrxRequestDto createTrxRequestDto) {
         log.info("Creating new trx");
-        Trx trx =trxService.createTrx();
+        TrxResponseDto trx = trxService.createTrx(createTrxRequestDto);
         return trx;
     }
 }

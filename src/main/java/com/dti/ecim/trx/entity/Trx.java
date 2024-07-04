@@ -1,11 +1,15 @@
 package com.dti.ecim.trx.entity;
 
+import com.dti.ecim.tix.entity.Tix;
 import com.dti.ecim.user.entity.Attendee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -27,4 +31,15 @@ public class Trx {
     @JoinColumn(name = "status_id")
     private Status status;
 
+    @OneToMany(mappedBy = "trx", cascade = CascadeType.ALL,fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<Tix> tixes = new HashSet<>();
+
+    public void addTix(Tix t) {
+        tixes.add(t);
+        t.setTrx(this);
+    }
+    public void removeTix(Tix t) {
+        tixes.remove(t);
+        t.setTrx(null);
+    }
 }
