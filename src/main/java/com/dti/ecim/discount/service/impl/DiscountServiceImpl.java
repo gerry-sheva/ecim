@@ -39,11 +39,7 @@ public class DiscountServiceImpl implements DiscountService {
 
     @Override
     public void createEventDiscount(CreateEventDiscountRequestDto requestDto) {
-//        createEvent(modelMapper.map(requestDto, EventDiscount.class));
-        EventDiscount eventDiscount = modelMapper.map(requestDto, EventDiscount.class);
-        eventDiscount.setEventId(requestDto.getEventId());
-        log.info(requestDto.getAmountFlat().toString());
-        createEvent(eventDiscount);
+        createEvent(modelMapper.map(requestDto, EventDiscount.class));
     }
 
     private void createEvent(Discount discount) {
