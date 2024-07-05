@@ -1,6 +1,5 @@
-package com.dti.ecim.metadata.entity;
+package com.dti.ecim.event.entity;
 
-import com.dti.ecim.event.entity.Event;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +8,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor

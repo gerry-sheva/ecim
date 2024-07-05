@@ -5,11 +5,9 @@ import com.dti.ecim.event.dto.EventOfferingResponseDto;
 import com.dti.ecim.event.dto.RetrieveEventDto;
 import com.dti.ecim.event.dto.UpdateEventDto;
 import com.dti.ecim.event.entity.Event;
+import com.dti.ecim.event.entity.Interest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
-import java.util.Optional;
 
 public interface EventService {
     Event createEvent(CreateEventDto createEventDto);
@@ -24,4 +22,5 @@ public interface EventService {
             String state);
     Event dumpEvent(Long id);
     EventOfferingResponseDto getEventOffering(Long eventOfferingId);
+    Interest findInterestById(Long id);
 }

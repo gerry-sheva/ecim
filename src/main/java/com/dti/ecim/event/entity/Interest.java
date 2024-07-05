@@ -1,4 +1,4 @@
-package com.dti.ecim.metadata.entity;
+package com.dti.ecim.event.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

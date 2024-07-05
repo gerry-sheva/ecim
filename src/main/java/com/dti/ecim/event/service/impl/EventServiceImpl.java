@@ -4,15 +4,10 @@ import com.dti.ecim.event.dto.*;
 import com.dti.ecim.event.entity.Event;
 import com.dti.ecim.event.entity.EventLocation;
 import com.dti.ecim.event.entity.EventOffering;
-import com.dti.ecim.event.repository.EventLocationRepository;
-import com.dti.ecim.event.repository.EventOfferingRepository;
-import com.dti.ecim.event.repository.EventRepository;
-import com.dti.ecim.event.repository.EventSpecifications;
+import com.dti.ecim.event.repository.*;
 import com.dti.ecim.event.service.EventService;
 import com.dti.ecim.exceptions.DataNotFoundException;
-import com.dti.ecim.metadata.entity.Interest;
-import com.dti.ecim.metadata.service.CategoryService;
-import com.dti.ecim.metadata.service.InterestService;
+import com.dti.ecim.event.entity.Interest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
@@ -37,14 +32,13 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final EventOfferingRepository eventOfferingRepository;
     private final EventLocationRepository eventLocationRepository;
-    private final CategoryService categoryService;
-    private final InterestService interestService;
+    private final InterestRepository interestRepository;
     private final ModelMapper modelMapper;
 
     @Override
     @Transactional
     public Event createEvent(CreateEventDto createEventDto) {
-        Interest interest = interestService.findById(createEventDto.getInterestId());
+        Interest interest = findInterestById(createEventDto.getInterestId());
         Event event = new Event();
         event.setTitle(createEventDto.getTitle());
         event.setDescription(createEventDto.getDescription());
@@ -91,7 +85,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event updateEvent(Long id, UpdateEventDto updateEventDto) {
-        Interest interest = interestService.findById(updateEventDto.getInterestId());
+        Interest interest = findInterestById(updateEventDto.getInterestId());
         Optional<Event> eventOptional = eventRepository.findById(id);
         if (eventOptional.isEmpty()) {
             throw new DataNotFoundException("Event with id " + id + " not found");
@@ -130,5 +124,14 @@ public class EventServiceImpl implements EventService {
         }
         EventOffering eventOffering = eventOfferingOptional.get();
         return modelMapper.map(eventOffering, EventOfferingResponseDto.class);
+    }
+
+    @Override
+    public Interest findInterestById(Long id) {
+        Optional<Interest> interestOptional = interestRepository.findById(id);
+        if (interestOptional.isEmpty()) {
+            throw new DataNotFoundException("Interest with id " + id + " not found");
+        }
+        return interestOptional.get();
     }
 }

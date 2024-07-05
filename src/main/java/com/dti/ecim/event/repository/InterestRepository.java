@@ -1,6 +1,6 @@
-package com.dti.ecim.metadata.repository;
+package com.dti.ecim.event.repository;
 
-import com.dti.ecim.metadata.entity.Interest;
+import com.dti.ecim.event.entity.Interest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

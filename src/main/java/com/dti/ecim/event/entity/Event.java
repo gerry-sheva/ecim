@@ -1,7 +1,5 @@
 package com.dti.ecim.event.entity;
 
-import com.dti.ecim.metadata.entity.Category;
-import com.dti.ecim.metadata.entity.Interest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
