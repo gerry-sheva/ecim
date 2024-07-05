@@ -1,7 +1,7 @@
 package com.dti.ecim.trx.service.impl;
 
-import com.dti.ecim.discount.dto.ClaimDiscountRequestDto;
-import com.dti.ecim.discount.dto.ClaimDiscountResponseDto;
+import com.dti.ecim.discount.dto.RedeemDiscountRequestDto;
+import com.dti.ecim.discount.dto.RedeemDiscountResponseDto;
 import com.dti.ecim.discount.service.DiscountService;
 import com.dti.ecim.event.dto.EventOfferingResponseDto;
 import com.dti.ecim.event.entity.EventOffering;
@@ -18,14 +18,11 @@ import com.dti.ecim.trx.repository.TrxRepository;
 import com.dti.ecim.trx.repository.StatusRepository;
 import com.dti.ecim.trx.service.TrxService;
 import com.dti.ecim.user.dto.UserIdResponseDto;
-import com.dti.ecim.user.entity.Attendee;
 import com.dti.ecim.user.service.AttendeeService;
 import com.dti.ecim.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,7 +51,7 @@ public class TrxServiceImpl implements TrxService {
     @Override
     @Transactional
     public TrxResponseDto createTrx(CreateTrxRequestDto createTrxRequestDto) throws NoSuchAlgorithmException {
-        ClaimDiscountResponseDto claimDiscountResponseDto = discountService.claimDiscount(new ClaimDiscountRequestDto(createTrxRequestDto.getDiscountId()));
+        RedeemDiscountResponseDto redeemDiscountResponseDto = discountService.redeemDiscount(new RedeemDiscountRequestDto(createTrxRequestDto.getDiscountId()));
         UserIdResponseDto userIdResponseDto = userService.getCurrentUserId();
         Optional<Status> waiting = statusRepository.findById(1L);
         if (waiting.isEmpty()) {
@@ -77,11 +74,11 @@ public class TrxServiceImpl implements TrxService {
             }
         }
         trx.setPrice(totalPrice);
-        if (claimDiscountResponseDto.getAmountFlat() > 0) {
-            trx.setFinalPrice(totalPrice - claimDiscountResponseDto.getAmountFlat());
-            trx.setDiscountValue(claimDiscountResponseDto.getAmountFlat());
+        if (redeemDiscountResponseDto.getAmountFlat() > 0) {
+            trx.setFinalPrice(totalPrice - redeemDiscountResponseDto.getAmountFlat());
+            trx.setDiscountValue(redeemDiscountResponseDto.getAmountFlat());
         } else {
-            int discountValue = totalPrice * claimDiscountResponseDto.getAmountPercent() / 100;
+            int discountValue = totalPrice * redeemDiscountResponseDto.getAmountPercent() / 100;
             trx.setFinalPrice(totalPrice - discountValue);
             trx.setDiscountValue(discountValue);
         }

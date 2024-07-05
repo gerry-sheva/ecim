@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ClaimDiscountResponseDto {
+public class RedeemDiscountResponseDto {
     private int amountFlat;
     private int amountPercent;
 }

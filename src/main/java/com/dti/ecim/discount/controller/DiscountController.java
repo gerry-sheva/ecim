@@ -1,9 +1,9 @@
 package com.dti.ecim.discount.controller;
 
-import com.dti.ecim.discount.dto.ClaimDiscountRequestDto;
+import com.dti.ecim.discount.dto.RedeemDiscountRequestDto;
 import com.dti.ecim.discount.dto.CreateEventDiscountRequestDto;
 import com.dti.ecim.discount.dto.CreateGlobalDiscountRequestDto;
-import com.dti.ecim.discount.dto.RedeemDiscountRequestDto;
+import com.dti.ecim.discount.dto.ClaimDiscountRequestDto;
 import com.dti.ecim.discount.service.DiscountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -29,13 +29,13 @@ public class DiscountController {
         discountService.createEventDiscount(createEventDiscountRequestDto);
     }
 
-    @PostMapping("/redeem")
-    public void redeemDiscount(@RequestBody RedeemDiscountRequestDto redeemDiscountRequestDto) {
-        discountService.redeemDiscount(redeemDiscountRequestDto);
-    }
-
     @PostMapping("/claim")
     public void claimDiscount(@RequestBody ClaimDiscountRequestDto claimDiscountRequestDto) {
         discountService.claimDiscount(claimDiscountRequestDto);
+    }
+
+    @PostMapping("/redeem")
+    public void redeemDiscount(@RequestBody RedeemDiscountRequestDto redeemDiscountRequestDto) {
+        discountService.redeemDiscount(redeemDiscountRequestDto);
     }
 }
