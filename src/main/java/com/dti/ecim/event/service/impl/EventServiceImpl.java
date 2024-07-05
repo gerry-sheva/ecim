@@ -1,19 +1,15 @@
 package com.dti.ecim.event.service.impl;
 
-import com.dti.ecim.event.dto.CreateEventDto;
-import com.dti.ecim.event.dto.CreateEventOfferingDto;
-import com.dti.ecim.event.dto.RetrieveEventDto;
-import com.dti.ecim.event.dto.UpdateEventDto;
+import com.dti.ecim.event.dto.*;
 import com.dti.ecim.event.entity.Event;
 import com.dti.ecim.event.entity.EventLocation;
 import com.dti.ecim.event.entity.EventOffering;
 import com.dti.ecim.event.repository.EventLocationRepository;
+import com.dti.ecim.event.repository.EventOfferingRepository;
 import com.dti.ecim.event.repository.EventRepository;
 import com.dti.ecim.event.repository.EventSpecifications;
-import com.dti.ecim.event.service.EventOfferingService;
 import com.dti.ecim.event.service.EventService;
 import com.dti.ecim.exceptions.DataNotFoundException;
-import com.dti.ecim.metadata.entity.Category;
 import com.dti.ecim.metadata.entity.Interest;
 import com.dti.ecim.metadata.service.CategoryService;
 import com.dti.ecim.metadata.service.InterestService;
@@ -31,17 +27,15 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
 @Log
 public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
-    private final EventOfferingService eventOfferingService;
+    private final EventOfferingRepository eventOfferingRepository;
     private final EventLocationRepository eventLocationRepository;
     private final CategoryService categoryService;
     private final InterestService interestService;
@@ -126,5 +120,15 @@ public class EventServiceImpl implements EventService {
     public Event dumpEvent(Long id) {
 
         return eventRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public EventOfferingResponseDto getEventOffering(Long eventOfferingId) {
+        Optional<EventOffering> eventOfferingOptional = eventOfferingRepository.findById(eventOfferingId);
+        if (eventOfferingOptional.isEmpty()) {
+            throw new DataNotFoundException("Event offering with id " + eventOfferingId + " not found");
+        }
+        EventOffering eventOffering = eventOfferingOptional.get();
+        return modelMapper.map(eventOffering, EventOfferingResponseDto.class);
     }
 }

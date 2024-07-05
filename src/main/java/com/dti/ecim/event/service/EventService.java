@@ -1,6 +1,7 @@
 package com.dti.ecim.event.service;
 
 import com.dti.ecim.event.dto.CreateEventDto;
+import com.dti.ecim.event.dto.EventOfferingResponseDto;
 import com.dti.ecim.event.dto.RetrieveEventDto;
 import com.dti.ecim.event.dto.UpdateEventDto;
 import com.dti.ecim.event.entity.Event;
@@ -22,4 +23,5 @@ public interface EventService {
             String city,
             String state);
     Event dumpEvent(Long id);
+    EventOfferingResponseDto getEventOffering(Long eventOfferingId);
 }

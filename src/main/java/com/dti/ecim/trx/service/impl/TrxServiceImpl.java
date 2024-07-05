@@ -7,7 +7,7 @@ import com.dti.ecim.discount.dto.RedeemDiscountResponseDto;
 import com.dti.ecim.discount.service.DiscountService;
 import com.dti.ecim.event.dto.EventOfferingResponseDto;
 import com.dti.ecim.event.entity.EventOffering;
-import com.dti.ecim.event.service.EventOfferingService;
+import com.dti.ecim.event.service.EventService;
 import com.dti.ecim.exceptions.DataNotFoundException;
 import com.dti.ecim.trx.entity.Tix;
 import com.dti.ecim.trx.dto.CreateTixDto;
@@ -35,7 +35,7 @@ import java.util.Set;
 public class TrxServiceImpl implements TrxService {
     private final TrxRepository trxRepository;
     private final StatusRepository statusRepository;
-    private final EventOfferingService eventOfferingService;
+    private final EventService eventService;
     private final AuthService authService;
     private final DiscountService discountService;
     private final ModelMapper modelMapper;
@@ -62,7 +62,7 @@ public class TrxServiceImpl implements TrxService {
         trx.setStatus(waiting.get());
         Set<CreateTixDto> tixDtos = createTrxRequestDto.getTixes();
         for (CreateTixDto tixDto : tixDtos) {
-            EventOfferingResponseDto eventOffering = eventOfferingService.getEventOffering(tixDto.getOfferingId());
+            EventOfferingResponseDto eventOffering = eventService.getEventOffering(tixDto.getOfferingId());
             for (int i = 0; i < tixDto.getQuantity(); i++) {
                 Tix tix = new Tix();
                 tix.setCode(TrxHelper.generateTixCode(eventOffering.getName()));
