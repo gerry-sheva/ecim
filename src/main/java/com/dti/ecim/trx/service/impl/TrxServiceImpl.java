@@ -16,6 +16,7 @@ import com.dti.ecim.trx.repository.StatusRepository;
 import com.dti.ecim.trx.service.TrxService;
 import com.dti.ecim.user.entity.Attendee;
 import com.dti.ecim.user.service.AttendeeService;
+import com.dti.ecim.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;

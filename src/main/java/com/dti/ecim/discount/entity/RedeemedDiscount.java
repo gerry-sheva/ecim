@@ -21,12 +21,18 @@ public class RedeemedDiscount {
     @SequenceGenerator(name = "redeemed_discount_id_gen", sequenceName = "redeemed_discount_id_seq", allocationSize = 1)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "attendee_id")
-    private Attendee attendee;
+    @Column(name = "attendee_id")
+    private Long attendeeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "discount_id")
+    @JoinColumn(name = "attendee_id", insertable = false, updatable = false)
+    private Attendee attendee;
+
+    @Column(name = "discount_id")
+    private Long discountId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "discount_id", insertable = false, updatable = false)
     private Discount discount;
 
     @Column(name = "created_at")
