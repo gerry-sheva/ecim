@@ -5,6 +5,7 @@ import com.dti.ecim.auth.repository.UserAuthRepository;
 import com.dti.ecim.auth.repository.UserRoleRepository;
 import com.dti.ecim.auth.service.UserRoleService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +18,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+@Log
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserAuthRepository userAuthRepository;
     private final UserRoleService userRoleService;

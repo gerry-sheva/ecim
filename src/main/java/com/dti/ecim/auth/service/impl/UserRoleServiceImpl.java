@@ -32,6 +32,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public List<GrantedAuthority> retrieveRoles(Long userId) {
+        log.info("Retrieving roles");
         List<GrantedAuthority> roles = new ArrayList<>();
         List<UserRole> userRoles = userRoleRepository.findAllByUserId(userId);
         userRoles.forEach(userRole -> {roles.add(new SimpleGrantedAuthority(userRole.getRole().getRole()));});

@@ -1,8 +1,9 @@
 package com.dti.ecim.user.controller;
 
 import com.dti.ecim.dto.ResponseDto;
-import com.dti.ecim.user.dto.CreateAttendeeDto;
-import com.dti.ecim.user.service.AttendeeService;
+import com.dti.ecim.user.dto.attendee.CreateAttendeeRequestDto;
+import com.dti.ecim.user.dto.attendee.CreateAttendeeResponseDto;
+import com.dti.ecim.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.apache.coyote.BadRequestException;
@@ -17,11 +18,11 @@ import java.security.NoSuchAlgorithmException;
 @Log
 @RequestMapping("/api/v1/attendee")
 public class AttendeeController {
-    private final AttendeeService attendeeService;
+    private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<ResponseDto> createAttendee(@RequestBody CreateAttendeeDto createAttendeeDto) throws NoSuchAlgorithmException, BadRequestException {
-        ResponseDto res = attendeeService.createAttendee(createAttendeeDto);
+    public ResponseEntity<CreateAttendeeResponseDto> createAttendee(@RequestBody CreateAttendeeRequestDto createAttendeeRequestDto) throws NoSuchAlgorithmException, BadRequestException {
+        CreateAttendeeResponseDto res = userService.createAttendee(createAttendeeRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(res);
     }
 

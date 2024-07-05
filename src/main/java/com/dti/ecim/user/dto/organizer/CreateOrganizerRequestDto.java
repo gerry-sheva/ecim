@@ -1,4 +1,4 @@
-package com.dti.ecim.user.dto;
+package com.dti.ecim.user.dto.organizer;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class CreateOrganizerDto {
+public class CreateOrganizerRequestDto {
     @NotBlank
     private String name;
 

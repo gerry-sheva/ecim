@@ -9,8 +9,6 @@ import com.dti.ecim.discount.repository.ClaimedDiscountRepository;
 import com.dti.ecim.discount.service.DiscountService;
 import com.dti.ecim.exceptions.DataNotFoundException;
 import com.dti.ecim.user.dto.UserIdResponseDto;
-import com.dti.ecim.user.service.AttendeeService;
-import com.dti.ecim.user.service.OrganizerService;
 import com.dti.ecim.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -29,8 +27,6 @@ public class DiscountServiceImpl implements DiscountService {
     private final RedeemedDiscountRepository redeemedDiscountRepository;
     private final ClaimedDiscountRepository claimedDiscountRepository;
     private final PointRepository pointRepository;
-    private final OrganizerService organizerService;
-    private final AttendeeService attendeeService;
     private final UserService userService;
     private final ModelMapper modelMapper;
 

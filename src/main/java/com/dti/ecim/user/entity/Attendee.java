@@ -47,5 +47,5 @@ public class Attendee {
 
     @PositiveOrZero
     @Column(name = "points")
-    private Long points;
+    private int points;
 }

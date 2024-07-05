@@ -18,7 +18,6 @@ import com.dti.ecim.trx.repository.TrxRepository;
 import com.dti.ecim.trx.repository.StatusRepository;
 import com.dti.ecim.trx.service.TrxService;
 import com.dti.ecim.user.dto.UserIdResponseDto;
-import com.dti.ecim.user.service.AttendeeService;
 import com.dti.ecim.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -36,7 +35,6 @@ import java.util.Set;
 public class TrxServiceImpl implements TrxService {
     private final TrxRepository trxRepository;
     private final StatusRepository statusRepository;
-    private final AttendeeService attendeeService;
     private final EventOfferingService eventOfferingService;
     private final UserService userService;
     private final DiscountService discountService;
