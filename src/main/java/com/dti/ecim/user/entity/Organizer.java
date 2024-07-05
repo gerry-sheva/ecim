@@ -1,6 +1,5 @@
 package com.dti.ecim.user.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -21,8 +20,9 @@ public class Organizer {
     @Column(name = "user_id")
     private Long userId;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @MapsId
+    @JoinColumn(name = "user_id")
     private User user;
 
     @NotBlank

@@ -1,14 +1,10 @@
 package com.dti.ecim.user.service.impl;
 
 import com.dti.ecim.auth.dto.AddUserRoleDto;
-import com.dti.ecim.auth.entity.UserAuth;
-import com.dti.ecim.auth.entity.UserRole;
-import com.dti.ecim.auth.repository.UserAuthRepository;
-import com.dti.ecim.auth.repository.UserRoleRepository;
+import com.dti.ecim.auth.dto.UserIdResponseDto;
+import com.dti.ecim.auth.service.AuthService;
 import com.dti.ecim.auth.service.UserRoleService;
-import com.dti.ecim.dto.ResponseDto;
 import com.dti.ecim.exceptions.DataNotFoundException;
-import com.dti.ecim.user.dto.UserIdResponseDto;
 import com.dti.ecim.user.dto.attendee.CreateAttendeeRequestDto;
 import com.dti.ecim.user.dto.attendee.CreateAttendeeResponseDto;
 import com.dti.ecim.user.dto.organizer.CreateOrganizerRequestDto;
@@ -25,8 +21,6 @@ import com.dti.ecim.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.apache.coyote.BadRequestException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,41 +35,38 @@ import static com.dti.ecim.user.helper.UserHelper.parseDate;
 @Log
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final UserAuthRepository authRepository;
     private final AttendeeRepository attendeeRepository;
     private final OrganizerRepository organizerRepository;
     private final ReferralRepository referralRepository;
 
     private final UserRoleService userRoleService;
+    private final AuthService authService;
 
     @Override
     public User registerUser() {
         return userRepository.save(new User());
     }
 
-    @Override
-    public UserIdResponseDto getCurrentUserId() {
-        Optional<UserAuth> userAuthOptional = authRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        if (userAuthOptional.isEmpty()) {
-            throw new DataNotFoundException("User not found");
+    private User retrieveUser(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty()) {
+            throw new DataNotFoundException("User with id " + userId + " not found");
         }
-        return new UserIdResponseDto(userAuthOptional.get().getUserId());
+        return user.get();
     }
 
     @Override
     @Transactional
     public CreateAttendeeResponseDto createAttendee(CreateAttendeeRequestDto requestDto) throws NoSuchAlgorithmException, BadRequestException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Optional<UserAuth> userAuthOptional = authRepository.findByEmail(authentication.getName());
-        if (userAuthOptional.isEmpty()) {
-            throw new DataNotFoundException("User not found");
-        }
+        UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
+        User user = retrieveUser(userIdResponseDto.getId());
+        log.info(userIdResponseDto.getId().toString());
         Attendee newAttendee = new Attendee();
-        newAttendee.setUser(userAuthOptional.get().getUser());
+        newAttendee.setUser(user);
         newAttendee.setFname(requestDto.getFname());
         newAttendee.setLname(requestDto.getLname());
         newAttendee.setDob(parseDate(requestDto.getDob()));
-        newAttendee.setRefCode(generateReferralCode(authentication.getName()));
+        newAttendee.setRefCode(generateReferralCode(userIdResponseDto.getEmail()));
         newAttendee.setPoints(0);
         newAttendee.setContact(requestDto.getContact());
         attendeeRepository.save(newAttendee);
@@ -86,18 +77,18 @@ public class UserServiceImpl implements UserService {
             if (referral.isEmpty()) {
                 throw new BadRequestException("Referral code is invalid");
             }
-            boolean isAlreadyExists = referralIsAlreadyExist(referral.get().getUserId(), userAuthOptional.get().getUserId());
+            boolean isAlreadyExists = referralIsAlreadyExist(referral.get().getUserId(), userIdResponseDto.getId());
             if (!isAlreadyExists) {
                 log.info("Adding referral using code: " + requestDto.getReferralCode());
                 Referral newReferral = new Referral();
                 newReferral.setReferralId(referral.get().getUserId());
                 newReferral.setReferral(referral.get());
-                newReferral.setReferreeId(userAuthOptional.get().getUserId());
+                newReferral.setReferreeId(userIdResponseDto.getId());
                 newReferral.setReferree(newAttendee);
                 referralRepository.save(newReferral);
             }
         }
-        userRoleService.addUserRole(new AddUserRoleDto(userAuthOptional.get().getUserId(), 1L));
+        userRoleService.addUserRole(new AddUserRoleDto(userIdResponseDto.getId(), 1L));
 
         CreateAttendeeResponseDto responseDto = new CreateAttendeeResponseDto();
         responseDto.setFname(newAttendee.getFname());
@@ -112,18 +103,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public CreateOrganizerResponseDto createOrganizer(CreateOrganizerRequestDto requestDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Optional<UserAuth> userAuthOptional = authRepository.findByEmail(authentication.getName());
-        if (userAuthOptional.isEmpty()) {
-            throw new DataNotFoundException("User not found");
-        }
+        UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
+        User user = retrieveUser(userIdResponseDto.getId());
         Organizer newOrganizer = new Organizer();
-        newOrganizer.setUser(userAuthOptional.get().getUser());
+        newOrganizer.setUser(user);
         newOrganizer.setName(requestDto.getName());
         newOrganizer.setAvatar(requestDto.getAvatar());
         organizerRepository.save(newOrganizer);
 
-        userRoleService.addUserRole(new AddUserRoleDto(userAuthOptional.get().getUserId(), 2L));
+        userRoleService.addUserRole(new AddUserRoleDto(userIdResponseDto.getId(), 2L));
 
         CreateOrganizerResponseDto responseDto = new CreateOrganizerResponseDto();
         responseDto.setName(newOrganizer.getName());

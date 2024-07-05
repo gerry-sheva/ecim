@@ -1,9 +1,6 @@
 package com.dti.ecim.auth.service.impl;
 
-import com.dti.ecim.auth.dto.AuthResponseDto;
-import com.dti.ecim.auth.dto.LoginRequestDto;
-import com.dti.ecim.auth.dto.RegisterRequestDto;
-import com.dti.ecim.auth.dto.ResetPasswordRequestDto;
+import com.dti.ecim.auth.dto.*;
 import com.dti.ecim.auth.entity.UserAuth;
 import com.dti.ecim.auth.repository.AuthRedisRepository;
 import com.dti.ecim.auth.repository.UserAuthRepository;
@@ -12,6 +9,7 @@ import com.dti.ecim.dto.ResponseDto;
 import com.dti.ecim.exceptions.DataNotFoundException;
 import com.dti.ecim.user.entity.User;
 import com.dti.ecim.user.repository.UserRepository;
+import com.dti.ecim.user.service.UserService;
 import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -44,6 +42,7 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtEncoder jwtEncoder;
 
+//    private final UserService userService;
     @Override
     public AuthResponseDto registerUser(RegisterRequestDto requestDto) throws BadRequestException{
         if (!requestDto.getPassword().equals(requestDto.getConfirmPassword())) {
@@ -133,5 +132,14 @@ public class AuthServiceImpl implements AuthService {
         userAuth.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         userAuthRepository.save(userAuth);
         return new ResponseDto("Password reset successful");
+    }
+
+    @Override
+    public UserIdResponseDto getCurrentUserId() {
+        Optional<UserAuth> userAuthOptional = userAuthRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (userAuthOptional.isEmpty()) {
+            throw new DataNotFoundException("User not found");
+        }
+        return new UserIdResponseDto(userAuthOptional.get().getUserId(), userAuthOptional.get().getEmail());
     }
 }

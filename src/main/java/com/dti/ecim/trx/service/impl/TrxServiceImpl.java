@@ -1,5 +1,7 @@
 package com.dti.ecim.trx.service.impl;
 
+import com.dti.ecim.auth.dto.UserIdResponseDto;
+import com.dti.ecim.auth.service.AuthService;
 import com.dti.ecim.discount.dto.RedeemDiscountRequestDto;
 import com.dti.ecim.discount.dto.RedeemDiscountResponseDto;
 import com.dti.ecim.discount.service.DiscountService;
@@ -17,8 +19,6 @@ import com.dti.ecim.trx.helper.TrxHelper;
 import com.dti.ecim.trx.repository.TrxRepository;
 import com.dti.ecim.trx.repository.StatusRepository;
 import com.dti.ecim.trx.service.TrxService;
-import com.dti.ecim.user.dto.UserIdResponseDto;
-import com.dti.ecim.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
@@ -36,7 +36,7 @@ public class TrxServiceImpl implements TrxService {
     private final TrxRepository trxRepository;
     private final StatusRepository statusRepository;
     private final EventOfferingService eventOfferingService;
-    private final UserService userService;
+    private final AuthService authService;
     private final DiscountService discountService;
     private final ModelMapper modelMapper;
 
@@ -50,7 +50,7 @@ public class TrxServiceImpl implements TrxService {
     @Transactional
     public TrxResponseDto createTrx(CreateTrxRequestDto createTrxRequestDto) throws NoSuchAlgorithmException {
         RedeemDiscountResponseDto redeemDiscountResponseDto = discountService.redeemDiscount(new RedeemDiscountRequestDto(createTrxRequestDto.getDiscountId()));
-        UserIdResponseDto userIdResponseDto = userService.getCurrentUserId();
+        UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
         Optional<Status> waiting = statusRepository.findById(1L);
         if (waiting.isEmpty()) {
             throw new DataNotFoundException("Data is not found");

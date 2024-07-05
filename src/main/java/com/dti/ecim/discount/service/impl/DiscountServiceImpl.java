@@ -1,5 +1,7 @@
 package com.dti.ecim.discount.service.impl;
 
+import com.dti.ecim.auth.dto.UserIdResponseDto;
+import com.dti.ecim.auth.service.AuthService;
 import com.dti.ecim.discount.dto.*;
 import com.dti.ecim.discount.entity.*;
 import com.dti.ecim.discount.repository.RedeemedDiscountRepository;
@@ -8,8 +10,6 @@ import com.dti.ecim.discount.repository.PointRepository;
 import com.dti.ecim.discount.repository.ClaimedDiscountRepository;
 import com.dti.ecim.discount.service.DiscountService;
 import com.dti.ecim.exceptions.DataNotFoundException;
-import com.dti.ecim.user.dto.UserIdResponseDto;
-import com.dti.ecim.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
@@ -27,7 +27,7 @@ public class DiscountServiceImpl implements DiscountService {
     private final RedeemedDiscountRepository redeemedDiscountRepository;
     private final ClaimedDiscountRepository claimedDiscountRepository;
     private final PointRepository pointRepository;
-    private final UserService userService;
+    private final AuthService authService;
     private final ModelMapper modelMapper;
 
     @Override
@@ -53,7 +53,7 @@ public class DiscountServiceImpl implements DiscountService {
             throw new DataNotFoundException(String.format("Discount with code '%s' not found", requestDto.getCode()));
         }
         Discount discount = discountOptional.get();
-        UserIdResponseDto userIdResponseDto = userService.getCurrentUserId();
+        UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
         Optional<ClaimedDiscount> existingDiscount = claimedDiscountRepository.findByAttendeeIdAndDiscountId(userIdResponseDto.getId(), discount.getId());
         if (existingDiscount.isPresent()) {
 //            TODO: THROW DISCOUNT ALREADY CLAIMED EXCEPTION
