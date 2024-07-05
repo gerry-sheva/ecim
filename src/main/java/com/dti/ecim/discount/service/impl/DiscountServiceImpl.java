@@ -15,7 +15,6 @@ import com.dti.ecim.user.service.impl.OrganizerServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -34,15 +33,15 @@ public class DiscountServiceImpl implements DiscountService {
 
     @Override
     public void createGlobalDiscount(CreateGlobalDiscountRequestDto requestDto) {
-        createEvent(modelMapper.map(requestDto, GlobalDiscount.class));
+        createDiscount(modelMapper.map(requestDto, GlobalDiscount.class));
     }
 
     @Override
     public void createEventDiscount(CreateEventDiscountRequestDto requestDto) {
-        createEvent(modelMapper.map(requestDto, EventDiscount.class));
+        createDiscount(modelMapper.map(requestDto, EventDiscount.class));
     }
 
-    private void createEvent(Discount discount) {
+    private void createDiscount(Discount discount) {
         discount.setExpiredAt(Instant.now().plus(discount.getExpiresInDays(), ChronoUnit.DAYS));
         discount.setCode(discount.getCode().toUpperCase());
         discountRepository.save(discount);
