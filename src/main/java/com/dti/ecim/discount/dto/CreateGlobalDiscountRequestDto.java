@@ -18,7 +18,7 @@ public class CreateGlobalDiscountRequestDto {
     @NotBlank
     private String description;
 
-    private Long amountFlat;
+    private int amountFlat;
 
     private int amountPercent;
 

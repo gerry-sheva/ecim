@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,22 +32,21 @@ public class Trx {
     @Column(name = "discount_id")
     private Long discountId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "attendee_id")
-    private Attendee attendee;
+    @Column(name = "attendee_id")
+    private Long attendeeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id")
     private Status status;
 
     @PositiveOrZero
-    private Long price;
+    private int price;
 
     @PositiveOrZero
-    private Long discountValue;
+    private int discountValue;
 
     @PositiveOrZero
-    private Long finalPrice;
+    private int finalPrice;
 
     @OneToMany(mappedBy = "trx", cascade = CascadeType.ALL,fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Tix> tixes = new HashSet<>();
@@ -58,6 +58,10 @@ public class Trx {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "discount_id", insertable = false, updatable = false)
     private Discount discount;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "attendee_id", insertable = false, updatable = false)
+    private Attendee attendee;
 
     public void addTix(Tix t) {
         tixes.add(t);

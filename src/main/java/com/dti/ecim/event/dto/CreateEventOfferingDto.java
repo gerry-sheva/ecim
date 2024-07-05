@@ -6,6 +6,8 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigInteger;
+
 @Data
 @NoArgsConstructor
 public class CreateEventOfferingDto {
@@ -16,7 +18,7 @@ public class CreateEventOfferingDto {
     private String description;
 
     @PositiveOrZero
-    private Long price;
+    private int price;
 
     @Positive
     private int capacity;

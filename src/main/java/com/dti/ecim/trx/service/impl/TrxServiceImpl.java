@@ -1,5 +1,8 @@
 package com.dti.ecim.trx.service.impl;
 
+import com.dti.ecim.discount.dto.ClaimDiscountRequestDto;
+import com.dti.ecim.discount.dto.ClaimDiscountResponseDto;
+import com.dti.ecim.discount.service.DiscountService;
 import com.dti.ecim.event.dto.EventOfferingResponseDto;
 import com.dti.ecim.event.entity.EventOffering;
 import com.dti.ecim.event.service.EventOfferingService;
@@ -14,6 +17,7 @@ import com.dti.ecim.trx.helper.TrxHelper;
 import com.dti.ecim.trx.repository.TrxRepository;
 import com.dti.ecim.trx.repository.StatusRepository;
 import com.dti.ecim.trx.service.TrxService;
+import com.dti.ecim.user.dto.UserIdResponseDto;
 import com.dti.ecim.user.entity.Attendee;
 import com.dti.ecim.user.service.AttendeeService;
 import com.dti.ecim.user.service.UserService;
@@ -23,6 +27,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
@@ -36,6 +41,8 @@ public class TrxServiceImpl implements TrxService {
     private final StatusRepository statusRepository;
     private final AttendeeService attendeeService;
     private final EventOfferingService eventOfferingService;
+    private final UserService userService;
+    private final DiscountService discountService;
     private final ModelMapper modelMapper;
 
 
@@ -45,19 +52,18 @@ public class TrxServiceImpl implements TrxService {
     }
 
     @Override
+    @Transactional
     public TrxResponseDto createTrx(CreateTrxRequestDto createTrxRequestDto) throws NoSuchAlgorithmException {
-        var ctx = SecurityContextHolder.getContext();
-        Authentication authentication = ctx.getAuthentication();
-        Attendee attendee = attendeeService.findAttendeeByEmail(authentication.getName());
+        ClaimDiscountResponseDto claimDiscountResponseDto = discountService.claimDiscount(new ClaimDiscountRequestDto(createTrxRequestDto.getDiscountId()));
+        UserIdResponseDto userIdResponseDto = userService.getCurrentUserId();
         Optional<Status> waiting = statusRepository.findById(1L);
         if (waiting.isEmpty()) {
             throw new DataNotFoundException("Data is not found");
         }
         Trx trx = new Trx();
         trx.setEventId(createTrxRequestDto.getEventId());
-        Long totalPrice = 0L;
-        log.info(attendee.getFname());
-        trx.setAttendee(attendee);
+        int totalPrice = 0;
+        trx.setAttendeeId(userIdResponseDto.getId());
         trx.setStatus(waiting.get());
         Set<CreateTixDto> tixDtos = createTrxRequestDto.getTixes();
         for (CreateTixDto tixDto : tixDtos) {
@@ -71,6 +77,14 @@ public class TrxServiceImpl implements TrxService {
             }
         }
         trx.setPrice(totalPrice);
+        if (claimDiscountResponseDto.getAmountFlat() > 0) {
+            trx.setFinalPrice(totalPrice - claimDiscountResponseDto.getAmountFlat());
+            trx.setDiscountValue(claimDiscountResponseDto.getAmountFlat());
+        } else {
+            int discountValue = totalPrice * claimDiscountResponseDto.getAmountPercent() / 100;
+            trx.setFinalPrice(totalPrice - discountValue);
+            trx.setDiscountValue(discountValue);
+        }
         Trx savedTrx = trxRepository.save(trx);
         return modelMapper.map(savedTrx, TrxResponseDto.class);
     }

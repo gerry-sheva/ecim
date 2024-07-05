@@ -12,7 +12,7 @@ public class EventOfferingResponseDto {
     private Long id;
     private String name;
     private String description;
-    private Long price;
+    private int price;
     private int capacity;
     private int availability;
 }

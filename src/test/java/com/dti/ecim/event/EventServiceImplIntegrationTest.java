@@ -41,14 +41,14 @@ public class EventServiceImplIntegrationTest {
         CreateEventOfferingDto createVIPOfferingDto = new CreateEventOfferingDto();
         createVIPOfferingDto.setName("VIP Admission");
         createVIPOfferingDto.setDescription("description");
-        createVIPOfferingDto.setPrice(1000000L);
+        createVIPOfferingDto.setPrice(1000000);
         createVIPOfferingDto.setCapacity(100);
         offeringDtos.add(createVIPOfferingDto);
 
         CreateEventOfferingDto createRegOfferingDto = new CreateEventOfferingDto();
         createRegOfferingDto.setName("Regular Admission");
         createRegOfferingDto.setDescription("description");
-        createRegOfferingDto.setPrice(1000L);
+        createRegOfferingDto.setPrice(1000);
         createRegOfferingDto.setCapacity(1000);
         offeringDtos.add(createRegOfferingDto);
 

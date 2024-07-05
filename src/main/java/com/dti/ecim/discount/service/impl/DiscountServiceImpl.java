@@ -1,9 +1,6 @@
 package com.dti.ecim.discount.service.impl;
 
-import com.dti.ecim.discount.dto.ClaimDiscountRequestDto;
-import com.dti.ecim.discount.dto.CreateEventDiscountRequestDto;
-import com.dti.ecim.discount.dto.CreateGlobalDiscountRequestDto;
-import com.dti.ecim.discount.dto.RedeemDiscountRequestDto;
+import com.dti.ecim.discount.dto.*;
 import com.dti.ecim.discount.entity.*;
 import com.dti.ecim.discount.repository.ClaimedDiscountRepository;
 import com.dti.ecim.discount.repository.DiscountRepository;
@@ -78,7 +75,7 @@ public class DiscountServiceImpl implements DiscountService {
     }
 
     @Override
-    public void claimDiscount(ClaimDiscountRequestDto requestDto) {
+    public ClaimDiscountResponseDto claimDiscount(ClaimDiscountRequestDto requestDto) {
         Optional<RedeemedDiscount> redeemedDiscountOptional = redeemedDiscountRepository.findById(requestDto.getRedeemedDiscountId());
         if (redeemedDiscountOptional.isEmpty()) {
             throw new DataNotFoundException("Discount with id: " + requestDto.getRedeemedDiscountId() + "not found");
@@ -90,7 +87,7 @@ public class DiscountServiceImpl implements DiscountService {
         }
         ClaimedDiscount claimedDiscount = new ClaimedDiscount();
         claimedDiscount.setRedeemedDiscount(redeemedDiscount);
-//        claimedDiscount.setDiscountId(redeemedDiscount.getId());
         claimedDiscountRepository.save(claimedDiscount);
+        return new ClaimDiscountResponseDto(redeemedDiscount.getDiscount().getAmountFlat(), redeemedDiscount.getDiscount().getAmountPercent());
     }
 }

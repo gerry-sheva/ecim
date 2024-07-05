@@ -27,7 +27,7 @@ public class EventOffering {
     private String description;
 
     @PositiveOrZero
-    private Long price;
+    private int price;
 
     @Positive
     private int capacity;

@@ -4,6 +4,7 @@ package com.dti.ecim.event.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigInteger;
 import java.time.Instant;
 import java.util.Set;
 
@@ -63,14 +64,14 @@ public class RetrieveEventDto {
     public static class OfferingDto {
         private String name;
         private String description;
-        private Long price;
+        private int price;
         private int capacity;
         private int availability;
 
         public OfferingDto() {
             this.name = "";
             this.description = "";
-            this.price = 0L;
+            this.price = 0;
             this.capacity = 0;
             this.availability = 0;
         }
