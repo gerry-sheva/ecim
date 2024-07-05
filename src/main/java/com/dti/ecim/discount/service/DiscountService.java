@@ -1,5 +1,6 @@
 package com.dti.ecim.discount.service;
 
+import com.dti.ecim.discount.dto.ClaimDiscountRequestDto;
 import com.dti.ecim.discount.dto.CreateEventDiscountRequestDto;
 import com.dti.ecim.discount.dto.CreateGlobalDiscountRequestDto;
 import com.dti.ecim.discount.dto.RedeemDiscountRequestDto;
@@ -12,5 +13,5 @@ public interface DiscountService {
     void createGlobalDiscount(CreateGlobalDiscountRequestDto requestDto);
     void createEventDiscount(CreateEventDiscountRequestDto requestDto);
     void redeemDiscount(RedeemDiscountRequestDto requestDto);
-    void claimDiscount(RedeemedDiscount redeemedDiscount);
+    void claimDiscount(ClaimDiscountRequestDto requestDto);
 }

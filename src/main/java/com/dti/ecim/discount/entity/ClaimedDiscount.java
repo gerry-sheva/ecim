@@ -16,7 +16,7 @@ import java.time.Instant;
 public class ClaimedDiscount {
     @Id
     @Column(name = "redeemed_discount_id")
-    private Long id;
+    private Long discountId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId

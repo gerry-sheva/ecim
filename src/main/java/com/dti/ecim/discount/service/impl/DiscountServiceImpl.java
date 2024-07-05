@@ -1,12 +1,10 @@
 package com.dti.ecim.discount.service.impl;
 
+import com.dti.ecim.discount.dto.ClaimDiscountRequestDto;
 import com.dti.ecim.discount.dto.CreateEventDiscountRequestDto;
 import com.dti.ecim.discount.dto.CreateGlobalDiscountRequestDto;
 import com.dti.ecim.discount.dto.RedeemDiscountRequestDto;
-import com.dti.ecim.discount.entity.Discount;
-import com.dti.ecim.discount.entity.EventDiscount;
-import com.dti.ecim.discount.entity.GlobalDiscount;
-import com.dti.ecim.discount.entity.RedeemedDiscount;
+import com.dti.ecim.discount.entity.*;
 import com.dti.ecim.discount.repository.ClaimedDiscountRepository;
 import com.dti.ecim.discount.repository.DiscountRepository;
 import com.dti.ecim.discount.repository.PointRepository;
@@ -80,7 +78,19 @@ public class DiscountServiceImpl implements DiscountService {
     }
 
     @Override
-    public void claimDiscount(RedeemedDiscount redeemedDiscount) {
-
+    public void claimDiscount(ClaimDiscountRequestDto requestDto) {
+        Optional<RedeemedDiscount> redeemedDiscountOptional = redeemedDiscountRepository.findById(requestDto.getRedeemedDiscountId());
+        if (redeemedDiscountOptional.isEmpty()) {
+            throw new DataNotFoundException("Discount with id: " + requestDto.getRedeemedDiscountId() + "not found");
+        }
+        RedeemedDiscount redeemedDiscount = redeemedDiscountOptional.get();
+        Optional<ClaimedDiscount> claimedDiscountOptional = claimedDiscountRepository.findById(redeemedDiscount.getDiscountId());
+        if (claimedDiscountOptional.isPresent()) {
+//            TODO: THROW DISCOUNT ALREADY CLAIMED EXCEPTION
+        }
+        ClaimedDiscount claimedDiscount = new ClaimedDiscount();
+        claimedDiscount.setRedeemedDiscount(redeemedDiscount);
+//        claimedDiscount.setDiscountId(redeemedDiscount.getId());
+        claimedDiscountRepository.save(claimedDiscount);
     }
 }
