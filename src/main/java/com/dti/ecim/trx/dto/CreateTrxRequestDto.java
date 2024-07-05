@@ -14,6 +14,8 @@ public class CreateTrxRequestDto {
     @NotNull
     private Long eventId;
 
+    private Long discountId;
+
     @NotNull
     private Set<CreateTixDto> tixes;
 }

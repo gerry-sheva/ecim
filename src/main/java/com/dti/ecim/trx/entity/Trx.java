@@ -1,5 +1,6 @@
 package com.dti.ecim.trx.entity;
 
+import com.dti.ecim.discount.entity.Discount;
 import com.dti.ecim.event.entity.Event;
 import com.dti.ecim.user.entity.Attendee;
 import jakarta.persistence.*;
@@ -27,6 +28,9 @@ public class Trx {
     @Column(name = "event_id")
     private Long eventId;
 
+    @Column(name = "discount_id")
+    private Long discountId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "attendee_id")
     private Attendee attendee;
@@ -38,12 +42,22 @@ public class Trx {
     @PositiveOrZero
     private Long price;
 
+    @PositiveOrZero
+    private Long discountValue;
+
+    @PositiveOrZero
+    private Long finalPrice;
+
     @OneToMany(mappedBy = "trx", cascade = CascadeType.ALL,fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Tix> tixes = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id", insertable = false, updatable = false)
     private Event event;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "discount_id", insertable = false, updatable = false)
+    private Discount discount;
 
     public void addTix(Tix t) {
         tixes.add(t);
