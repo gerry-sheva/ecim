@@ -13,9 +13,9 @@ import lombok.*;
 public class EventLocation {
     @Id
     @Column(name = "event_id")
-    private Long eventId;
+    private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "event_id")
     private Event event;

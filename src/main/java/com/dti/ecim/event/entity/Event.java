@@ -51,8 +51,8 @@ public class Event {
     @Column(name = "deleted_at")
     private Instant deletedAt;
 
-    @OneToOne
-    @JoinColumn(name = "id", referencedColumnName = "event_id")
+    @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn
     private EventLocation location;
 
     @ManyToOne
@@ -66,8 +66,19 @@ public class Event {
         offerings.add(offering);
         offering.setEvent(this);
     }
+
     public void removeOffering(EventOffering offering) {
         offerings.remove(offering);
         offering.setEvent(null);
+    }
+
+    public void addLocation(EventLocation location) {
+        this.location = location;
+        location.setEvent(this);
+    }
+
+    public void removeLocation(EventLocation location) {
+        this.location = null;
+        location.setEvent(null);
     }
 }
