@@ -17,13 +17,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+
+import static com.dti.ecim.event.helper.EventHelper.stringToInstant;
 
 @RequiredArgsConstructor
 @Service
@@ -66,15 +63,6 @@ public class EventServiceImpl implements EventService {
         }
         Event event = eventOptional.get();
         return modelMapper.map(event, RetrieveEventResponseDto.class);
-    }
-
-    private Instant stringToInstant(String time) {
-        String pattern = "hh:mm:ss a, EEE M/d/uuuu";
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(pattern);
-        LocalDateTime localDateTime = LocalDateTime.parse(time, dateTimeFormatter);
-        ZoneId zoneId = ZoneId.of("Asia/Jakarta");
-        ZonedDateTime zonedDateTime = localDateTime.atZone(zoneId);
-        return zonedDateTime.toInstant();
     }
 
     @Override
