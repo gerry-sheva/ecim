@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.TransactionSystemException;
 
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -41,9 +42,10 @@ public class EventServiceTest {
     @Autowired
     private EventService eventService;
 
-    @Test
-    public void test_create_event_with_valid_data() {
-        CreateEventRequestDto createEventRequestDto = new CreateEventRequestDto();
+    CreateEventRequestDto createEventRequestDto = new CreateEventRequestDto();
+
+    @BeforeEach
+    void setUp() {
         createEventRequestDto.setTitle("Sample Event");
         createEventRequestDto.setDescription("Sample Description");
         createEventRequestDto.setStartingDate("07:00:00 PM, Wed 07/10/2024");
@@ -63,7 +65,10 @@ public class EventServiceTest {
         offeringDto.setPrice(100);
         offeringDto.setCapacity(50);
         createEventRequestDto.setOfferings(List.of(offeringDto));
+    }
 
+    @Test
+    public void test_create_event_with_valid_data() {
         RetrieveEventResponseDto response = eventService.createEvent(createEventRequestDto);
 
         assertNotNull(response);
@@ -72,27 +77,26 @@ public class EventServiceTest {
 
     @Test
     public void test_create_event_with_invalid_date() {
-        CreateEventRequestDto createEventRequestDto = new CreateEventRequestDto();
-        createEventRequestDto.setTitle("Sample Event");
-        createEventRequestDto.setDescription("Sample Description");
         createEventRequestDto.setStartingDate("10:00:00 AM, Mon 1/1/2023");
         createEventRequestDto.setEndingDate("12:00:00 PM, Mon 1/1/2023");
-        createEventRequestDto.setInterestId(1L);
-
-        CreateEventRequestDto.CreateEventLocationDto locationDto = new CreateEventRequestDto.CreateEventLocationDto();
-        locationDto.setStreet1("123 Main St");
-        locationDto.setStreet2("Apt 4B");
-        locationDto.setCity("Sample City");
-        locationDto.setState("Sample State");
-        createEventRequestDto.setLocation(locationDto);
-
-        CreateEventRequestDto.CreateEventOfferingDto offeringDto = new CreateEventRequestDto.CreateEventOfferingDto();
-        offeringDto.setName("Sample Offering");
-        offeringDto.setDescription("Sample Offering Description");
-        offeringDto.setPrice(100);
-        offeringDto.setCapacity(50);
-        createEventRequestDto.setOfferings(List.of(offeringDto));
 
         Assertions.assertThrows(DateTimeParseException.class, () -> eventService.createEvent(createEventRequestDto));
+    }
+
+    @Test
+    public void test_create_event_that_ends_before_starting_date() {
+        createEventRequestDto.setEndingDate("07:00:00 PM, Wed 07/10/2024");
+        createEventRequestDto.setStartingDate("10:00:00 PM, Wed 07/10/2024");
+
+        Assertions.assertThrows(DateTimeParseException.class, () -> eventService.createEvent(createEventRequestDto));
+    }
+
+    @Test
+    public void test_create_event_with_invalid_location() {
+        CreateEventRequestDto.CreateEventLocationDto invalidLocation  = new CreateEventRequestDto.CreateEventLocationDto();
+        invalidLocation.setStreet1("123 Main St");
+        createEventRequestDto.setLocation(invalidLocation);
+
+        Assertions.assertThrows(TransactionSystemException.class, () -> eventService.createEvent(createEventRequestDto));
     }
 }
