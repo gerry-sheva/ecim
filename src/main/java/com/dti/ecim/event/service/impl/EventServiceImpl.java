@@ -31,13 +31,12 @@ import java.util.Optional;
 public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final EventOfferingRepository eventOfferingRepository;
-    private final EventLocationRepository eventLocationRepository;
     private final InterestRepository interestRepository;
     private final ModelMapper modelMapper;
 
     @Override
     @Transactional
-    public Event createEvent(CreateEventRequestDto createEventRequestDto) {
+    public RetrieveEventResponseDto createEvent(CreateEventRequestDto createEventRequestDto) {
         Interest interest = findInterestById(createEventRequestDto.getInterestId());
         Event event = new Event();
         event.setTitle(createEventRequestDto.getTitle());
@@ -56,9 +55,7 @@ public class EventServiceImpl implements EventService {
         event.addLocation(eventLocation);
         Event createdEvent = eventRepository.save(event);
 
-        log.info("Created event: " + createdEvent.getId());
-
-        return createdEvent;
+        return modelMapper.map(createdEvent, RetrieveEventResponseDto.class);
     }
 
     @Override
@@ -81,7 +78,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event updateEvent(Long id, UpdateEventDto updateEventDto) {
+    public RetrieveEventResponseDto updateEvent(Long id, UpdateEventDto updateEventDto) {
         Interest interest = findInterestById(updateEventDto.getInterestId());
         Optional<Event> eventOptional = eventRepository.findById(id);
         if (eventOptional.isEmpty()) {
@@ -93,7 +90,7 @@ public class EventServiceImpl implements EventService {
         event.setInterest(interest);
         event.setStartingDate(stringToInstant(updateEventDto.getStartingDate()));
         event.setEndingDate(stringToInstant(updateEventDto.getEndingDate()));
-        return eventRepository.save(event);
+        return modelMapper.map(eventRepository.save(event), RetrieveEventResponseDto.class);
     }
 
     @Override
@@ -105,12 +102,6 @@ public class EventServiceImpl implements EventService {
                 .and(EventSpecifications.byState(state));
         Page<Event> events = eventRepository.findAll(specification, pageable);
         return events.map(event -> modelMapper.map(event, RetrieveEventResponseDto.class));
-    }
-
-    @Override
-    public Event dumpEvent(Long id) {
-
-        return eventRepository.findById(id).orElse(null);
     }
 
     @Override

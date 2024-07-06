@@ -49,10 +49,4 @@ public class EventController {
         var res = eventService.findEventById(id);
         return ResponseEntity.ok(res);
     }
-
-    @GetMapping("/dump/{id}")
-    public ResponseEntity<?> dumpEvent(@PathVariable Long id) {
-        var res = eventService.dumpEvent(id);
-        return ResponseEntity.ok(res);
-    }
 }

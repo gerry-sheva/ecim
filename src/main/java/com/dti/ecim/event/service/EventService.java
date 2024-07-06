@@ -10,9 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface EventService {
-    Event createEvent(CreateEventRequestDto createEventRequestDto);
+    RetrieveEventResponseDto createEvent(CreateEventRequestDto createEventRequestDto);
     RetrieveEventResponseDto findEventById(Long id);
-    Event updateEvent(Long id, UpdateEventDto updateEventDto);
+    RetrieveEventResponseDto updateEvent(Long id, UpdateEventDto updateEventDto);
     Page<RetrieveEventResponseDto> displayEvents(
             Pageable pageable,
             String title,
@@ -20,7 +20,6 @@ public interface EventService {
             String interest,
             String city,
             String state);
-    Event dumpEvent(Long id);
     EventOfferingResponseDto getEventOffering(Long eventOfferingId);
     Interest findInterestById(Long id);
 }
