@@ -136,6 +136,7 @@ public class EventServiceTest {
         EventOfferingResponseDto responseDto = eventService.getEventOffering(1L);
 
         assertNotNull(responseDto);
+        assertEquals("General Admission", responseDto.getName());
     }
 
     @Test
