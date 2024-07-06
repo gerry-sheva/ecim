@@ -114,6 +114,9 @@ public class EventServiceTest {
         Assertions.assertThrows(ApplicationException.class, () -> eventService.createEvent(createEventRequestDto));
     }
 
+//    Object mapper somehow throws an error here,
+//    even though every thing is fine
+//    when findEventById is called by rest controller
     @Test
     @Disabled
     public void test_find_event_with_valid_id() {
