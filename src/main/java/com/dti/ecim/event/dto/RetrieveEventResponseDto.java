@@ -4,13 +4,12 @@ package com.dti.ecim.event.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigInteger;
 import java.time.Instant;
 import java.util.Set;
 
 @Data
 @NoArgsConstructor
-public class RetrieveEventDto {
+public class RetrieveEventResponseDto {
     private String title;
 
     private String description;

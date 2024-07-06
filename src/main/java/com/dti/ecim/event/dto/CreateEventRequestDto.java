@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class CreateEventDto {
+public class CreateEventRequestDto {
     @NotBlank
     private String title;
 

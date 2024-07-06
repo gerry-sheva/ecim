@@ -1,6 +1,6 @@
 package com.dti.ecim.event.controller;
 
-import com.dti.ecim.event.dto.CreateEventDto;
+import com.dti.ecim.event.dto.CreateEventRequestDto;
 import com.dti.ecim.event.service.EventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -39,8 +39,8 @@ public class EventController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createEvent(@RequestBody CreateEventDto createEventDto) {
-        var res = eventService.createEvent(createEventDto);
+    public ResponseEntity<?> createEvent(@RequestBody CreateEventRequestDto createEventRequestDto) {
+        var res = eventService.createEvent(createEventRequestDto);
         return ResponseEntity.ok(res);
     }
 

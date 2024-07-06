@@ -37,22 +37,22 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public Event createEvent(CreateEventDto createEventDto) {
-        Interest interest = findInterestById(createEventDto.getInterestId());
+    public Event createEvent(CreateEventRequestDto createEventRequestDto) {
+        Interest interest = findInterestById(createEventRequestDto.getInterestId());
         Event event = new Event();
-        event.setTitle(createEventDto.getTitle());
-        event.setDescription(createEventDto.getDescription());
+        event.setTitle(createEventRequestDto.getTitle());
+        event.setDescription(createEventRequestDto.getDescription());
         event.setInterest(interest);
-        event.setStartingDate(stringToInstant(createEventDto.getStartingDate()));
-        event.setEndingDate(stringToInstant(createEventDto.getEndingDate()));
+        event.setStartingDate(stringToInstant(createEventRequestDto.getStartingDate()));
+        event.setEndingDate(stringToInstant(createEventRequestDto.getEndingDate()));
 
-        List<CreateEventDto.CreateEventOfferingDto> createEventOfferingDtoList = createEventDto.getOfferings();
-        for (CreateEventDto.CreateEventOfferingDto createEventOfferingDto : createEventOfferingDtoList) {
+        List<CreateEventRequestDto.CreateEventOfferingDto> createEventOfferingDtoList = createEventRequestDto.getOfferings();
+        for (CreateEventRequestDto.CreateEventOfferingDto createEventOfferingDto : createEventOfferingDtoList) {
             EventOffering eventOffering = modelMapper.map(createEventOfferingDto, EventOffering.class);
             eventOffering.setAvailability(createEventOfferingDto.getCapacity());
             event.addOffering(eventOffering);
         }
-        EventLocation eventLocation = modelMapper.map(createEventDto.getLocation(), EventLocation.class);
+        EventLocation eventLocation = modelMapper.map(createEventRequestDto.getLocation(), EventLocation.class);
         event.addLocation(eventLocation);
         Event createdEvent = eventRepository.save(event);
 
@@ -62,13 +62,13 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public RetrieveEventDto findEventById(Long id) {
+    public RetrieveEventResponseDto findEventById(Long id) {
         Optional<Event> eventOptional = eventRepository.findById(id);
         if (eventOptional.isEmpty()) {
             throw new DataNotFoundException("Event with id " + id + " not found");
         }
         Event event = eventOptional.get();
-        return modelMapper.map(event, RetrieveEventDto.class);
+        return modelMapper.map(event, RetrieveEventResponseDto.class);
     }
 
     private Instant stringToInstant(String time) {
@@ -97,14 +97,14 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Page<RetrieveEventDto> displayEvents(Pageable pageable, String title, String category, String interest, String city, String state) {
+    public Page<RetrieveEventResponseDto> displayEvents(Pageable pageable, String title, String category, String interest, String city, String state) {
         Specification<Event> specification = Specification.where(EventSpecifications.byTitle(title))
                 .and(EventSpecifications.byCategory(category))
                 .and(EventSpecifications.byInterest(interest))
                 .and(EventSpecifications.byCity(city))
                 .and(EventSpecifications.byState(state));
         Page<Event> events = eventRepository.findAll(specification, pageable);
-        return events.map(event -> modelMapper.map(event, RetrieveEventDto.class));
+        return events.map(event -> modelMapper.map(event, RetrieveEventResponseDto.class));
     }
 
     @Override
