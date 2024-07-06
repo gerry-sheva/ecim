@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: ecim
+  datasource:
+    url: jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?prepareThreshold=0
+    username: postgres.nhpoexhulxoymzqrvpza
+    password: h2BHwzgJSvMFHMPt
+  data:
+    redis:
+      database: 0
+      host: heroic-sturgeon-44979.upstash.io
+      port: 6379
+      password: Aa-zAAIncDE3Y2Y3MWM5YWExOGI0ZTZkYjFhYjFmYzQ4MmZkMWE0Y3AxNDQ5Nzk
+      timeout: 60000
+      ssl:
+        enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 734822941675-r3dioilljjkckfotk5qsf7ttlhgl6u8b.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - email
+              - profile
+              - openid
+      resourceserver:
+        jwt:
+          issuer-uri: https://accounts.google.com
+          jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+rsa:
+  private-key: classpath:certs/private-key.pem
+  public-key: classpath:certs/public-key.pem
