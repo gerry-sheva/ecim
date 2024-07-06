@@ -1,6 +1,7 @@
 package com.dti.ecim.unit.event;
 
 import com.dti.ecim.event.dto.CreateEventRequestDto;
+import com.dti.ecim.event.dto.EventOfferingResponseDto;
 import com.dti.ecim.event.dto.RetrieveEventResponseDto;
 import com.dti.ecim.event.exceptions.InvalidDateException;
 import com.dti.ecim.event.repository.EventOfferingRepository;
@@ -130,5 +131,16 @@ public class EventServiceTest {
         Assertions.assertThrows(DataNotFoundException.class, () -> eventService.findEventById(-1L));
     }
 
+    @Test
+    public void test_find_event_offering_with_valid_id() {
+        EventOfferingResponseDto responseDto = eventService.getEventOffering(1L);
+
+        assertNotNull(responseDto);
+    }
+
+    @Test
+    public void test_find_event_offering_with_invalid_id() {
+        Assertions.assertThrows(DataNotFoundException.class, () -> eventService.getEventOffering(-1L));
+    }
 
 }
