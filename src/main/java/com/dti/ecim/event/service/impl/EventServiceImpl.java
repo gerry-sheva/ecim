@@ -7,6 +7,7 @@ import com.dti.ecim.event.entity.EventOffering;
 import com.dti.ecim.event.exceptions.InvalidDateException;
 import com.dti.ecim.event.repository.*;
 import com.dti.ecim.event.service.EventService;
+import com.dti.ecim.exceptions.ApplicationException;
 import com.dti.ecim.exceptions.DataNotFoundException;
 import com.dti.ecim.event.entity.Interest;
 import lombok.RequiredArgsConstructor;
@@ -55,6 +56,9 @@ public class EventServiceImpl implements EventService {
         event.setEndingDate(end);
 
         List<CreateEventRequestDto.CreateEventOfferingDto> createEventOfferingDtoList = createEventRequestDto.getOfferings();
+        if (createEventOfferingDtoList == null || createEventOfferingDtoList.isEmpty()) {
+            throw new ApplicationException("No offerings provided");
+        }
         for (CreateEventRequestDto.CreateEventOfferingDto createEventOfferingDto : createEventOfferingDtoList) {
             EventOffering eventOffering = modelMapper.map(createEventOfferingDto, EventOffering.class);
             eventOffering.setAvailability(createEventOfferingDto.getCapacity());
