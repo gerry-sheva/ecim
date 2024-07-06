@@ -4,6 +4,7 @@ import com.dti.ecim.event.dto.*;
 import com.dti.ecim.event.entity.Event;
 import com.dti.ecim.event.entity.EventLocation;
 import com.dti.ecim.event.entity.EventOffering;
+import com.dti.ecim.event.exceptions.InvalidDateException;
 import com.dti.ecim.event.repository.*;
 import com.dti.ecim.event.service.EventService;
 import com.dti.ecim.exceptions.DataNotFoundException;
@@ -17,6 +18,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,13 +36,23 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional
     public RetrieveEventResponseDto createEvent(CreateEventRequestDto createEventRequestDto) {
+        Instant start = stringToInstant(createEventRequestDto.getStartingDate());
+        Instant end = stringToInstant(createEventRequestDto.getEndingDate());
+
+        if (end.isBefore(start)) {
+            throw new InvalidDateException("Start date cannot be after end date");
+        }
+        if (end.isBefore(Instant.now())) {
+            throw new InvalidDateException("End date cannot be in the past");
+        }
+
         Interest interest = findInterestById(createEventRequestDto.getInterestId());
         Event event = new Event();
         event.setTitle(createEventRequestDto.getTitle());
         event.setDescription(createEventRequestDto.getDescription());
         event.setInterest(interest);
-        event.setStartingDate(stringToInstant(createEventRequestDto.getStartingDate()));
-        event.setEndingDate(stringToInstant(createEventRequestDto.getEndingDate()));
+        event.setStartingDate(start);
+        event.setEndingDate(end);
 
         List<CreateEventRequestDto.CreateEventOfferingDto> createEventOfferingDtoList = createEventRequestDto.getOfferings();
         for (CreateEventRequestDto.CreateEventOfferingDto createEventOfferingDto : createEventOfferingDtoList) {
