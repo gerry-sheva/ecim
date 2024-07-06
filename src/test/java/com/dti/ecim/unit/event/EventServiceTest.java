@@ -8,6 +8,7 @@ import com.dti.ecim.event.repository.EventRepository;
 import com.dti.ecim.event.repository.InterestRepository;
 import com.dti.ecim.event.service.EventService;
 import com.dti.ecim.exceptions.ApplicationException;
+import com.dti.ecim.exceptions.DataNotFoundException;
 import org.junit.jupiter.api.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,6 +112,19 @@ public class EventServiceTest {
         createEventRequestDto.setOfferings(new ArrayList<>());
 
         Assertions.assertThrows(ApplicationException.class, () -> eventService.createEvent(createEventRequestDto));
+    }
+
+    @Test
+    @Disabled
+    public void test_find_event_with_valid_id() {
+        RetrieveEventResponseDto response = eventService.findEventById(1L);
+
+        assertNotNull(response);
+    }
+
+    @Test
+    public void test_find_event_with_invalid_id() {
+        Assertions.assertThrows(DataNotFoundException.class, () -> eventService.findEventById(-1L));
     }
 
 
