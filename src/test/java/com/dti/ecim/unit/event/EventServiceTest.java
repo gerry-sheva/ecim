@@ -7,13 +7,16 @@ import com.dti.ecim.event.repository.EventOfferingRepository;
 import com.dti.ecim.event.repository.EventRepository;
 import com.dti.ecim.event.repository.InterestRepository;
 import com.dti.ecim.event.service.EventService;
+import com.dti.ecim.exceptions.ApplicationException;
 import org.junit.jupiter.api.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.TransactionSystemException;
 
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -95,11 +98,20 @@ public class EventServiceTest {
     }
 
     @Test
-    public void test_create_event_with_invalid_data() {
+    public void test_create_event_with_invalid_location() {
         CreateEventRequestDto.CreateEventLocationDto invalidLocation  = new CreateEventRequestDto.CreateEventLocationDto();
         invalidLocation.setStreet1("123 Main St");
         createEventRequestDto.setLocation(invalidLocation);
 
         Assertions.assertThrows(TransactionSystemException.class, () -> eventService.createEvent(createEventRequestDto));
     }
+
+    @Test
+    public void test_create_event_with_no_offering() {
+        createEventRequestDto.setOfferings(new ArrayList<>());
+
+        Assertions.assertThrows(ApplicationException.class, () -> eventService.createEvent(createEventRequestDto));
+    }
+
+
 }
