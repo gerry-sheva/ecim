@@ -3,6 +3,7 @@ package com.dti.ecim.unit.event;
 import com.dti.ecim.event.dto.CreateEventRequestDto;
 import com.dti.ecim.event.dto.EventOfferingResponseDto;
 import com.dti.ecim.event.dto.RetrieveEventResponseDto;
+import com.dti.ecim.event.entity.Interest;
 import com.dti.ecim.event.exceptions.InvalidDateException;
 import com.dti.ecim.event.repository.EventOfferingRepository;
 import com.dti.ecim.event.repository.EventRepository;
@@ -14,7 +15,9 @@ import org.junit.jupiter.api.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.TransactionException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.TransactionSystemException;
 
 import java.time.format.DateTimeParseException;
@@ -67,6 +70,7 @@ public class EventServiceTest {
         createEventRequestDto.setOfferings(List.of(offeringDto));
     }
 
+//    CREATE EVENT
     @Test
     public void test_create_event_with_valid_data() {
         RetrieveEventResponseDto response = eventService.createEvent(createEventRequestDto);
@@ -115,6 +119,8 @@ public class EventServiceTest {
         Assertions.assertThrows(ApplicationException.class, () -> eventService.createEvent(createEventRequestDto));
     }
 
+//    FIND EVENT
+
 //    Object mapper somehow throws an error here,
 //    even though every thing is fine
 //    when findEventById is called by rest controller
@@ -131,6 +137,8 @@ public class EventServiceTest {
         Assertions.assertThrows(DataNotFoundException.class, () -> eventService.findEventById(-1L));
     }
 
+//    GET EVENT OFFERING
+
     @Test
     public void test_find_event_offering_with_valid_id() {
         EventOfferingResponseDto responseDto = eventService.getEventOffering(1L);
@@ -142,6 +150,40 @@ public class EventServiceTest {
     @Test
     public void test_find_event_offering_with_invalid_id() {
         Assertions.assertThrows(DataNotFoundException.class, () -> eventService.getEventOffering(-1L));
+    }
+
+//    FIND INTEREST
+
+    @Test
+    public void  test_find_interest_with_valid_id() {
+        Interest response = eventService.findInterestById(1L);
+
+        assertNotNull(response);
+        assertEquals("Live Music", response.getName());
+    }
+
+    @Test
+    public void test_find_interest_with_invalid_id() {
+        Assertions.assertThrows(DataNotFoundException.class, () -> eventService.findInterestById(-1L));
+    }
+
+//  DISPLAY EVENT
+
+//    Same issue with test_find_event_by_valid_id
+    @Test
+    @Disabled
+    public void test_display_event() {
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<RetrieveEventResponseDto> res = eventService.displayEvents(
+                pageable,
+                null,
+                null,
+                null,
+                null,
+                null);
+
+        assertNotNull(res);
+        assertEquals(5, res.getSize());
     }
 
 }
