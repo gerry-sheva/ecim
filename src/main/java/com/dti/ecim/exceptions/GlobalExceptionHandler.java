@@ -1,5 +1,6 @@
 package com.dti.ecim.exceptions;
 
+import com.dti.ecim.event.exceptions.InvalidDateException;
 import com.dti.ecim.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -42,6 +43,12 @@ public class GlobalExceptionHandler {
             return Response.failed(HttpStatus.BAD_REQUEST.value(), "Unable to process the request: " + ex.getLocalizedMessage());
         }
 
+        return Response.failed(HttpStatus.BAD_REQUEST.value(), "Unable to process the request: " + ex.getMessage());
+    }
+
+//    EVENT EXCEPTION HANDLER
+    @ExceptionHandler(InvalidDateException.class)
+    public final ResponseEntity<Response<String>> handleInvalidDateException(InvalidDateException ex){
         return Response.failed(HttpStatus.BAD_REQUEST.value(), "Unable to process the request: " + ex.getMessage());
     }
 }
