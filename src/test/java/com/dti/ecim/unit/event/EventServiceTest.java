@@ -2,17 +2,12 @@ package com.dti.ecim.unit.event;
 
 import com.dti.ecim.event.dto.CreateEventRequestDto;
 import com.dti.ecim.event.dto.RetrieveEventResponseDto;
+import com.dti.ecim.event.exceptions.InvalidDateException;
 import com.dti.ecim.event.repository.EventOfferingRepository;
 import com.dti.ecim.event.repository.EventRepository;
 import com.dti.ecim.event.repository.InterestRepository;
 import com.dti.ecim.event.service.EventService;
-import com.dti.ecim.event.service.impl.EventServiceImpl;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -88,11 +83,19 @@ public class EventServiceTest {
         createEventRequestDto.setEndingDate("07:00:00 PM, Wed 07/10/2024");
         createEventRequestDto.setStartingDate("10:00:00 PM, Wed 07/10/2024");
 
-        Assertions.assertThrows(DateTimeParseException.class, () -> eventService.createEvent(createEventRequestDto));
+        Assertions.assertThrows(InvalidDateException.class, () -> eventService.createEvent(createEventRequestDto));
     }
 
     @Test
-    public void test_create_event_with_invalid_location() {
+    public void test_create_event_that_ends_in_the_past() {
+        createEventRequestDto.setEndingDate("07:00:00 PM, Fri 07/05/2024");
+        createEventRequestDto.setStartingDate("10:00:00 PM, Thu 07/04/2024");
+
+        Assertions.assertThrows(InvalidDateException.class, () -> eventService.createEvent(createEventRequestDto));
+    }
+
+    @Test
+    public void test_create_event_with_invalid_data() {
         CreateEventRequestDto.CreateEventLocationDto invalidLocation  = new CreateEventRequestDto.CreateEventLocationDto();
         invalidLocation.setStreet1("123 Main St");
         createEventRequestDto.setLocation(invalidLocation);
