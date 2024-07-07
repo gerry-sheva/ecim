@@ -125,10 +125,10 @@ public class EventServiceTest {
 
     @Test
     public void test_find_event_offering_with_valid_id() {
-        EventOfferingResponseDto responseDto = eventService.getEventOffering(1L);
+        EventOfferingResponseDto responseDto = eventService.getEventOffering(2L);
 
         assertNotNull(responseDto);
-        assertEquals("General Admission", responseDto.getName());
+        assertEquals("Sample Offering", responseDto.getName());
     }
 
     @Test
