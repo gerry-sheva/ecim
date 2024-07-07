@@ -5,14 +5,10 @@ import com.dti.ecim.event.dto.EventOfferingResponseDto;
 import com.dti.ecim.event.dto.RetrieveEventResponseDto;
 import com.dti.ecim.event.entity.Interest;
 import com.dti.ecim.event.exceptions.InvalidDateException;
-import com.dti.ecim.event.repository.EventOfferingRepository;
-import com.dti.ecim.event.repository.EventRepository;
-import com.dti.ecim.event.repository.InterestRepository;
 import com.dti.ecim.event.service.EventService;
 import com.dti.ecim.exceptions.ApplicationException;
 import com.dti.ecim.exceptions.DataNotFoundException;
 import org.junit.jupiter.api.*;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -30,18 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 public class EventServiceTest {
-    @Autowired
-    private EventRepository eventRepository;
-
-    @Autowired
-    private EventOfferingRepository eventOfferingRepository;
-
-    @Autowired
-    private InterestRepository interestRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
-
     @Autowired
     private EventService eventService;
 
