@@ -2,6 +2,7 @@ package com.dti.ecim.trx.entity;
 
 import com.dti.ecim.discount.entity.Discount;
 import com.dti.ecim.event.entity.Event;
+import com.dti.ecim.trx.enums.Status;
 import com.dti.ecim.user.entity.Attendee;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -10,7 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,8 +35,7 @@ public class Trx {
     @Column(name = "attendee_id")
     private Long attendeeId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "status_id")
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     @PositiveOrZero
