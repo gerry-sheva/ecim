@@ -22,18 +22,14 @@ public class TrxServiceTest {
 
     @BeforeEach
     public void setUp() {
-        requestDto.setEventId(1L);
-        requestDto.setDiscountId(1L);
+        requestDto.setEventId(2L);
+        requestDto.setDiscountId(3L);
 
         CreateTixDto tixDto = new CreateTixDto();
-        tixDto.setQuantity(2);
-        tixDto.setOfferingId(1L);
+        tixDto.setQuantity(1);
+        tixDto.setOfferingId(2L);
 
-        CreateTixDto tixDto2 = new CreateTixDto();
-        tixDto2.setQuantity(1);
-        tixDto2.setOfferingId(2L);
-
-        requestDto.setTixes(Set.of(tixDto, tixDto2));
+        requestDto.setTixes(Set.of(tixDto));
     }
 
     @Test
