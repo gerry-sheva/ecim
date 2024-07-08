@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.math.BigInteger;
 import java.time.Instant;
 
 @Getter
@@ -23,7 +22,7 @@ public class Point {
     @SequenceGenerator(name = "point_id_gen", sequenceName = "point_id_seq", allocationSize = 1)
     private Long id;
 
-    private BigInteger amount;
+    private int amount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "attendee_id")
@@ -35,8 +34,4 @@ public class Point {
 
     @Column(name = "expired_at")
     private Instant expiredAt;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trx_id")
-    private Trx trx;
 }
