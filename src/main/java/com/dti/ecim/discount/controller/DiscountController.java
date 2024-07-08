@@ -33,9 +33,4 @@ public class DiscountController {
     public void claimDiscount(@RequestBody ClaimDiscountRequestDto claimDiscountRequestDto) {
         discountService.claimDiscount(claimDiscountRequestDto);
     }
-
-    @PostMapping("/redeem")
-    public void redeemDiscount(@RequestBody RedeemDiscountRequestDto redeemDiscountRequestDto) {
-        discountService.redeemDiscount(redeemDiscountRequestDto);
-    }
 }

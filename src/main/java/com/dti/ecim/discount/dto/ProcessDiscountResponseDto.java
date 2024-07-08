@@ -10,4 +10,8 @@ import lombok.NoArgsConstructor;
 public class ProcessDiscountResponseDto {
     private int discountValue;
     private int finalPrice;
+
+    public void addDiscountValue(int discountValue) {
+        this.discountValue += discountValue;
+    }
 }

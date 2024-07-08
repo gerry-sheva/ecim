@@ -70,8 +70,7 @@ public class DiscountServiceImpl implements DiscountService {
         claimedDiscountRepository.save(claimedDiscount);
     }
 
-    @Override
-    public RedeemDiscountResponseDto redeemDiscount(RedeemDiscountRequestDto requestDto) {
+    private RedeemDiscountResponseDto redeemDiscount(RedeemDiscountRequestDto requestDto) {
         Optional<ClaimedDiscount> redeemedDiscountOptional = claimedDiscountRepository.findById(requestDto.getRedeemedDiscountId());
         if (redeemedDiscountOptional.isEmpty()) {
             throw new DataNotFoundException("Discount with id: " + requestDto.getRedeemedDiscountId() + "not found");
@@ -87,18 +86,28 @@ public class DiscountServiceImpl implements DiscountService {
         return new RedeemDiscountResponseDto(claimedDiscount.getDiscount().getAmountFlat(), claimedDiscount.getDiscount().getAmountPercent());
     }
 
+    private void validatePoint(int point) {
+        UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
+
+    }
+
     @Override
     public ProcessDiscountResponseDto processDiscount(ProcessDiscountRequestDto requestDto) {
-        RedeemDiscountResponseDto redeemDiscountResponseDto = redeemDiscount(new RedeemDiscountRequestDto(requestDto.getDiscountId()));
         ProcessDiscountResponseDto processDiscountResponseDto = new ProcessDiscountResponseDto();
-        if (redeemDiscountResponseDto.getAmountFlat() > 0) {
-            processDiscountResponseDto.setFinalPrice(requestDto.getTotalPrice() - redeemDiscountResponseDto.getAmountFlat());
-            processDiscountResponseDto.setDiscountValue(redeemDiscountResponseDto.getAmountFlat());
-        } else {
-            int discountValue = requestDto.getTotalPrice() * redeemDiscountResponseDto.getAmountPercent() / 100;
-            processDiscountResponseDto.setFinalPrice(requestDto.getTotalPrice() - discountValue);
-            processDiscountResponseDto.setDiscountValue(discountValue);
+        if (requestDto.getDiscountId() != null) {
+            RedeemDiscountResponseDto redeemDiscountResponseDto = redeemDiscount(new RedeemDiscountRequestDto(requestDto.getDiscountId()));
+            if (redeemDiscountResponseDto.getAmountFlat() > 0) {
+                processDiscountResponseDto.addDiscountValue(redeemDiscountResponseDto.getAmountFlat());
+            } else {
+                int discountValue = requestDto.getTotalPrice() * redeemDiscountResponseDto.getAmountPercent() / 100;
+                processDiscountResponseDto.addDiscountValue(discountValue);
+            }
         }
+        if (requestDto.getPoint() > 0) {
+            validatePoint(requestDto.getPoint());
+            processDiscountResponseDto.addDiscountValue(requestDto.getPoint());
+        }
+        processDiscountResponseDto.setFinalPrice(requestDto.getTotalPrice() - processDiscountResponseDto.getDiscountValue());
         return processDiscountResponseDto;
     }
 }

@@ -65,11 +65,11 @@ public class TrxServiceImpl implements TrxService {
             }
         }
         trx.setPrice(totalPrice);
-        if (createTrxRequestDto.getDiscountId() != null) {
+        if (createTrxRequestDto.getDiscountId() != null || createTrxRequestDto.getPoint() != 0)  {
             ProcessDiscountResponseDto processDiscountResponseDto = discountService.processDiscount(
                     new ProcessDiscountRequestDto(
                             createTrxRequestDto.getDiscountId(),
-                            0,
+                            createTrxRequestDto.getPoint(),
                             totalPrice
                     ));
             trx.setDiscountValue(processDiscountResponseDto.getDiscountValue());
