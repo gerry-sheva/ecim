@@ -7,4 +7,5 @@ public interface DiscountService {
     void createEventDiscount(CreateEventDiscountRequestDto requestDto);
     void claimDiscount(ClaimDiscountRequestDto requestDto);
     RedeemDiscountResponseDto redeemDiscount(RedeemDiscountRequestDto requestDto);
+    ProcessDiscountResponseDto processDiscount(ProcessDiscountRequestDto requestDto);
 }

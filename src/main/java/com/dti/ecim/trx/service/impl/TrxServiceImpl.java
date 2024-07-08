@@ -2,6 +2,8 @@ package com.dti.ecim.trx.service.impl;
 
 import com.dti.ecim.auth.dto.UserIdResponseDto;
 import com.dti.ecim.auth.service.AuthService;
+import com.dti.ecim.discount.dto.ProcessDiscountRequestDto;
+import com.dti.ecim.discount.dto.ProcessDiscountResponseDto;
 import com.dti.ecim.discount.dto.RedeemDiscountRequestDto;
 import com.dti.ecim.discount.dto.RedeemDiscountResponseDto;
 import com.dti.ecim.discount.service.DiscountService;
@@ -45,7 +47,6 @@ public class TrxServiceImpl implements TrxService {
     @Override
     @Transactional
     public TrxResponseDto createTrx(CreateTrxRequestDto createTrxRequestDto) throws NoSuchAlgorithmException {
-        RedeemDiscountResponseDto redeemDiscountResponseDto = discountService.redeemDiscount(new RedeemDiscountRequestDto(createTrxRequestDto.getDiscountId()));
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
         Trx trx = new Trx();
         trx.setEventId(createTrxRequestDto.getEventId());
@@ -64,14 +65,21 @@ public class TrxServiceImpl implements TrxService {
             }
         }
         trx.setPrice(totalPrice);
-        if (redeemDiscountResponseDto.getAmountFlat() > 0) {
-            trx.setFinalPrice(totalPrice - redeemDiscountResponseDto.getAmountFlat());
-            trx.setDiscountValue(redeemDiscountResponseDto.getAmountFlat());
+        if (createTrxRequestDto.getDiscountId() != null) {
+            ProcessDiscountResponseDto processDiscountResponseDto = discountService.processDiscount(
+                    new ProcessDiscountRequestDto(
+                            createTrxRequestDto.getDiscountId(),
+                            0,
+                            totalPrice
+                    ));
+            trx.setDiscountValue(processDiscountResponseDto.getDiscountValue());
+            trx.setFinalPrice(processDiscountResponseDto.getFinalPrice());
+            trx.setDiscountId(trx.getDiscountId());
         } else {
-            int discountValue = totalPrice * redeemDiscountResponseDto.getAmountPercent() / 100;
-            trx.setFinalPrice(totalPrice - discountValue);
-            trx.setDiscountValue(discountValue);
+            trx.setDiscountValue(0);
+            trx.setFinalPrice(totalPrice);
         }
+
         Trx savedTrx = trxRepository.save(trx);
         return modelMapper.map(savedTrx, TrxResponseDto.class);
     }

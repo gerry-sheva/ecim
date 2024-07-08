@@ -86,4 +86,19 @@ public class DiscountServiceImpl implements DiscountService {
         redeemedDiscountRepository.save(redeemedDiscount);
         return new RedeemDiscountResponseDto(claimedDiscount.getDiscount().getAmountFlat(), claimedDiscount.getDiscount().getAmountPercent());
     }
+
+    @Override
+    public ProcessDiscountResponseDto processDiscount(ProcessDiscountRequestDto requestDto) {
+        RedeemDiscountResponseDto redeemDiscountResponseDto = redeemDiscount(new RedeemDiscountRequestDto(requestDto.getDiscountId()));
+        ProcessDiscountResponseDto processDiscountResponseDto = new ProcessDiscountResponseDto();
+        if (redeemDiscountResponseDto.getAmountFlat() > 0) {
+            processDiscountResponseDto.setFinalPrice(requestDto.getTotalPrice() - redeemDiscountResponseDto.getAmountFlat());
+            processDiscountResponseDto.setDiscountValue(redeemDiscountResponseDto.getAmountFlat());
+        } else {
+            int discountValue = requestDto.getTotalPrice() * redeemDiscountResponseDto.getAmountPercent() / 100;
+            processDiscountResponseDto.setFinalPrice(requestDto.getTotalPrice() - discountValue);
+            processDiscountResponseDto.setDiscountValue(discountValue);
+        }
+        return processDiscountResponseDto;
+    }
 }
