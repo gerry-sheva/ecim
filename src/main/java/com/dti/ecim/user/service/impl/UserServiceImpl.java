@@ -4,6 +4,7 @@ import com.dti.ecim.auth.dto.AddUserRoleDto;
 import com.dti.ecim.auth.dto.UserIdResponseDto;
 import com.dti.ecim.auth.service.AuthService;
 import com.dti.ecim.auth.service.UserRoleService;
+import com.dti.ecim.discount.service.DiscountService;
 import com.dti.ecim.exceptions.DataNotFoundException;
 import com.dti.ecim.user.dto.attendee.CreateAttendeeRequestDto;
 import com.dti.ecim.user.dto.attendee.CreateAttendeeResponseDto;
@@ -41,6 +42,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRoleService userRoleService;
     private final AuthService authService;
+    private final DiscountService discountService;
 
     @Override
     public User registerUser() {
@@ -86,6 +88,7 @@ public class UserServiceImpl implements UserService {
                 newReferral.setReferreeId(userIdResponseDto.getId());
                 newReferral.setReferree(newAttendee);
                 referralRepository.save(newReferral);
+                discountService.addPoint(referral.get().getUserId());
             }
         }
         userRoleService.addUserRole(new AddUserRoleDto(userIdResponseDto.getId(), 1L));

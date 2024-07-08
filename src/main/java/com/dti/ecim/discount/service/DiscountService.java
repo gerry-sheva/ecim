@@ -7,5 +7,5 @@ public interface DiscountService {
     void createEventDiscount(CreateEventDiscountRequestDto requestDto);
     void claimDiscount(ClaimDiscountRequestDto requestDto);
     ProcessDiscountResponseDto processDiscount(ProcessDiscountRequestDto requestDto);
-    void addPoint();
+    void addPoint(Long referralId);
 }

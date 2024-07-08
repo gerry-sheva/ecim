@@ -121,10 +121,9 @@ public class DiscountServiceImpl implements DiscountService {
     }
 
     @Override
-    public void addPoint() {
-        UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
+    public void addPoint(Long referralId) {
         Point point = new Point();
-        point.setAttendeeId(userIdResponseDto.getId());
+        point.setAttendeeId(referralId);
         point.setAmount(10000);
         point.setExpiredAt(Instant.now().plus(90, ChronoUnit.DAYS));
         pointRepository.save(point);
