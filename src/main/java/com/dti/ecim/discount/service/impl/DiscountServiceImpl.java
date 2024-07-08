@@ -4,6 +4,7 @@ import com.dti.ecim.auth.dto.UserIdResponseDto;
 import com.dti.ecim.auth.service.AuthService;
 import com.dti.ecim.discount.dto.*;
 import com.dti.ecim.discount.entity.*;
+import com.dti.ecim.discount.exceptions.InsufficientPointException;
 import com.dti.ecim.discount.repository.RedeemedDiscountRepository;
 import com.dti.ecim.discount.repository.DiscountRepository;
 import com.dti.ecim.discount.repository.PointRepository;
@@ -88,7 +89,15 @@ public class DiscountServiceImpl implements DiscountService {
 
     private void validatePoint(int point) {
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
-
+        int amount = pointRepository.findSumAmount(userIdResponseDto.getId(), Instant.now().minus(90, ChronoUnit.DAYS));
+        if (amount < point) {
+            throw new InsufficientPointException("Insufficient point");
+        }
+        Point deductedPoint = new Point();
+        deductedPoint.setAmount(point);
+        deductedPoint.setAttendeeId(userIdResponseDto.getId());
+        deductedPoint.setExpiredAt(Instant.now());
+        pointRepository.save(deductedPoint);
     }
 
     @Override
@@ -109,5 +118,15 @@ public class DiscountServiceImpl implements DiscountService {
         }
         processDiscountResponseDto.setFinalPrice(requestDto.getTotalPrice() - processDiscountResponseDto.getDiscountValue());
         return processDiscountResponseDto;
+    }
+
+    @Override
+    public void addPoint() {
+        UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
+        Point point = new Point();
+        point.setAttendeeId(userIdResponseDto.getId());
+        point.setAmount(10000);
+        point.setExpiredAt(Instant.now().plus(90, ChronoUnit.DAYS));
+        pointRepository.save(point);
     }
 }

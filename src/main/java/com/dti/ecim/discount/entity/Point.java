@@ -22,10 +22,13 @@ public class Point {
     @SequenceGenerator(name = "point_id_gen", sequenceName = "point_id_seq", allocationSize = 1)
     private Long id;
 
+    @Column(name = "attendee_id")
+    private Long attendeeId;
+
     private int amount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "attendee_id")
+    @JoinColumn(name = "attendee_id", insertable = false, updatable = false)
     private Attendee attendee;
 
     @Column(name = "created_at")
