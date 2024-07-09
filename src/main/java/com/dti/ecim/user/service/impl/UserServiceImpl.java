@@ -61,6 +61,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public CreateAttendeeResponseDto createAttendee(CreateAttendeeRequestDto requestDto) throws NoSuchAlgorithmException, BadRequestException {
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
+        boolean alreadyHasRole = userRoleService.isRoleExist(userIdResponseDto.getId());
+        if (alreadyHasRole) {
+            throw new BadRequestException("User already has role");
+        }
         User user = retrieveUser(userIdResponseDto.getId());
         log.info(userIdResponseDto.getId().toString());
         Attendee newAttendee = new Attendee();
@@ -106,8 +110,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public CreateOrganizerResponseDto createOrganizer(CreateOrganizerRequestDto requestDto) {
+    public CreateOrganizerResponseDto createOrganizer(CreateOrganizerRequestDto requestDto) throws BadRequestException {
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
+        boolean alreadyHasRole = userRoleService.isRoleExist(userIdResponseDto.getId());
+        if (alreadyHasRole) {
+            throw new BadRequestException("User already has role");
+        }
         User user = retrieveUser(userIdResponseDto.getId());
         Organizer newOrganizer = new Organizer();
         newOrganizer.setUser(user);

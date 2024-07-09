@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -37,5 +38,11 @@ public class UserRoleServiceImpl implements UserRoleService {
         List<UserRole> userRoles = userRoleRepository.findAllByUserId(userId);
         userRoles.forEach(userRole -> {roles.add(new SimpleGrantedAuthority(userRole.getRole().getRole()));});
         return roles;
+    }
+
+    @Override
+    public boolean isRoleExist(Long userId) {
+        Optional<UserRole> userRole = userRoleRepository.findById(userId);
+        return userRole.isPresent();
     }
 }
