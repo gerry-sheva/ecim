@@ -1,6 +1,5 @@
 package com.dti.ecim.auth.entity;
 
-import com.dti.ecim.auth.entity.key.UserRoleCompositeKey;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,13 +10,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "user_role")
-@IdClass(UserRoleCompositeKey.class)
 public class UserRole {
     @Id
     @Column(name = "user_id")
     private Long userId;
 
-    @Id
     @Column(name = "role_id")
     private Long roleId;
 
