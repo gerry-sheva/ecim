@@ -105,6 +105,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public CreateOrganizerResponseDto createOrganizer(CreateOrganizerRequestDto requestDto) {
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
         User user = retrieveUser(userIdResponseDto.getId());
