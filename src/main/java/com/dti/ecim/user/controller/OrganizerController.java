@@ -6,6 +6,7 @@ import com.dti.ecim.user.dto.organizer.CreateOrganizerResponseDto;
 import com.dti.ecim.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class OrganizerController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<CreateOrganizerResponseDto> createOrganizer(@RequestBody CreateOrganizerRequestDto createOrganizerRequestDto) {
+    public ResponseEntity<CreateOrganizerResponseDto> createOrganizer(@RequestBody CreateOrganizerRequestDto createOrganizerRequestDto) throws BadRequestException {
         CreateOrganizerResponseDto responseDto = userService.createOrganizer(createOrganizerRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
