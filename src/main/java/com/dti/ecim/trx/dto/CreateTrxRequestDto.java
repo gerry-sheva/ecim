@@ -16,7 +16,7 @@ public class CreateTrxRequestDto {
 
     private Long discountId;
 
-    private int point;
+    private boolean point;
 
     @NotNull
     private Set<CreateTixDto> tixes;

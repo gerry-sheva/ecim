@@ -87,21 +87,9 @@ public class DiscountServiceImpl implements DiscountService {
         return new RedeemDiscountResponseDto(claimedDiscount.getDiscount().getAmountFlat(), claimedDiscount.getDiscount().getAmountPercent());
     }
 
-    private void validatePoint(int point) {
-        UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
-        int amount = pointRepository.findSumAmount(userIdResponseDto.getId(), Instant.now().minus(90, ChronoUnit.DAYS));
-        if (amount < point) {
-            throw new InsufficientPointException("Insufficient point");
-        }
-        Point deductedPoint = new Point();
-        deductedPoint.setAmount(point);
-        deductedPoint.setAttendeeId(userIdResponseDto.getId());
-        deductedPoint.setExpiredAt(Instant.now());
-        pointRepository.save(deductedPoint);
-    }
-
     @Override
     public ProcessDiscountResponseDto processDiscount(ProcessDiscountRequestDto requestDto) {
+        UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
         ProcessDiscountResponseDto processDiscountResponseDto = new ProcessDiscountResponseDto();
         if (requestDto.getDiscountId() != null) {
             RedeemDiscountResponseDto redeemDiscountResponseDto = redeemDiscount(new RedeemDiscountRequestDto(requestDto.getDiscountId()));
@@ -112,9 +100,22 @@ public class DiscountServiceImpl implements DiscountService {
                 processDiscountResponseDto.addDiscountValue(discountValue);
             }
         }
-        if (requestDto.getPoint() > 0) {
-            validatePoint(requestDto.getPoint());
-            processDiscountResponseDto.addDiscountValue(requestDto.getPoint());
+        if (requestDto.isUsingPoint()) {
+            Instant lastUsed = pointRepository.getLastResetDate(userIdResponseDto.getId());
+            int points;
+            if (lastUsed.isAfter(Instant.now().minus(90, ChronoUnit.DAYS))) {
+                points = pointRepository.getCurrentPoints(userIdResponseDto.getId(), Instant.now(), lastUsed);
+                processDiscountResponseDto.addDiscountValue(points);
+            } else {
+                points = pointRepository.getCurrentPoints(userIdResponseDto.getId(), Instant.now(), Instant.now().minus(90, ChronoUnit.DAYS));
+                processDiscountResponseDto.addDiscountValue(points);
+            }
+            Point deductedPoint = new Point();
+            deductedPoint.setAmount(points * -1);
+            deductedPoint.setAttendeeId(userIdResponseDto.getId());
+            deductedPoint.setExpiredAt(Instant.now());
+            pointRepository.save(deductedPoint);
+
         }
         processDiscountResponseDto.setFinalPrice(requestDto.getTotalPrice() - processDiscountResponseDto.getDiscountValue());
         return processDiscountResponseDto;
