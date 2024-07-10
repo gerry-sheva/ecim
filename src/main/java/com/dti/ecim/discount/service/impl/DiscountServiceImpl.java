@@ -73,13 +73,14 @@ public class DiscountServiceImpl implements DiscountService {
     }
 
     private RedeemDiscountResponseDto redeemDiscount(RedeemDiscountRequestDto requestDto) {
-        Optional<ClaimedDiscount> redeemedDiscountOptional = claimedDiscountRepository.findById(requestDto.getRedeemedDiscountId());
-        if (redeemedDiscountOptional.isEmpty()) {
+        UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
+        Optional<ClaimedDiscount> claimedDiscountOptional = claimedDiscountRepository.findByAttendeeIdAndDiscountId(userIdResponseDto.getId(), requestDto.getRedeemedDiscountId());
+        if (claimedDiscountOptional.isEmpty()) {
             throw new DataNotFoundException("Discount with id: " + requestDto.getRedeemedDiscountId() + "not found");
         }
-        ClaimedDiscount claimedDiscount = redeemedDiscountOptional.get();
-        Optional<RedeemedDiscount> claimedDiscountOptional = redeemedDiscountRepository.findById(claimedDiscount.getDiscountId());
-        if (claimedDiscountOptional.isPresent()) {
+        ClaimedDiscount claimedDiscount = claimedDiscountOptional.get();
+        Optional<RedeemedDiscount> redeemedDiscountOptional = redeemedDiscountRepository.findById(claimedDiscount.getDiscountId());
+        if (redeemedDiscountOptional.isPresent()) {
 //            TODO: THROW DISCOUNT ALREADY REDEEMED EXCEPTION
         }
         RedeemedDiscount redeemedDiscount = new RedeemedDiscount();
