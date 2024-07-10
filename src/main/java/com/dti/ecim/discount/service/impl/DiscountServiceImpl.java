@@ -13,6 +13,7 @@ import com.dti.ecim.discount.service.DiscountService;
 import com.dti.ecim.exceptions.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.apache.coyote.BadRequestException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -88,7 +89,7 @@ public class DiscountServiceImpl implements DiscountService {
     }
 
     @Override
-    public ProcessDiscountResponseDto processDiscount(ProcessDiscountRequestDto requestDto) {
+    public ProcessDiscountResponseDto processDiscount(ProcessDiscountRequestDto requestDto) throws BadRequestException {
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
         ProcessDiscountResponseDto processDiscountResponseDto = new ProcessDiscountResponseDto();
         if (requestDto.getDiscountId() != null) {
@@ -109,6 +110,9 @@ public class DiscountServiceImpl implements DiscountService {
             } else {
                 points = pointRepository.getCurrentPoints(userIdResponseDto.getId(), Instant.now(), Instant.now().minus(90, ChronoUnit.DAYS));
                 processDiscountResponseDto.addDiscountValue(points);
+            }
+            if (points < 0) {
+                throw new BadRequestException("Insufficient points");
             }
             Point deductedPoint = new Point();
             deductedPoint.setAmount(points * -1);
