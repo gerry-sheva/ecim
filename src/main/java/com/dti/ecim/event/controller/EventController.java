@@ -8,6 +8,7 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -48,6 +49,26 @@ public class EventController {
     @GetMapping("/{id}")
     public ResponseEntity<?> displayEvent(@PathVariable Long id) {
         var res = eventService.findEventById(id);
+        return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/organizer")
+    @PreAuthorize("hasRole('ROLE_ORGANIZER')")
+    public ResponseEntity<?> displayOrganizersEvents(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        var res = eventService.displayOrganizerEvents(PageRequest.of(page, size));
+        return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/organizer/{id}")
+    public ResponseEntity<?> displayOrganizerEvents(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        var res = eventService.displayOrganizerEvents(id,PageRequest.of(page, size));
         return ResponseEntity.ok(res);
     }
 }

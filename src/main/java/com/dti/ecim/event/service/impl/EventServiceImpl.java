@@ -120,6 +120,20 @@ public class EventServiceImpl implements EventService {
         return events.map(event -> modelMapper.map(event, RetrieveEventResponseDto.class));
     }
 
+//    PREAUTHORIZED FOR ORGANIZER ONLY
+    @Override
+    public Page<RetrieveEventResponseDto> displayOrganizerEvents(Pageable pageable) {
+        UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
+        Page<Event> events = eventRepository.findAllByOrganizerIdOrderByEndingDate(userIdResponseDto.getId(), pageable);
+        return events.map(event -> modelMapper.map(event, RetrieveEventResponseDto.class));
+    }
+
+    @Override
+    public Page<RetrieveEventResponseDto> displayOrganizerEvents(Long organizerId, Pageable pageable) {
+        Page<Event> events = eventRepository.findAllByOrganizerIdOrderByEndingDate(organizerId, pageable);
+        return events.map(event -> modelMapper.map(event, RetrieveEventResponseDto.class));
+    }
+
     @Override
     public EventOfferingResponseDto getEventOffering(Long eventOfferingId) {
         Optional<EventOffering> eventOfferingOptional = eventOfferingRepository.findById(eventOfferingId);
