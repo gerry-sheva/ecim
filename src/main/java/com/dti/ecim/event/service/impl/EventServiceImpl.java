@@ -1,11 +1,12 @@
 package com.dti.ecim.event.service.impl;
 
+import com.dti.ecim.auth.dto.UserIdResponseDto;
+import com.dti.ecim.auth.service.AuthService;
 import com.dti.ecim.event.dto.*;
 import com.dti.ecim.event.entity.*;
 import com.dti.ecim.event.exceptions.InvalidDateException;
 import com.dti.ecim.event.repository.*;
 import com.dti.ecim.event.service.EventService;
-import com.dti.ecim.exceptions.ApplicationException;
 import com.dti.ecim.exceptions.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.dti.ecim.event.helper.EventHelper.stringToInstant;
@@ -33,9 +35,12 @@ public class EventServiceImpl implements EventService {
     private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
 
+    private final AuthService authService;
+
     @Override
     @Transactional
     public RetrieveEventResponseDto createEvent(CreateEventRequestDto createEventRequestDto) throws BadRequestException {
+        UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
         Instant start = stringToInstant(createEventRequestDto.getStartingDate());
         Instant end = stringToInstant(createEventRequestDto.getEndingDate());
 
@@ -49,11 +54,12 @@ public class EventServiceImpl implements EventService {
         Category category = findCategoryById(createEventRequestDto.getCategoryId());
         Interest interest = findInterestById(createEventRequestDto.getInterestId());
 
-        if (interest.getCategory().getId() != category.getId()) {
+        if (!Objects.equals(interest.getCategory().getId(), category.getId())) {
             throw new BadRequestException("Category id does not match interest id");
         }
 
         Event event = new Event();
+        event.setOrganizerId(userIdResponseDto.getId());
         event.setTitle(createEventRequestDto.getTitle());
         event.setDescription(createEventRequestDto.getDescription());
         event.setCategory(category);

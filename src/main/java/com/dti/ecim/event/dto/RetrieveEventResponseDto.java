@@ -18,6 +18,8 @@ public class RetrieveEventResponseDto {
 
     private Instant endingDate;
 
+    private OrganizerDto organizer;
+
     private LocationDto location;
 
     private CategoryDto category;
@@ -25,6 +27,17 @@ public class RetrieveEventResponseDto {
     private InterestDto interest;
 
     private Set<OfferingDto> offerings;
+
+    @Data
+    public static class OrganizerDto {
+        private String name;
+        private String avatar;
+
+        public OrganizerDto() {
+            this.name = "";
+            this.avatar = "";
+        }
+    }
 
     @Data
     public static class LocationDto {

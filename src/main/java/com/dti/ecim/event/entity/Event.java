@@ -1,5 +1,6 @@
 package com.dti.ecim.event.entity;
 
+import com.dti.ecim.user.entity.Organizer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,6 +24,9 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_id_gen")
     @SequenceGenerator(name = "event_id_gen", sequenceName = "event_id_seq", allocationSize = 1)
     private Long id;
+
+    @Column(name = "organizer_id")
+    private Long organizerId;
 
     @NotBlank
     @Column(name = "title", nullable = false)
@@ -50,6 +54,10 @@ public class Event {
 
     @Column(name = "deleted_at")
     private Instant deletedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organizer_id", insertable = false, updatable = false)
+    private Organizer organizer;
 
     @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
