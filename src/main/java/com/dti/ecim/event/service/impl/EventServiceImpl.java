@@ -1,17 +1,15 @@
 package com.dti.ecim.event.service.impl;
 
 import com.dti.ecim.event.dto.*;
-import com.dti.ecim.event.entity.Event;
-import com.dti.ecim.event.entity.EventLocation;
-import com.dti.ecim.event.entity.EventOffering;
+import com.dti.ecim.event.entity.*;
 import com.dti.ecim.event.exceptions.InvalidDateException;
 import com.dti.ecim.event.repository.*;
 import com.dti.ecim.event.service.EventService;
 import com.dti.ecim.exceptions.ApplicationException;
 import com.dti.ecim.exceptions.DataNotFoundException;
-import com.dti.ecim.event.entity.Interest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.apache.coyote.BadRequestException;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,11 +30,12 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final EventOfferingRepository eventOfferingRepository;
     private final InterestRepository interestRepository;
+    private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
 
     @Override
     @Transactional
-    public RetrieveEventResponseDto createEvent(CreateEventRequestDto createEventRequestDto) {
+    public RetrieveEventResponseDto createEvent(CreateEventRequestDto createEventRequestDto) throws BadRequestException {
         Instant start = stringToInstant(createEventRequestDto.getStartingDate());
         Instant end = stringToInstant(createEventRequestDto.getEndingDate());
 
@@ -47,17 +46,24 @@ public class EventServiceImpl implements EventService {
             throw new InvalidDateException("End date cannot be in the past");
         }
 
+        Category category = findCategoryById(createEventRequestDto.getCategoryId());
         Interest interest = findInterestById(createEventRequestDto.getInterestId());
+
+        if (interest.getCategory().getId() != category.getId()) {
+            throw new BadRequestException("Category id does not match interest id");
+        }
+
         Event event = new Event();
         event.setTitle(createEventRequestDto.getTitle());
         event.setDescription(createEventRequestDto.getDescription());
+        event.setCategory(category);
         event.setInterest(interest);
         event.setStartingDate(start);
         event.setEndingDate(end);
 
         List<CreateEventRequestDto.CreateEventOfferingDto> createEventOfferingDtoList = createEventRequestDto.getOfferings();
         if (createEventOfferingDtoList == null || createEventOfferingDtoList.isEmpty()) {
-            throw new ApplicationException("No offerings provided");
+            throw new BadRequestException("No offerings provided");
         }
         for (CreateEventRequestDto.CreateEventOfferingDto createEventOfferingDto : createEventOfferingDtoList) {
             EventOffering eventOffering = modelMapper.map(createEventOfferingDto, EventOffering.class);
@@ -125,5 +131,13 @@ public class EventServiceImpl implements EventService {
             throw new DataNotFoundException("Interest with id " + id + " not found");
         }
         return interestOptional.get();
+    }
+
+    private Category findCategoryById(Long id) {
+        Optional<Category> optionalCategory = categoryRepository.findById(id);
+        if (optionalCategory.isEmpty()) {
+            throw new DataNotFoundException("Category with id " + id + " not found");
+        }
+        return optionalCategory.get();
     }
 }

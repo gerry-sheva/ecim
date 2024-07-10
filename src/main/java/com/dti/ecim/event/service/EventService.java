@@ -6,11 +6,12 @@ import com.dti.ecim.event.dto.RetrieveEventResponseDto;
 import com.dti.ecim.event.dto.UpdateEventDto;
 import com.dti.ecim.event.entity.Event;
 import com.dti.ecim.event.entity.Interest;
+import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface EventService {
-    RetrieveEventResponseDto createEvent(CreateEventRequestDto createEventRequestDto);
+    RetrieveEventResponseDto createEvent(CreateEventRequestDto createEventRequestDto) throws BadRequestException;
     RetrieveEventResponseDto findEventById(Long id);
     RetrieveEventResponseDto updateEvent(Long id, UpdateEventDto updateEventDto);
     Page<RetrieveEventResponseDto> displayEvents(

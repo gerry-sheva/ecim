@@ -20,6 +20,8 @@ public class RetrieveEventResponseDto {
 
     private LocationDto location;
 
+    private CategoryDto category;
+
     private InterestDto interest;
 
     private Set<OfferingDto> offerings;
@@ -51,11 +53,9 @@ public class RetrieveEventResponseDto {
     @Data
     public static class InterestDto {
         private String name;
-        private CategoryDto category;
 
         public InterestDto() {
             this.name = "";
-            this.category = new CategoryDto();
         }
     }
 

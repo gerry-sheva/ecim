@@ -56,6 +56,10 @@ public class Event {
     private EventLocation location;
 
     @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @ManyToOne
     @JoinColumn(name = "interest_id")
     private Interest interest;
 

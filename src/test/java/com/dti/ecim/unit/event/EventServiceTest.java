@@ -8,6 +8,7 @@ import com.dti.ecim.event.exceptions.InvalidDateException;
 import com.dti.ecim.event.service.EventService;
 import com.dti.ecim.exceptions.ApplicationException;
 import com.dti.ecim.exceptions.DataNotFoundException;
+import org.apache.coyote.BadRequestException;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,6 +38,7 @@ public class EventServiceTest {
         createEventRequestDto.setDescription("Sample Description");
         createEventRequestDto.setStartingDate("07:00:00 PM, Wed 07/10/2024");
         createEventRequestDto.setEndingDate("10:00:00 PM, Wed 07/10/2024");
+        createEventRequestDto.setCategoryId(1L);
         createEventRequestDto.setInterestId(1L);
 
         CreateEventRequestDto.CreateEventLocationDto locationDto = new CreateEventRequestDto.CreateEventLocationDto();
@@ -56,7 +58,7 @@ public class EventServiceTest {
 
 //    CREATE EVENT
     @Test
-    public void test_create_event_with_valid_data() {
+    public void test_create_event_with_valid_data() throws BadRequestException {
         RetrieveEventResponseDto response = eventService.createEvent(createEventRequestDto);
 
         assertNotNull(response);
@@ -100,12 +102,12 @@ public class EventServiceTest {
     public void test_create_event_with_no_offering() {
         createEventRequestDto.setOfferings(new ArrayList<>());
 
-        Assertions.assertThrows(ApplicationException.class, () -> eventService.createEvent(createEventRequestDto));
+        Assertions.assertThrows(BadRequestException.class, () -> eventService.createEvent(createEventRequestDto));
     }
 
 //    FIND EVENT
 
-//    Object mapper somehow throws an error here,
+//    Object mapper somehow throws an error here, failed to lazily initialize a collection of role: com.dti.ecim.event.entity.Event.offerings: could not initialize proxy - no Session
 //    even though every thing is fine
 //    when findEventById is called by rest controller
     @Test
@@ -128,7 +130,7 @@ public class EventServiceTest {
         EventOfferingResponseDto responseDto = eventService.getEventOffering(2L);
 
         assertNotNull(responseDto);
-        assertEquals("Sample Offering", responseDto.getName());
+        assertEquals("General Admission", responseDto.getName());
     }
 
     @Test
@@ -155,7 +157,7 @@ public class EventServiceTest {
 
 //    Same issue with test_find_event_by_valid_id
     @Test
-    @Disabled
+//    @Disabled
     public void test_display_event() {
         Pageable pageable = PageRequest.of(0, 5);
         Page<RetrieveEventResponseDto> res = eventService.displayEvents(

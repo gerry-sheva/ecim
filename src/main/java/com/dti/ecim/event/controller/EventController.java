@@ -4,6 +4,7 @@ import com.dti.ecim.event.dto.CreateEventRequestDto;
 import com.dti.ecim.event.service.EventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,7 @@ public class EventController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createEvent(@RequestBody CreateEventRequestDto createEventRequestDto) {
+    public ResponseEntity<?> createEvent(@RequestBody CreateEventRequestDto createEventRequestDto) throws BadRequestException {
         var res = eventService.createEvent(createEventRequestDto);
         return ResponseEntity.ok(res);
     }
