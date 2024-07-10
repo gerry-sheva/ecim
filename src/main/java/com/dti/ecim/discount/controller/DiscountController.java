@@ -7,10 +7,7 @@ import com.dti.ecim.discount.dto.ClaimDiscountRequestDto;
 import com.dti.ecim.discount.service.DiscountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -32,5 +29,10 @@ public class DiscountController {
     @PostMapping("/claim")
     public void claimDiscount(@RequestBody ClaimDiscountRequestDto claimDiscountRequestDto) {
         discountService.claimDiscount(claimDiscountRequestDto);
+    }
+
+    @PostMapping("/{id}")
+    public void addPoint(@PathVariable Long id) {
+        discountService.addPoint(id);
     }
 }

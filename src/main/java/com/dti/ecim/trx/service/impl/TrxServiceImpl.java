@@ -21,6 +21,7 @@ import com.dti.ecim.trx.repository.TrxRepository;
 import com.dti.ecim.trx.service.TrxService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.apache.coyote.BadRequestException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +47,7 @@ public class TrxServiceImpl implements TrxService {
 
     @Override
     @Transactional
-    public TrxResponseDto createTrx(CreateTrxRequestDto createTrxRequestDto) throws NoSuchAlgorithmException {
+    public TrxResponseDto createTrx(CreateTrxRequestDto createTrxRequestDto) throws NoSuchAlgorithmException, BadRequestException {
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
         Trx trx = new Trx();
         trx.setEventId(createTrxRequestDto.getEventId());

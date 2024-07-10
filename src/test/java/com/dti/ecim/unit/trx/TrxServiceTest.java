@@ -4,6 +4,7 @@ import com.dti.ecim.trx.dto.CreateTixDto;
 import com.dti.ecim.trx.dto.CreateTrxRequestDto;
 import com.dti.ecim.trx.dto.TrxResponseDto;
 import com.dti.ecim.trx.service.TrxService;
+import org.apache.coyote.BadRequestException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,7 @@ public class TrxServiceTest {
     }
 
     @Test
-    public void test_create_trx_with_valid_data() throws NoSuchAlgorithmException {
+    public void test_create_trx_with_valid_data() throws NoSuchAlgorithmException, BadRequestException {
         TrxResponseDto responseDto = trxService.createTrx(requestDto);
 
         Assertions.assertThat(responseDto).isNotNull();

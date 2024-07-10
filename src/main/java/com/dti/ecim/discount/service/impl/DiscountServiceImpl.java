@@ -104,7 +104,7 @@ public class DiscountServiceImpl implements DiscountService {
         if (requestDto.isUsingPoint()) {
             Instant lastUsed = pointRepository.getLastResetDate(userIdResponseDto.getId());
             int points;
-            if (lastUsed.isAfter(Instant.now().minus(90, ChronoUnit.DAYS))) {
+            if (lastUsed != null && lastUsed.isAfter(Instant.now().minus(90, ChronoUnit.DAYS))) {
                 points = pointRepository.getCurrentPoints(userIdResponseDto.getId(), Instant.now(), lastUsed);
                 processDiscountResponseDto.addDiscountValue(points);
             } else {
@@ -121,6 +121,11 @@ public class DiscountServiceImpl implements DiscountService {
             pointRepository.save(deductedPoint);
 
         }
+        if (requestDto.getTotalPrice() < processDiscountResponseDto.getDiscountValue()) {
+            processDiscountResponseDto.setDiscountValue(requestDto.getTotalPrice());
+        }
+        log.info(String.valueOf(requestDto.getTotalPrice()));
+        log.info(String.valueOf(processDiscountResponseDto.getDiscountValue()));
         processDiscountResponseDto.setFinalPrice(requestDto.getTotalPrice() - processDiscountResponseDto.getDiscountValue());
         return processDiscountResponseDto;
     }
@@ -131,6 +136,7 @@ public class DiscountServiceImpl implements DiscountService {
         point.setAttendeeId(referralId);
         point.setAmount(10000);
         point.setExpiredAt(Instant.now().plus(90, ChronoUnit.DAYS));
+//        point.setExpiredAt(Instant.now().minus(80, ChronoUnit.DAYS));
         pointRepository.save(point);
     }
 }
