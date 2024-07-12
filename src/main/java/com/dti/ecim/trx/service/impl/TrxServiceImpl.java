@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 import java.util.Set;
 
 @RequiredArgsConstructor
@@ -39,8 +40,12 @@ public class TrxServiceImpl implements TrxService {
 
 
     @Override
-    public Trx retrieveTrx(Long trxId) {
-        return null;
+    public TrxResponseDto retrieveTrx(Long trxId) {
+        Optional<Trx> trxOptional = trxRepository.findById(trxId);
+        if (trxOptional.isEmpty()) {
+//            TODO: IMPLEMENT EXCEPTION
+        }
+        return modelMapper.map(trxOptional.get(), TrxResponseDto.class);
     }
 
     @Override
