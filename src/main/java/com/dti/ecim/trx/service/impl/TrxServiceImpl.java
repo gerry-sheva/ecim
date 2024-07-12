@@ -53,10 +53,11 @@ public class TrxServiceImpl implements TrxService {
     @Override
     @Transactional
     public TrxResponseDto createTrx(CreateTrxRequestDto createTrxRequestDto) throws NoSuchAlgorithmException, BadRequestException {
+        int totalPrice = 0;
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
         Trx trx = new Trx();
         trx.setEventId(createTrxRequestDto.getEventId());
-        int totalPrice = 0;
+        trx.setOrganizerId(createTrxRequestDto.getOrganizerId());
         trx.setAttendeeId(userIdResponseDto.getId());
         trx.setStatus(Status.WAITING_PAYMENT);
         Set<CreateTixDto> tixDtos = createTrxRequestDto.getTixes();

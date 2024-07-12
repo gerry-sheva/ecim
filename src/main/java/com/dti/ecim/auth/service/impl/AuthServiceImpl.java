@@ -136,4 +136,13 @@ public class AuthServiceImpl implements AuthService {
         }
         return new UserIdResponseDto(userAuthOptional.get().getId(), userAuthOptional.get().getEmail());
     }
+
+    @Override
+    public UserAuth getCurrentUser() {
+        Optional<UserAuth> userAuthOptional = userAuthRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        if (userAuthOptional.isEmpty()) {
+            throw new DataNotFoundException("User not found");
+        }
+        return userAuthOptional.get();
+    }
 }

@@ -14,6 +14,9 @@ public class CreateTrxRequestDto {
     @NotNull
     private Long eventId;
 
+    @Positive
+    private Long organizerId;
+
     private Long discountId;
 
     private boolean point;

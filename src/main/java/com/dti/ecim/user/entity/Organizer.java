@@ -19,11 +19,11 @@ import java.time.Instant;
 public class Organizer {
     @Id
     @Column(name = "id")
-    private Long id;
+    private Long organizerId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
-    @JoinColumn(name = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "id")
     private UserAuth user;
 
     @NotBlank

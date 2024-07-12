@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
         log.info(userIdResponseDto.getId().toString());
         Attendee newAttendee = new Attendee();
-        newAttendee.setId(userIdResponseDto.getId());
+        newAttendee.setAttendeeId(userIdResponseDto.getId());
         newAttendee.setFname(requestDto.getFname());
         newAttendee.setLname(requestDto.getLname());
         newAttendee.setDob(parseDate(requestDto.getDob()));
@@ -58,16 +58,16 @@ public class UserServiceImpl implements UserService {
             if (referral.isEmpty()) {
                 throw new BadRequestException("Referral code is invalid");
             }
-            boolean isAlreadyExists = referralIsAlreadyExist(referral.get().getId(), userIdResponseDto.getId());
+            boolean isAlreadyExists = referralIsAlreadyExist(referral.get().getAttendeeId(), userIdResponseDto.getId());
             if (!isAlreadyExists) {
                 log.info("Adding referral using code: " + requestDto.getReferralCode());
                 Referral newReferral = new Referral();
-                newReferral.setReferralId(referral.get().getId());
+                newReferral.setReferralId(referral.get().getAttendeeId());
                 newReferral.setReferral(referral.get());
                 newReferral.setReferreeId(userIdResponseDto.getId());
                 newReferral.setReferree(newAttendee);
                 referralRepository.save(newReferral);
-                discountService.addPoint(referral.get().getId());
+                discountService.addPoint(referral.get().getAttendeeId());
             }
         }
 
@@ -85,9 +85,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public CreateOrganizerResponseDto createOrganizer(CreateOrganizerRequestDto requestDto) throws BadRequestException {
-        UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
+        var userAuth = authService.getCurrentUser();
         Organizer newOrganizer = new Organizer();
-        newOrganizer.setId(userIdResponseDto.getId());
+//        newOrganizer.setOrganizerId(userAuth.getId());
+        newOrganizer.setUser(userAuth);
         newOrganizer.setName(requestDto.getName());
         newOrganizer.setAvatar(requestDto.getAvatar());
         organizerRepository.save(newOrganizer);

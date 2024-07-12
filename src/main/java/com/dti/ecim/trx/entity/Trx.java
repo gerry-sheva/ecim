@@ -4,6 +4,7 @@ import com.dti.ecim.discount.entity.Discount;
 import com.dti.ecim.event.entity.Event;
 import com.dti.ecim.trx.enums.Status;
 import com.dti.ecim.user.entity.Attendee;
+import com.dti.ecim.user.entity.Organizer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,9 @@ public class Trx {
     @Column(name = "attendee_id")
     private Long attendeeId;
 
+    @Column(name = "organizer_id")
+    private Long organizerId;
+
     @Enumerated(EnumType.STRING)
     private Status status;
 
@@ -61,6 +65,10 @@ public class Trx {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "attendee_id", insertable = false, updatable = false)
     private Attendee attendee;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organizer_id", insertable = false, updatable = false)
+    private Organizer organizer;
 
     public void addTix(Tix t) {
         tixes.add(t);

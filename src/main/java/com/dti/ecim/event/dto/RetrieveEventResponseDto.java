@@ -30,10 +30,12 @@ public class RetrieveEventResponseDto {
 
     @Data
     public static class OrganizerDto {
+        private Long id;
         private String name;
         private String avatar;
 
         public OrganizerDto() {
+            this.id = null;
             this.name = "";
             this.avatar = "";
         }

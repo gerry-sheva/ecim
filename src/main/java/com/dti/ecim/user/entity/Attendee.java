@@ -19,7 +19,7 @@ import java.time.LocalDate;
 public class Attendee {
     @Id
     @Column(name = "id")
-    private Long id;
+    private Long attendeeId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId

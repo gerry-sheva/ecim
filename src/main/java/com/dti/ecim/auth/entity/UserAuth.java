@@ -1,6 +1,8 @@
 package com.dti.ecim.auth.entity;
 
 import com.dti.ecim.auth.enums.Role;
+import com.dti.ecim.user.entity.Attendee;
+import com.dti.ecim.user.entity.Organizer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -55,6 +57,12 @@ public class UserAuth implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Attendee attendee;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Organizer organizer;
 
     @Override
     public String getUsername() {

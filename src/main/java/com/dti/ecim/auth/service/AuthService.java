@@ -1,6 +1,7 @@
 package com.dti.ecim.auth.service;
 
 import com.dti.ecim.auth.dto.*;
+import com.dti.ecim.auth.entity.UserAuth;
 import com.dti.ecim.dto.ResponseDto;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpHeaders;
@@ -12,4 +13,5 @@ public interface AuthService {
     void logoutUser(String jwtKey);
     ResponseDto resetPassword(ResetPasswordRequestDto requestDto) throws BadRequestException;
     UserIdResponseDto getCurrentUserId();
+    UserAuth getCurrentUser();
 }
