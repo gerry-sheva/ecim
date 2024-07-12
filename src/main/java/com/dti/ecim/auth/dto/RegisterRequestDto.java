@@ -1,6 +1,9 @@
 package com.dti.ecim.auth.dto;
 
+import com.dti.ecim.auth.enums.Role;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +18,9 @@ public class RegisterRequestDto {
     @Size(min = 8)
     private String password;
 
+    @Size(min = 8)
     private String confirmPassword;
 
-    private String referralCode;
+    @NotNull
+    private Role role;
 }

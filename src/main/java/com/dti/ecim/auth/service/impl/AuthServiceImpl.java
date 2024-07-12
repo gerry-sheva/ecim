@@ -54,6 +54,7 @@ public class AuthServiceImpl implements AuthService {
         userAuth.setUser(user);
         userAuth.setEmail(requestDto.getEmail());
         userAuth.setPassword(password);
+        userAuth.setRole(requestDto.getRole());
         userAuthRepository.save(userAuth);
         AuthResponseDto res = authenticateUser(new LoginRequestDto(requestDto.getEmail(), requestDto.getPassword()));
         res.setMessage("Registered user");

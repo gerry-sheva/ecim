@@ -1,5 +1,6 @@
 package com.dti.ecim.auth.entity;
 
+import com.dti.ecim.auth.enums.Role;
 import com.dti.ecim.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -54,18 +55,19 @@ public class UserAuth implements UserDetails {
     @Column(name = "deleted_at")
     private Instant deletedAt;
 
-    @Transient
-    private Collection<? extends GrantedAuthority> authorities;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Role role;
 
     @Override
     public String getUsername() {
         return this.email;
     }
 
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return List.of(new SimpleGrantedAuthority("PLON"));
-//    }
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
 
     @Override
     public boolean isAccountNonExpired() {

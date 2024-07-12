@@ -1,9 +1,7 @@
 package com.dti.ecim.user.service.impl;
 
-import com.dti.ecim.auth.dto.AddUserRoleDto;
 import com.dti.ecim.auth.dto.UserIdResponseDto;
 import com.dti.ecim.auth.service.AuthService;
-import com.dti.ecim.auth.service.UserRoleService;
 import com.dti.ecim.discount.service.DiscountService;
 import com.dti.ecim.exceptions.DataNotFoundException;
 import com.dti.ecim.user.dto.attendee.CreateAttendeeRequestDto;
@@ -40,7 +38,6 @@ public class UserServiceImpl implements UserService {
     private final OrganizerRepository organizerRepository;
     private final ReferralRepository referralRepository;
 
-    private final UserRoleService userRoleService;
     private final AuthService authService;
     private final DiscountService discountService;
 
@@ -61,10 +58,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public CreateAttendeeResponseDto createAttendee(CreateAttendeeRequestDto requestDto) throws NoSuchAlgorithmException, BadRequestException {
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
-        boolean alreadyHasRole = userRoleService.isRoleExist(userIdResponseDto.getId());
-        if (alreadyHasRole) {
-            throw new BadRequestException("User already has role");
-        }
         User user = retrieveUser(userIdResponseDto.getId());
         log.info(userIdResponseDto.getId().toString());
         Attendee newAttendee = new Attendee();
@@ -95,7 +88,6 @@ public class UserServiceImpl implements UserService {
                 discountService.addPoint(referral.get().getUserId());
             }
         }
-        userRoleService.addUserRole(new AddUserRoleDto(userIdResponseDto.getId(), 1L));
 
         CreateAttendeeResponseDto responseDto = new CreateAttendeeResponseDto();
         responseDto.setFname(newAttendee.getFname());
@@ -112,18 +104,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public CreateOrganizerResponseDto createOrganizer(CreateOrganizerRequestDto requestDto) throws BadRequestException {
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
-        boolean alreadyHasRole = userRoleService.isRoleExist(userIdResponseDto.getId());
-        if (alreadyHasRole) {
-            throw new BadRequestException("User already has role");
-        }
         User user = retrieveUser(userIdResponseDto.getId());
         Organizer newOrganizer = new Organizer();
         newOrganizer.setUser(user);
         newOrganizer.setName(requestDto.getName());
         newOrganizer.setAvatar(requestDto.getAvatar());
         organizerRepository.save(newOrganizer);
-
-        userRoleService.addUserRole(new AddUserRoleDto(userIdResponseDto.getId(), 2L));
 
         CreateOrganizerResponseDto responseDto = new CreateOrganizerResponseDto();
         responseDto.setName(newOrganizer.getName());

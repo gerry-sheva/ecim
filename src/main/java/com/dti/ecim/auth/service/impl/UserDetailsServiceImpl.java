@@ -2,12 +2,8 @@ package com.dti.ecim.auth.service.impl;
 
 import com.dti.ecim.auth.entity.UserAuth;
 import com.dti.ecim.auth.repository.UserAuthRepository;
-import com.dti.ecim.auth.repository.UserRoleRepository;
-import com.dti.ecim.auth.service.UserRoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,7 +17,6 @@ import java.util.Optional;
 @Log
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserAuthRepository userAuthRepository;
-    private final UserRoleService userRoleService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -29,9 +24,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (userAuthOptional.isEmpty()) {
             throw new UsernameNotFoundException(username);
         }
-        UserAuth userAuth = userAuthOptional.get();
-        List<GrantedAuthority> roles = userRoleService.retrieveRoles(userAuth.getUserId());
-        userAuth.setAuthorities(roles);
-        return userAuth;
+        return userAuthOptional.get();
     }
 }
