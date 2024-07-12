@@ -4,8 +4,6 @@ import com.dti.ecim.auth.dto.UserIdResponseDto;
 import com.dti.ecim.auth.service.AuthService;
 import com.dti.ecim.discount.dto.ProcessDiscountRequestDto;
 import com.dti.ecim.discount.dto.ProcessDiscountResponseDto;
-import com.dti.ecim.discount.dto.RedeemDiscountRequestDto;
-import com.dti.ecim.discount.dto.RedeemDiscountResponseDto;
 import com.dti.ecim.discount.service.DiscountService;
 import com.dti.ecim.event.dto.EventOfferingResponseDto;
 import com.dti.ecim.event.entity.EventOffering;
@@ -83,15 +81,5 @@ public class TrxServiceImpl implements TrxService {
 
         Trx savedTrx = trxRepository.save(trx);
         return modelMapper.map(savedTrx, TrxResponseDto.class);
-    }
-
-    @Override
-    public Trx updateTrx(Trx trx) {
-        return null;
-    }
-
-    @Override
-    public void deleteTrx(Trx trx) {
-
     }
 }
