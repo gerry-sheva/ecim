@@ -1,5 +1,6 @@
 package com.dti.ecim.user.entity;
 
+import com.dti.ecim.auth.entity.UserAuth;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -17,13 +18,13 @@ import java.time.Instant;
 @Table(name = "organizer")
 public class Organizer {
     @Id
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "id")
+    private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "id", insertable = false, updatable = false)
+    private UserAuth user;
 
     @NotBlank
     @Column(name = "name")

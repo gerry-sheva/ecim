@@ -1,7 +1,6 @@
 package com.dti.ecim.auth.entity;
 
 import com.dti.ecim.auth.enums.Role;
-import com.dti.ecim.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -26,12 +25,10 @@ import java.util.List;
 public class UserAuth implements UserDetails {
 
     @Id
-    @Column(name = "user_id")
-    private Long userId;
-
-    @OneToOne(mappedBy = "auth")
-    @MapsId
-    private User user;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_gen")
+    @SequenceGenerator(name = "user_id_gen", sequenceName = "user_id_seq")
+    @Column(name = "id")
+    private Long id;
 
     @Email
     @Column(name = "email", nullable = false, unique = true)

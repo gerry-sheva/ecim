@@ -7,9 +7,6 @@ import com.dti.ecim.auth.repository.UserAuthRepository;
 import com.dti.ecim.auth.service.AuthService;
 import com.dti.ecim.dto.ResponseDto;
 import com.dti.ecim.exceptions.DataNotFoundException;
-import com.dti.ecim.user.entity.User;
-import com.dti.ecim.user.repository.UserRepository;
-import com.dti.ecim.user.service.UserService;
 import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -35,23 +32,19 @@ import java.util.stream.Collectors;
 @Service
 @Log
 public class AuthServiceImpl implements AuthService {
-    private final UserRepository userRepository;
     private final UserAuthRepository userAuthRepository;
     private final AuthRedisRepository authRedisRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtEncoder jwtEncoder;
 
-//    private final UserService userService;
     @Override
     public AuthResponseDto registerUser(RegisterRequestDto requestDto) throws BadRequestException{
         if (!requestDto.getPassword().equals(requestDto.getConfirmPassword())) {
             throw new BadRequestException("Passwords do not match");
         }
         String password = passwordEncoder.encode(requestDto.getPassword());
-        User user = userRepository.save(new User());
         UserAuth userAuth = new UserAuth();
-        userAuth.setUser(user);
         userAuth.setEmail(requestDto.getEmail());
         userAuth.setPassword(password);
         userAuth.setRole(requestDto.getRole());
@@ -141,6 +134,6 @@ public class AuthServiceImpl implements AuthService {
         if (userAuthOptional.isEmpty()) {
             throw new DataNotFoundException("User not found");
         }
-        return new UserIdResponseDto(userAuthOptional.get().getUserId(), userAuthOptional.get().getEmail());
+        return new UserIdResponseDto(userAuthOptional.get().getId(), userAuthOptional.get().getEmail());
     }
 }

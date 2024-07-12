@@ -3,7 +3,6 @@ package com.dti.ecim.user.service.impl;
 import com.dti.ecim.auth.dto.UserIdResponseDto;
 import com.dti.ecim.auth.service.AuthService;
 import com.dti.ecim.discount.service.DiscountService;
-import com.dti.ecim.exceptions.DataNotFoundException;
 import com.dti.ecim.user.dto.attendee.CreateAttendeeRequestDto;
 import com.dti.ecim.user.dto.attendee.CreateAttendeeResponseDto;
 import com.dti.ecim.user.dto.organizer.CreateOrganizerRequestDto;
@@ -11,11 +10,9 @@ import com.dti.ecim.user.dto.organizer.CreateOrganizerResponseDto;
 import com.dti.ecim.user.entity.Attendee;
 import com.dti.ecim.user.entity.Organizer;
 import com.dti.ecim.user.entity.Referral;
-import com.dti.ecim.user.entity.User;
 import com.dti.ecim.user.repository.AttendeeRepository;
 import com.dti.ecim.user.repository.OrganizerRepository;
 import com.dti.ecim.user.repository.ReferralRepository;
-import com.dti.ecim.user.repository.UserRepository;
 import com.dti.ecim.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -33,7 +30,6 @@ import static com.dti.ecim.user.helper.UserHelper.parseDate;
 @Service
 @Log
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
     private final AttendeeRepository attendeeRepository;
     private final OrganizerRepository organizerRepository;
     private final ReferralRepository referralRepository;
@@ -42,26 +38,12 @@ public class UserServiceImpl implements UserService {
     private final DiscountService discountService;
 
     @Override
-    public User registerUser() {
-        return userRepository.save(new User());
-    }
-
-    private User retrieveUser(Long userId) {
-        Optional<User> user = userRepository.findById(userId);
-        if (user.isEmpty()) {
-            throw new DataNotFoundException("User with id " + userId + " not found");
-        }
-        return user.get();
-    }
-
-    @Override
     @Transactional
     public CreateAttendeeResponseDto createAttendee(CreateAttendeeRequestDto requestDto) throws NoSuchAlgorithmException, BadRequestException {
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
-        User user = retrieveUser(userIdResponseDto.getId());
         log.info(userIdResponseDto.getId().toString());
         Attendee newAttendee = new Attendee();
-        newAttendee.setUser(user);
+        newAttendee.setId(userIdResponseDto.getId());
         newAttendee.setFname(requestDto.getFname());
         newAttendee.setLname(requestDto.getLname());
         newAttendee.setDob(parseDate(requestDto.getDob()));
@@ -76,16 +58,16 @@ public class UserServiceImpl implements UserService {
             if (referral.isEmpty()) {
                 throw new BadRequestException("Referral code is invalid");
             }
-            boolean isAlreadyExists = referralIsAlreadyExist(referral.get().getUserId(), userIdResponseDto.getId());
+            boolean isAlreadyExists = referralIsAlreadyExist(referral.get().getId(), userIdResponseDto.getId());
             if (!isAlreadyExists) {
                 log.info("Adding referral using code: " + requestDto.getReferralCode());
                 Referral newReferral = new Referral();
-                newReferral.setReferralId(referral.get().getUserId());
+                newReferral.setReferralId(referral.get().getId());
                 newReferral.setReferral(referral.get());
                 newReferral.setReferreeId(userIdResponseDto.getId());
                 newReferral.setReferree(newAttendee);
                 referralRepository.save(newReferral);
-                discountService.addPoint(referral.get().getUserId());
+                discountService.addPoint(referral.get().getId());
             }
         }
 
@@ -104,9 +86,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public CreateOrganizerResponseDto createOrganizer(CreateOrganizerRequestDto requestDto) throws BadRequestException {
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
-        User user = retrieveUser(userIdResponseDto.getId());
         Organizer newOrganizer = new Organizer();
-        newOrganizer.setUser(user);
+        newOrganizer.setId(userIdResponseDto.getId());
         newOrganizer.setName(requestDto.getName());
         newOrganizer.setAvatar(requestDto.getAvatar());
         organizerRepository.save(newOrganizer);
