@@ -21,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.apache.coyote.BadRequestException;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,5 +88,13 @@ public class TrxServiceImpl implements TrxService {
 
         Trx savedTrx = trxRepository.save(trx);
         return modelMapper.map(savedTrx, TrxResponseDto.class);
+    }
+
+    @Override
+    public Page<TrxResponseDto> retrieveAllTrx(Pageable pageable) {
+        UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
+//        TODO: IF USER IS AN ATTENDEE, QUERY BY ATTENDEE_ID
+//        TODO: IF USER IS AN ORGANIZER, QUERY BY ORGANIZER_ID
+        return null;
     }
 }
