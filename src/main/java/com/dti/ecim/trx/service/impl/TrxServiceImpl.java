@@ -96,11 +96,9 @@ public class TrxServiceImpl implements TrxService {
     public Page<TrxResponseDto> retrieveAllTrx(Pageable pageable) {
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
         if (userIdResponseDto.getRole().equals(Role.ATTENDEE)) {
-            //        TODO: IF USER IS AN ATTENDEE, QUERY BY ATTENDEE_ID
             Page<Trx> trxPage = trxRepository.findAllByAttendeeId(userIdResponseDto.getId(), pageable);
             return trxPage.map(trx -> modelMapper.map(trx, TrxResponseDto.class));
         } else if (userIdResponseDto.getRole().equals(Role.ORGANIZER)) {
-            //        TODO: IF USER IS AN ORGANIZER, QUERY BY ORGANIZER_ID
             Page<Trx> trxPage = trxRepository.findAllByOrganizerId(userIdResponseDto.getId(), pageable);
             return trxPage.map(trx -> modelMapper.map(trx, TrxResponseDto.class));
         }
