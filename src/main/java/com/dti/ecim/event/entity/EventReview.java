@@ -1,5 +1,6 @@
 package com.dti.ecim.event.entity;
 
+import com.dti.ecim.user.entity.Attendee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,6 +28,10 @@ public class EventReview {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
     private Event event;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "attendee_id")
+    private Attendee attendee;
 
     @Override
     public boolean equals(Object o) {
