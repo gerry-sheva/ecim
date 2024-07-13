@@ -14,6 +14,7 @@ import java.time.LocalDate;
 public interface TrxRepository extends JpaRepository<Trx, Long>, JpaSpecificationExecutor<Trx> {
     Page<Trx> findAllByOrganizerId(Long organizerId, Pageable pageable);
     Page<Trx> findAllByAttendeeId(Long attendeeId, Pageable pageable);
+    Page<Trx> findAllByOrganizerId(Long organizerId, Specification<Trx> spec, Pageable pageable);
 
     @Query(value = "SELECT * FROM trx WHERE DATE(created_at) = ?1", nativeQuery = true)
     Page<Trx> findAllByDate(LocalDate createdAt, Pageable pageable);

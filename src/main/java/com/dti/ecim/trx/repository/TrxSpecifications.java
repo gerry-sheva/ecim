@@ -3,17 +3,12 @@ package com.dti.ecim.trx.repository;
 import com.dti.ecim.trx.entity.Trx;
 import com.dti.ecim.trx.enums.TimeSpecifier;
 import jakarta.persistence.criteria.Expression;
-import org.hibernate.query.sqm.TemporalUnit;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.Year;
-import java.time.temporal.Temporal;
 
 public class TrxSpecifications {
-    public static Specification<Trx> inMonth(Instant date, TimeSpecifier timeSpecifier) {
+    public static Specification<Trx> byTime(Instant date, TimeSpecifier timeSpecifier) {
 //        if (year < 0 || month < 0) {
 //            return (root, query, cb) -> cb.conjunction();
 //        }
