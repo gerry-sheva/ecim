@@ -7,6 +7,7 @@ import com.dti.ecim.trx.service.TrxService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.apache.coyote.BadRequestException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,5 +25,14 @@ public class TrxController {
         log.info("Creating new trx");
         TrxResponseDto trx = trxService.createTrx(createTrxRequestDto);
         return trx;
+    }
+
+    @GetMapping
+    public ResponseEntity<?> retrieveTrxs(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        var res = trxService.retrieveAllTrx(PageRequest.of(page, size));
+        return ResponseEntity.ok(res);
     }
 }

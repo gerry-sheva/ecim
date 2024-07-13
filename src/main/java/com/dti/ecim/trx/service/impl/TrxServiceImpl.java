@@ -1,6 +1,7 @@
 package com.dti.ecim.trx.service.impl;
 
 import com.dti.ecim.auth.dto.UserIdResponseDto;
+import com.dti.ecim.auth.enums.Role;
 import com.dti.ecim.auth.service.AuthService;
 import com.dti.ecim.discount.dto.ProcessDiscountRequestDto;
 import com.dti.ecim.discount.dto.ProcessDiscountResponseDto;
@@ -94,8 +95,15 @@ public class TrxServiceImpl implements TrxService {
     @Override
     public Page<TrxResponseDto> retrieveAllTrx(Pageable pageable) {
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
-//        TODO: IF USER IS AN ATTENDEE, QUERY BY ATTENDEE_ID
-//        TODO: IF USER IS AN ORGANIZER, QUERY BY ORGANIZER_ID
+        if (userIdResponseDto.getRole().equals(Role.ATTENDEE)) {
+            //        TODO: IF USER IS AN ATTENDEE, QUERY BY ATTENDEE_ID
+            Page<Trx> trxPage = trxRepository.findAllByAttendeeId(userIdResponseDto.getId(), pageable);
+            return trxPage.map(trx -> modelMapper.map(trx, TrxResponseDto.class));
+        } else if (userIdResponseDto.getRole().equals(Role.ORGANIZER)) {
+            //        TODO: IF USER IS AN ORGANIZER, QUERY BY ORGANIZER_ID
+            Page<Trx> trxPage = trxRepository.findAllByOrganizerId(userIdResponseDto.getId(), pageable);
+            return trxPage.map(trx -> modelMapper.map(trx, TrxResponseDto.class));
+        }
         return null;
     }
 }
