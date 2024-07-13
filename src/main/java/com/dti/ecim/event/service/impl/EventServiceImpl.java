@@ -127,13 +127,12 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventOfferingResponseDto getEventOffering(Long eventOfferingId) {
+    public EventOffering getEventOffering(Long eventOfferingId) {
         Optional<EventOffering> eventOfferingOptional = eventOfferingRepository.findById(eventOfferingId);
         if (eventOfferingOptional.isEmpty()) {
             throw new DataNotFoundException("Event offering with id " + eventOfferingId + " not found");
         }
-        EventOffering eventOffering = eventOfferingOptional.get();
-        return modelMapper.map(eventOffering, EventOfferingResponseDto.class);
+        return eventOfferingOptional.get();
     }
 
     @Override
@@ -167,5 +166,10 @@ public class EventServiceImpl implements EventService {
         review.setAttendeeId(userIdResponseDto.getId());
         event.addReview(review);
         eventRepository.save(event);
+    }
+
+    @Override
+    public void updateOffering(EventOffering eventOffering) {
+        eventOfferingRepository.save(eventOffering);
     }
 }

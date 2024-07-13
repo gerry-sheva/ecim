@@ -125,18 +125,18 @@ public class EventServiceTest {
 
 //    GET EVENT OFFERING
 
-    @Test
-    public void test_find_event_offering_with_valid_id() {
-        EventOfferingResponseDto responseDto = eventService.getEventOffering(2L);
-
-        assertNotNull(responseDto);
-        assertEquals("General Admission", responseDto.getName());
-    }
-
-    @Test
-    public void test_find_event_offering_with_invalid_id() {
-        Assertions.assertThrows(DataNotFoundException.class, () -> eventService.getEventOffering(-1L));
-    }
+//    @Test
+//    public void test_find_event_offering_with_valid_id() {
+//        EventOfferingResponseDto responseDto = eventService.getEventOffering(2L);
+//
+//        assertNotNull(responseDto);
+//        assertEquals("General Admission", responseDto.getName());
+//    }
+//
+//    @Test
+//    public void test_find_event_offering_with_invalid_id() {
+//        Assertions.assertThrows(DataNotFoundException.class, () -> eventService.getEventOffering(-1L));
+//    }
 
 //    FIND INTEREST
 

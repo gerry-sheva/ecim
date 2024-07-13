@@ -67,14 +67,19 @@ public class TrxServiceImpl implements TrxService {
         trx.setStatus(Status.WAITING_PAYMENT);
         Set<CreateTixDto> tixDtos = createTrxRequestDto.getTixes();
         for (CreateTixDto tixDto : tixDtos) {
-            EventOfferingResponseDto eventOffering = eventService.getEventOffering(tixDto.getOfferingId());
+            var eventOffering = eventService.getEventOffering(tixDto.getOfferingId());
+            if (eventOffering.getAvailability() < tixDto.getQuantity()) {
+                throw new BadRequestException("Offering is not available");
+            }
             for (int i = 0; i < tixDto.getQuantity(); i++) {
                 Tix tix = new Tix();
                 tix.setCode(TrxHelper.generateTixCode(eventOffering.getName()));
-                tix.setEventOffering(modelMapper.map(eventOffering, EventOffering.class));
+                tix.setEventOffering(eventOffering);
                 trx.addTix(tix);
                 totalPrice += eventOffering.getPrice();
             }
+            eventOffering.setAvailability(eventOffering.getAvailability() - tixDto.getQuantity());
+            eventService.updateOffering(eventOffering);
         }
         trx.setPrice(totalPrice);
         if (createTrxRequestDto.getDiscountId() != null || createTrxRequestDto.isPoint())  {
