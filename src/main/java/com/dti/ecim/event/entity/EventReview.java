@@ -21,16 +21,19 @@ public class EventReview {
     @SequenceGenerator(name = "event_review_id_gen", sequenceName = "event_review_id_seq")
     private Long id;
 
+    @Column(name = "attendee_id")
+    private Long attendeeId;
+
     private int rating;
 
-    private String comment;
+    private String review;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
     private Event event;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "attendee_id")
+    @JoinColumn(name = "attendee_id", insertable = false, updatable = false)
     private Attendee attendee;
 
     @Override
@@ -38,11 +41,11 @@ public class EventReview {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EventReview that = (EventReview) o;
-        return rating == that.rating && Objects.equals(id, that.id) && Objects.equals(comment, that.comment) && Objects.equals(event, that.event);
+        return rating == that.rating && Objects.equals(id, that.id) && Objects.equals(review, that.review) && Objects.equals(event, that.event);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, rating, comment, event);
+        return Objects.hash(id, rating, review, event);
     }
 }

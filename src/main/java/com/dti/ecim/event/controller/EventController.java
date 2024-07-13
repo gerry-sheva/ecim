@@ -1,5 +1,6 @@
 package com.dti.ecim.event.controller;
 
+import com.dti.ecim.event.dto.AddReviewRequestDto;
 import com.dti.ecim.event.dto.CreateEventRequestDto;
 import com.dti.ecim.event.service.EventService;
 import lombok.RequiredArgsConstructor;
@@ -60,5 +61,10 @@ public class EventController {
     ) {
         var res = eventService.displayOrganizerEvents(id,PageRequest.of(page, size));
         return ResponseEntity.ok(res);
+    }
+
+    @PostMapping("/review")
+    public void addReview(@RequestBody AddReviewRequestDto requestDto) {
+        eventService.addReview(requestDto);
     }
 }

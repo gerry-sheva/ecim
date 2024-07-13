@@ -152,4 +152,20 @@ public class EventServiceImpl implements EventService {
         }
         return optionalCategory.get();
     }
+
+    @Override
+    public void addReview(AddReviewRequestDto requestDto) {
+        UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
+        Optional<Event> eventOptional = eventRepository.findById(requestDto.getEventId());
+        if (eventOptional.isEmpty()) {
+            throw new DataNotFoundException("Event with id " + requestDto.getEventId() + " not found");
+        }
+        Event event = eventOptional.get();
+        EventReview review = new EventReview();
+        review.setReview(requestDto.getReview());
+        review.setRating(requestDto.getRating());
+        review.setAttendeeId(userIdResponseDto.getId());
+        event.addReview(review);
+        eventRepository.save(event);
+    }
 }

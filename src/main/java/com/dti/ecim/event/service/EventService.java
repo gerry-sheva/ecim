@@ -1,9 +1,6 @@
 package com.dti.ecim.event.service;
 
-import com.dti.ecim.event.dto.CreateEventRequestDto;
-import com.dti.ecim.event.dto.EventOfferingResponseDto;
-import com.dti.ecim.event.dto.RetrieveEventResponseDto;
-import com.dti.ecim.event.dto.UpdateEventDto;
+import com.dti.ecim.event.dto.*;
 import com.dti.ecim.event.entity.Event;
 import com.dti.ecim.event.entity.Interest;
 import org.apache.coyote.BadRequestException;
@@ -24,4 +21,5 @@ public interface EventService {
     EventOfferingResponseDto getEventOffering(Long eventOfferingId);
     Interest findInterestById(Long id);
     Page<RetrieveEventResponseDto> displayOrganizerEvents(Long organizerId, Pageable pageable);
+    void addReview(AddReviewRequestDto requestDto);
 }
