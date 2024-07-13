@@ -113,9 +113,9 @@ public class TrxServiceImpl implements TrxService {
     }
 
     @Override
-    public Page<TrxResponseDto> summarizeTrxs(Pageable pageable, TimeSpecifier timeSpecifier) {
+    public Page<TrxResponseDto> summarizeTrxs(Pageable pageable, Instant date, TimeSpecifier timeSpecifier) {
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
-        var spec = Specification.where(TrxSpecifications.inMonth(Instant.now(), timeSpecifier));
+        var spec = Specification.where(TrxSpecifications.inMonth(date, timeSpecifier));
 //        var result = trxRepository.findAllByMonth(month, year, pageable);
 //        LocalDate now = LocalDate.now();
 //        var result = trxRepository.findAllByDate(now, pageable);

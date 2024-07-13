@@ -9,11 +9,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @RestController
@@ -48,10 +51,11 @@ public class TrxController {
     public ResponseEntity<?> sumTrxs(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
-            @RequestParam(defaultValue = "DAY") String timeSpecifier
+            @RequestParam(defaultValue = "DAY") String timeSpecifier,
+            @RequestParam() @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Instant date
             ) {
         TimeSpecifier timeSpecifierEnum = TimeSpecifier.valueOf(timeSpecifier.toUpperCase());
-        var res = trxService.summarizeTrxs(PageRequest.of(page, size), timeSpecifierEnum);
+        var res = trxService.summarizeTrxs(PageRequest.of(page, size), date, timeSpecifierEnum);
         return ResponseEntity.ok(res);
     }
 }

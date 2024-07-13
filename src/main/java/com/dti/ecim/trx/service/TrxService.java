@@ -8,10 +8,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.security.NoSuchAlgorithmException;
+import java.time.Instant;
 
 public interface TrxService {
     TrxResponseDto retrieveTrx(Long trxId) throws BadRequestException, NoSuchAlgorithmException;
     TrxResponseDto createTrx(CreateTrxRequestDto createTrxRequestDto) throws NoSuchAlgorithmException, BadRequestException;
     Page<TrxResponseDto> retrieveAllTrx(Pageable pageable);
-    Page<TrxResponseDto> summarizeTrxs(Pageable pageable, TimeSpecifier timeSpecifier);
+    Page<TrxResponseDto> summarizeTrxs(Pageable pageable, Instant date, TimeSpecifier timeSpecifier);
 }
