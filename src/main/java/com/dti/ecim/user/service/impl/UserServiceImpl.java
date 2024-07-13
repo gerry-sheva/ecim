@@ -40,14 +40,13 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public CreateAttendeeResponseDto createAttendee(CreateAttendeeRequestDto requestDto) throws NoSuchAlgorithmException, BadRequestException {
-        UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
-        log.info(userIdResponseDto.getId().toString());
+        var userAuth = authService.getCurrentUser();
         Attendee newAttendee = new Attendee();
-        newAttendee.setAttendeeId(userIdResponseDto.getId());
+        newAttendee.setUser(userAuth);
         newAttendee.setFname(requestDto.getFname());
         newAttendee.setLname(requestDto.getLname());
         newAttendee.setDob(parseDate(requestDto.getDob()));
-        newAttendee.setRefCode(generateReferralCode(userIdResponseDto.getEmail()));
+        newAttendee.setRefCode(generateReferralCode(userAuth.getEmail()));
         newAttendee.setPoints(0);
         newAttendee.setContact(requestDto.getContact());
         attendeeRepository.save(newAttendee);
@@ -58,13 +57,13 @@ public class UserServiceImpl implements UserService {
             if (referral.isEmpty()) {
                 throw new BadRequestException("Referral code is invalid");
             }
-            boolean isAlreadyExists = referralIsAlreadyExist(referral.get().getAttendeeId(), userIdResponseDto.getId());
+            boolean isAlreadyExists = referralIsAlreadyExist(referral.get().getAttendeeId(), userAuth.getId());
             if (!isAlreadyExists) {
                 log.info("Adding referral using code: " + requestDto.getReferralCode());
                 Referral newReferral = new Referral();
                 newReferral.setReferralId(referral.get().getAttendeeId());
                 newReferral.setReferral(referral.get());
-                newReferral.setReferreeId(userIdResponseDto.getId());
+                newReferral.setReferreeId(userAuth.getId());
                 newReferral.setReferree(newAttendee);
                 referralRepository.save(newReferral);
                 discountService.addPoint(referral.get().getAttendeeId());
@@ -87,7 +86,6 @@ public class UserServiceImpl implements UserService {
     public CreateOrganizerResponseDto createOrganizer(CreateOrganizerRequestDto requestDto) throws BadRequestException {
         var userAuth = authService.getCurrentUser();
         Organizer newOrganizer = new Organizer();
-//        newOrganizer.setOrganizerId(userAuth.getId());
         newOrganizer.setUser(userAuth);
         newOrganizer.setName(requestDto.getName());
         newOrganizer.setAvatar(requestDto.getAvatar());

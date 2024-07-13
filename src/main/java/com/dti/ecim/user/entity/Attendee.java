@@ -23,7 +23,7 @@ public class Attendee {
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
-    @JoinColumn(name = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "id")
     private UserAuth user;
 
     @NotBlank
