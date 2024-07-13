@@ -74,6 +74,9 @@ public class Event {
     @OneToMany(mappedBy = "event",cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<EventOffering> offerings = new HashSet<>();
 
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<EventReview> reviews = new HashSet<>();
+
     public void addOffering(EventOffering offering) {
         offerings.add(offering);
         offering.setEvent(this);
@@ -92,5 +95,15 @@ public class Event {
     public void removeLocation(EventLocation location) {
         this.location = null;
         location.setEvent(null);
+    }
+
+    public void addReview(EventReview review) {
+        this.reviews.add(review);
+        review.setEvent(this);
+    }
+
+    public void removeReview(EventReview review) {
+        this.reviews.remove(review);
+        review.setEvent(null);
     }
 }
