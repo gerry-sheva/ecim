@@ -15,4 +15,5 @@ public interface TrxService {
     TrxResponseDto createTrx(CreateTrxRequestDto createTrxRequestDto) throws NoSuchAlgorithmException, BadRequestException;
     Page<TrxResponseDto> retrieveAllTrx(Pageable pageable);
     Page<TrxResponseDto> summarizeTrxs(Pageable pageable, Instant date, TimeSpecifier timeSpecifier);
+    int findRevenue(Instant date, TimeSpecifier timeSpecifier);
 }

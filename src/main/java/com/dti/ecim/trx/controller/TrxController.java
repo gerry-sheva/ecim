@@ -2,7 +2,6 @@ package com.dti.ecim.trx.controller;
 
 import com.dti.ecim.trx.dto.CreateTrxRequestDto;
 import com.dti.ecim.trx.dto.TrxResponseDto;
-import com.dti.ecim.trx.entity.Trx;
 import com.dti.ecim.trx.enums.TimeSpecifier;
 import com.dti.ecim.trx.service.TrxService;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @RestController
@@ -56,6 +53,16 @@ public class TrxController {
             ) {
         TimeSpecifier timeSpecifierEnum = TimeSpecifier.valueOf(timeSpecifier.toUpperCase());
         var res = trxService.summarizeTrxs(PageRequest.of(page, size), date, timeSpecifierEnum);
+        return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/revenue")
+    public ResponseEntity<?> revenueTrxs(
+            @RequestParam(defaultValue = "DAY") String timeSpecifier,
+            @RequestParam() @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Instant date
+    ) {
+        TimeSpecifier timeSpecifierEnum = TimeSpecifier.valueOf(timeSpecifier.toUpperCase());
+        var res = trxService.findRevenue(date, timeSpecifierEnum);
         return ResponseEntity.ok(res);
     }
 }

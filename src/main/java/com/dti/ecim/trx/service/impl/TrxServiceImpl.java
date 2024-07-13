@@ -120,4 +120,13 @@ public class TrxServiceImpl implements TrxService {
         var result = trxRepository.findAll(spec, pageable);
         return result.map(trx -> modelMapper.map(trx, TrxResponseDto.class));
     }
+
+    @Override
+    public int findRevenue(Instant date, TimeSpecifier timeSpecifier) {
+        var spec = Specification.where(TrxSpecifications.sumFinalPrice());
+//                .and(TrxSpecifications.byOrganizerId(userIdResponseDto.getId()));
+//        return trxRepository.findAll(spec);
+        var res = trxRepository.findAll(spec);
+        return 0;
+    }
 }

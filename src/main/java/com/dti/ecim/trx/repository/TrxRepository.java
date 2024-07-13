@@ -1,29 +1,27 @@
 package com.dti.ecim.trx.repository;
 
+import com.dti.ecim.dashboard.dao.StatisticDao;
 import com.dti.ecim.trx.entity.Trx;
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
-import java.time.Instant;
-import java.time.LocalDate;
+import java.util.List;
 
 public interface TrxRepository extends JpaRepository<Trx, Long>, JpaSpecificationExecutor<Trx> {
     Page<Trx> findAllByOrganizerId(Long organizerId, Pageable pageable);
     Page<Trx> findAllByAttendeeId(Long attendeeId, Pageable pageable);
-    Page<Trx> findAllByOrganizerId(Long organizerId, Specification<Trx> spec, Pageable pageable);
 
-    @Query(value = "SELECT * FROM trx WHERE DATE(created_at) = ?1", nativeQuery = true)
-    Page<Trx> findAllByDate(LocalDate createdAt, Pageable pageable);
-
-    @Query(value = "SELECT * FROM trx WHERE EXTRACT(MONTH FROM created_at) = ?1 AND EXTRACT(YEAR FROM created_at) = ?2;", nativeQuery = true)
-    Page<Trx> findAllByMonth(int month, int year, Pageable pageable);
-
-    @Query(value = "SELECT * FROM trx WHERE EXTRACT(YEAR FROM created_at) = 2024;", nativeQuery = true)
-    Page<Trx> findAllByYear(Pageable pageable);
-
-
+    @Query(value = "SELECT count(tix.event_offering_id) as count, tix.event_offering_id as offeringId, e.price as price, count(tix.event_offering_id) * e.price as revenue from trx " +
+            "join tix on tix.trx_id = trx.id " +
+            "join event_offering as e on tix.event_offering_id = e.id " +
+            "WHERE date_trunc(:timeSpecifier, trx.created_at) = date_trunc(:timeSpecifier, now()) " +
+            "AND trx.organizer_id = :organizerId " +
+            "group by tix.event_offering_id, e.price",
+            nativeQuery = true
+    )
+    List<StatisticDao> getStatistics(@Param("organizerId") Long organizerId, @Param("timeSpecifier") String timeSpecifier);
 }
