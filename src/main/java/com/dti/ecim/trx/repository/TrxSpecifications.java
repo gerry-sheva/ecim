@@ -38,4 +38,7 @@ public class TrxSpecifications {
         }
         return ((root, query, criteriaBuilder) -> criteriaBuilder.conjunction());
     }
+    public static Specification<Trx> byOrganizerId(Long organizerId) {
+        return (root, query, cb) -> cb.equal(root.get("organizerId"), organizerId);
+    }
 }
