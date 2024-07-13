@@ -27,6 +27,12 @@ public class TrxController {
         return trx;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getTrxById(@PathVariable Long id) throws NoSuchAlgorithmException, BadRequestException {
+        var res = trxService.retrieveTrx(id);
+        return ResponseEntity.ok(res);
+    }
+
     @GetMapping
     public ResponseEntity<?> retrieveTrxs(
             @RequestParam(defaultValue = "0") int page,
