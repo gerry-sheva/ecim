@@ -134,7 +134,7 @@ public class AuthServiceImpl implements AuthService {
         if (userAuthOptional.isEmpty()) {
             throw new DataNotFoundException("User not found");
         }
-        return new UserIdResponseDto(userAuthOptional.get().getId(), userAuthOptional.get().getEmail());
+        return new UserIdResponseDto(userAuthOptional.get().getId(), userAuthOptional.get().getEmail(), userAuthOptional.get().getRole());
     }
 
     @Override

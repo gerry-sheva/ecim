@@ -1,5 +1,6 @@
 package com.dti.ecim.auth.dto;
 
+import com.dti.ecim.auth.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -8,4 +9,5 @@ import lombok.Data;
 public class UserIdResponseDto {
     private Long id;
     private String email;
+    private Role role;
 }
