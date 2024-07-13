@@ -108,25 +108,4 @@ public class TrxServiceImpl implements TrxService {
         }
         return null;
     }
-
-    @Override
-    public Page<TrxResponseDto> summarizeTrxs(Pageable pageable, Instant date, TimeSpecifier timeSpecifier) {
-        UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
-        var spec = Specification.where(TrxSpecifications.byTime(date, timeSpecifier))
-                .and(TrxSpecifications.byOrganizerId(userIdResponseDto.getId()));
-//        var result = trxRepository.findAllByMonth(month, year, pageable);
-//        LocalDate now = LocalDate.now();
-//        var result = trxRepository.findAllByDate(now, pageable);
-        var result = trxRepository.findAll(spec, pageable);
-        return result.map(trx -> modelMapper.map(trx, TrxResponseDto.class));
-    }
-
-    @Override
-    public int findRevenue(Instant date, TimeSpecifier timeSpecifier) {
-        var spec = Specification.where(TrxSpecifications.sumFinalPrice());
-//                .and(TrxSpecifications.byOrganizerId(userIdResponseDto.getId()));
-//        return trxRepository.findAll(spec);
-        var res = trxRepository.findAll(spec);
-        return 0;
-    }
 }

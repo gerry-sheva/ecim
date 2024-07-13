@@ -52,16 +52,6 @@ public class EventController {
         return ResponseEntity.ok(res);
     }
 
-    @GetMapping("/organizer")
-    @PreAuthorize("hasRole('ROLE_ORGANIZER')")
-    public ResponseEntity<?> displayOrganizersEvents(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size
-    ) {
-        var res = eventService.displayOrganizerEvents(PageRequest.of(page, size));
-        return ResponseEntity.ok(res);
-    }
-
     @GetMapping("/organizer/{id}")
     public ResponseEntity<?> displayOrganizerEvents(
             @PathVariable Long id,

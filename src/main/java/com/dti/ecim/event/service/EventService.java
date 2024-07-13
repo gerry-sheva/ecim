@@ -23,6 +23,5 @@ public interface EventService {
             String state);
     EventOfferingResponseDto getEventOffering(Long eventOfferingId);
     Interest findInterestById(Long id);
-    Page<RetrieveEventResponseDto> displayOrganizerEvents(Pageable pageable);
     Page<RetrieveEventResponseDto> displayOrganizerEvents(Long organizerId, Pageable pageable);
 }

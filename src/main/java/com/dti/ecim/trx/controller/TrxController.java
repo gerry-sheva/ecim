@@ -43,26 +43,4 @@ public class TrxController {
         var res = trxService.retrieveAllTrx(PageRequest.of(page, size));
         return ResponseEntity.ok(res);
     }
-
-    @GetMapping("/sum")
-    public ResponseEntity<?> sumTrxs(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size,
-            @RequestParam(defaultValue = "DAY") String timeSpecifier,
-            @RequestParam() @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Instant date
-            ) {
-        TimeSpecifier timeSpecifierEnum = TimeSpecifier.valueOf(timeSpecifier.toUpperCase());
-        var res = trxService.summarizeTrxs(PageRequest.of(page, size), date, timeSpecifierEnum);
-        return ResponseEntity.ok(res);
-    }
-
-    @GetMapping("/revenue")
-    public ResponseEntity<?> revenueTrxs(
-            @RequestParam(defaultValue = "DAY") String timeSpecifier,
-            @RequestParam() @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Instant date
-    ) {
-        TimeSpecifier timeSpecifierEnum = TimeSpecifier.valueOf(timeSpecifier.toUpperCase());
-        var res = trxService.findRevenue(date, timeSpecifierEnum);
-        return ResponseEntity.ok(res);
-    }
 }
