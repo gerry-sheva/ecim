@@ -2,9 +2,9 @@ spring:
   application:
     name: ecim
   datasource:
-    url: jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?prepareThreshold=0
-    username: postgres.nhpoexhulxoymzqrvpza
-    password: h2BHwzgJSvMFHMPt
+    url: jdbc:postgresql://${DB_URL}:${DB_PORT}/${DB_NAME}?prepareThreshold=0
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   data:
     redis:
       database: 0
@@ -33,6 +33,13 @@ spring:
         jwt:
           issuer-uri: https://accounts.google.com
           jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+  config:
+    import: optional:file:.env[.properties]
 rsa:
   private-key: classpath:certs/private-key.pem
   public-key: classpath:certs/public-key.pem
+cloudinary:
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}
+  api-key: ${CLOUDINARY_API_KEY}
+  api-secret: ${CLOUDINARY_API_SECRET}
+  url: ${CLOUDINARY_URL}

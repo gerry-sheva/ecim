@@ -1,7 +1,7 @@
 package com.dti.ecim.user.service.impl;
 
-import com.dti.ecim.auth.dto.UserIdResponseDto;
 import com.dti.ecim.auth.service.AuthService;
+import com.dti.ecim.discount.dto.ClaimDiscountRequestDto;
 import com.dti.ecim.discount.service.DiscountService;
 import com.dti.ecim.user.dto.attendee.CreateAttendeeRequestDto;
 import com.dti.ecim.user.dto.attendee.CreateAttendeeResponseDto;
@@ -67,6 +67,7 @@ public class UserServiceImpl implements UserService {
                 newReferral.setReferree(newAttendee);
                 referralRepository.save(newReferral);
                 discountService.addPoint(referral.get().getAttendeeId());
+                discountService.claimDiscount(new ClaimDiscountRequestDto("d2873ef5-acf1-4be8-9111-3b247d3516bf"));
             }
         }
 
@@ -83,7 +84,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public CreateOrganizerResponseDto createOrganizer(CreateOrganizerRequestDto requestDto) throws BadRequestException {
+    public CreateOrganizerResponseDto createOrganizer(CreateOrganizerRequestDto requestDto) {
         var userAuth = authService.getCurrentUser();
         Organizer newOrganizer = new Organizer();
         newOrganizer.setUser(userAuth);

@@ -10,7 +10,7 @@ import java.security.NoSuchAlgorithmException;
 
 public interface UserService {
     CreateAttendeeResponseDto createAttendee(CreateAttendeeRequestDto requestDto) throws NoSuchAlgorithmException, BadRequestException;
-    CreateOrganizerResponseDto createOrganizer(CreateOrganizerRequestDto requestDto) throws BadRequestException;
+    CreateOrganizerResponseDto createOrganizer(CreateOrganizerRequestDto requestDto);
 
     boolean referralIsAlreadyExist(Long referralId, Long referreeId) throws BadRequestException;
 }

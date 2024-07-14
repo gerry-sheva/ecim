@@ -1,5 +1,8 @@
 package com.dti.ecim.unit.event;
 
+import com.dti.ecim.auth.dto.UserIdResponseDto;
+import com.dti.ecim.auth.enums.Role;
+import com.dti.ecim.auth.service.AuthService;
 import com.dti.ecim.event.dto.CreateEventRequestDto;
 import com.dti.ecim.event.dto.EventOfferingResponseDto;
 import com.dti.ecim.event.dto.RetrieveEventResponseDto;
@@ -16,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.TransactionSystemException;
+import static org.mockito.Mockito.*;
 
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -29,6 +33,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class EventServiceTest {
     @Autowired
     private EventService eventService;
+    @Autowired
+    private AuthService authService;
 
     CreateEventRequestDto createEventRequestDto = new CreateEventRequestDto();
 
@@ -60,6 +66,8 @@ public class EventServiceTest {
     @Test
     public void test_create_event_with_valid_data() throws BadRequestException {
         RetrieveEventResponseDto response = eventService.createEvent(createEventRequestDto);
+
+        when(authService.getCurrentUserId()).thenReturn(new UserIdResponseDto(1L, "ORGxnA@mail.com", Role.ORGANIZER));
 
         assertNotNull(response);
         assertEquals("Sample Event", response.getTitle());
