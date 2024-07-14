@@ -1,6 +1,7 @@
 package com.dti.ecim.exceptions;
 
 import com.dti.ecim.discount.exceptions.InsufficientPointException;
+import com.dti.ecim.discount.exceptions.InvalidDiscountException;
 import com.dti.ecim.event.exceptions.InvalidDateException;
 import com.dti.ecim.response.Response;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +57,11 @@ public class GlobalExceptionHandler {
 //    DISCOUNT EXCEPTION HANDLER
     @ExceptionHandler(InsufficientPointException.class)
     public final ResponseEntity<Response<String>> handleInsufficientPointException(InsufficientPointException ex){
+        return Response.failed(HttpStatus.BAD_REQUEST.value(), "Unable to process the request: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidDiscountException.class)
+    public final ResponseEntity<Response<String>> handleInvalidDiscountException(InvalidDiscountException ex){
         return Response.failed(HttpStatus.BAD_REQUEST.value(), "Unable to process the request: " + ex.getMessage());
     }
 }
