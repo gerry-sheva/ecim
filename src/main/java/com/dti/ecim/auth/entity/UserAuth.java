@@ -58,12 +58,6 @@ public class UserAuth implements UserDetails {
     @Column(name = "role")
     private Role role;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private Attendee attendee;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    private Organizer organizer;
-
     @Override
     public String getUsername() {
         return this.email;
