@@ -3,9 +3,12 @@ package com.dti.ecim.imageBucket.controller;
 import com.dti.ecim.imageBucket.service.ImageBucketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -16,8 +19,8 @@ import java.io.IOException;
 public class BucketController {
     private final ImageBucketService imageBucketService;
 
-    @GetMapping
-    public void upload() throws IOException {
-        imageBucketService.uploadImage();
+    @PostMapping
+    public ResponseEntity<?> upload(MultipartFile file) throws IOException {
+        return ResponseEntity.ok(imageBucketService.uploadImage(file, "avatar"));
     }
 }
