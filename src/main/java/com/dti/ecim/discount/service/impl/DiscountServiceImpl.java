@@ -5,6 +5,7 @@ import com.dti.ecim.auth.service.AuthService;
 import com.dti.ecim.discount.dto.*;
 import com.dti.ecim.discount.entity.*;
 import com.dti.ecim.discount.exceptions.InsufficientPointException;
+import com.dti.ecim.discount.exceptions.InvalidDiscountException;
 import com.dti.ecim.discount.repository.RedeemedDiscountRepository;
 import com.dti.ecim.discount.repository.DiscountRepository;
 import com.dti.ecim.discount.repository.PointRepository;
@@ -58,7 +59,7 @@ public class DiscountServiceImpl implements DiscountService {
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
         Optional<ClaimedDiscount> existingDiscount = claimedDiscountRepository.findByAttendeeIdAndDiscountId(userIdResponseDto.getId(), discount.getId());
         if (existingDiscount.isPresent()) {
-//            TODO: THROW DISCOUNT ALREADY CLAIMED EXCEPTION
+            throw new InvalidDiscountException("Discount with id: " + requestDto.getCode() + " already claimed");
         }
         ClaimedDiscount claimedDiscount = new ClaimedDiscount();
         claimedDiscount.setDiscountId(discount.getId());
@@ -81,7 +82,7 @@ public class DiscountServiceImpl implements DiscountService {
         ClaimedDiscount claimedDiscount = claimedDiscountOptional.get();
         Optional<RedeemedDiscount> redeemedDiscountOptional = redeemedDiscountRepository.findById(claimedDiscount.getDiscountId());
         if (redeemedDiscountOptional.isPresent()) {
-//            TODO: THROW DISCOUNT ALREADY REDEEMED EXCEPTION
+            throw new InvalidDiscountException("Discount with id: " + requestDto.getRedeemedDiscountId() + " already redeemed");
         }
         RedeemedDiscount redeemedDiscount = new RedeemedDiscount();
         redeemedDiscount.setClaimedDiscount(claimedDiscount);
