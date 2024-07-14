@@ -1,5 +1,6 @@
 package com.dti.ecim;
 
+import com.dti.ecim.config.CloudinaryConfigProperties;
 import com.dti.ecim.config.RsaKeyConfigProperties;
 import lombok.extern.java.Log;
 import org.springframework.boot.SpringApplication;
@@ -11,7 +12,7 @@ import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import static org.springframework.data.web.config.EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO;
 
 @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO)
-@EnableConfigurationProperties(RsaKeyConfigProperties.class)
+@EnableConfigurationProperties({RsaKeyConfigProperties.class, CloudinaryConfigProperties.class})
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.dti.ecim", "com.dti.ecim.config"})
 @Log
