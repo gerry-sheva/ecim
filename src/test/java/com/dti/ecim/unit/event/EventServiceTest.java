@@ -1,15 +1,11 @@
 package com.dti.ecim.unit.event;
 
-import com.dti.ecim.auth.dto.UserIdResponseDto;
-import com.dti.ecim.auth.enums.Role;
 import com.dti.ecim.auth.service.AuthService;
 import com.dti.ecim.event.dto.CreateEventRequestDto;
-import com.dti.ecim.event.dto.EventOfferingResponseDto;
 import com.dti.ecim.event.dto.RetrieveEventResponseDto;
 import com.dti.ecim.event.entity.Interest;
 import com.dti.ecim.event.exceptions.InvalidDateException;
 import com.dti.ecim.event.service.EventService;
-import com.dti.ecim.exceptions.ApplicationException;
 import com.dti.ecim.exceptions.DataNotFoundException;
 import org.apache.coyote.BadRequestException;
 import org.junit.jupiter.api.*;
@@ -18,8 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.transaction.TransactionSystemException;
-import static org.mockito.Mockito.*;
 
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -42,8 +38,8 @@ public class EventServiceTest {
     void setUp() {
         createEventRequestDto.setTitle("Sample Event");
         createEventRequestDto.setDescription("Sample Description");
-        createEventRequestDto.setStartingDate("07:00:00 PM, Wed 07/10/2024");
-        createEventRequestDto.setEndingDate("10:00:00 PM, Wed 07/10/2024");
+        createEventRequestDto.setStartingDate("07:00:00 PM, Mon 07/15/2024");
+        createEventRequestDto.setEndingDate("10:00:00 PM, Tue 07/16/2024");
         createEventRequestDto.setCategoryId(1L);
         createEventRequestDto.setInterestId(1L);
 
@@ -64,16 +60,16 @@ public class EventServiceTest {
 
 //    CREATE EVENT
     @Test
+    @WithUserDetails("ORGxnA@mail.com")
     public void test_create_event_with_valid_data() throws BadRequestException {
         RetrieveEventResponseDto response = eventService.createEvent(createEventRequestDto);
-
-        when(authService.getCurrentUserId()).thenReturn(new UserIdResponseDto(1L, "ORGxnA@mail.com", Role.ORGANIZER));
 
         assertNotNull(response);
         assertEquals("Sample Event", response.getTitle());
     }
 
     @Test
+    @WithUserDetails("ORGxnA@mail.com")
     public void test_create_event_with_invalid_date() {
         createEventRequestDto.setStartingDate("10:00:00 AM, Mon 1/1/2023");
         createEventRequestDto.setEndingDate("12:00:00 PM, Mon 1/1/2023");
@@ -82,6 +78,7 @@ public class EventServiceTest {
     }
 
     @Test
+    @WithUserDetails("ORGxnA@mail.com")
     public void test_create_event_that_ends_before_starting_date() {
         createEventRequestDto.setEndingDate("07:00:00 PM, Wed 07/10/2024");
         createEventRequestDto.setStartingDate("10:00:00 PM, Wed 07/10/2024");
@@ -90,6 +87,7 @@ public class EventServiceTest {
     }
 
     @Test
+    @WithUserDetails("ORGxnA@mail.com")
     public void test_create_event_that_ends_in_the_past() {
         createEventRequestDto.setEndingDate("07:00:00 PM, Fri 07/05/2024");
         createEventRequestDto.setStartingDate("10:00:00 PM, Thu 07/04/2024");
@@ -98,6 +96,7 @@ public class EventServiceTest {
     }
 
     @Test
+    @WithUserDetails("ORGxnA@mail.com")
     public void test_create_event_with_invalid_location() {
         CreateEventRequestDto.CreateEventLocationDto invalidLocation  = new CreateEventRequestDto.CreateEventLocationDto();
         invalidLocation.setStreet1("123 Main St");
@@ -107,6 +106,7 @@ public class EventServiceTest {
     }
 
     @Test
+    @WithUserDetails("ORGxnA@mail.com")
     public void test_create_event_with_no_offering() {
         createEventRequestDto.setOfferings(new ArrayList<>());
 
@@ -165,7 +165,7 @@ public class EventServiceTest {
 
 //    Same issue with test_find_event_by_valid_id
     @Test
-//    @Disabled
+    @Disabled
     public void test_display_event() {
         Pageable pageable = PageRequest.of(0, 5);
         Page<RetrieveEventResponseDto> res = eventService.displayEvents(

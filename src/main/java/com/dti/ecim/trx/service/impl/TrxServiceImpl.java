@@ -96,7 +96,6 @@ public class TrxServiceImpl implements TrxService {
             trx.setDiscountValue(0);
             trx.setFinalPrice(totalPrice);
         }
-
         Trx savedTrx = trxRepository.save(trx);
         return modelMapper.map(savedTrx, TrxResponseDto.class);
     }
