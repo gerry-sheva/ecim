@@ -10,8 +10,11 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TrxRepository extends JpaRepository<Trx, Long>, JpaSpecificationExecutor<Trx> {
+    Optional<Trx> findByIdAndAttendeeId(Long id, Long attendeeId);
+    Optional<Trx> findByIdAndOrganizerId(Long id, Long organizerId);
     Page<Trx> findAllByOrganizerId(Long organizerId, Pageable pageable);
     Page<Trx> findAllByAttendeeId(Long attendeeId, Pageable pageable);
 

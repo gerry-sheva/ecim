@@ -53,12 +53,12 @@ public class TrxServiceImpl implements TrxService {
     @Override
     public TrxResponseDto retrieveTrx(Long trxId) {
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
-        Optional<Trx> trxOptional = trxRepository.findById(trxId);
-        if (
-                trxOptional.isEmpty() ||
-                !Objects.equals(trxOptional.get().getAttendeeId(), userIdResponseDto.getId()) ||
-                !Objects.equals(trxOptional.get().getOrganizerId(), userIdResponseDto.getId())
-        ){
+        Optional<Trx> trxOptional = switch (userIdResponseDto.getRole()) {
+            case ATTENDEE -> trxRepository.findByIdAndAttendeeId(trxId, userIdResponseDto.getId());
+            case ORGANIZER -> trxRepository.findByIdAndOrganizerId(trxId, userIdResponseDto.getId());
+            default -> throw new IllegalStateException("Unexpected role: " + userIdResponseDto.getRole());
+        };
+        if (trxOptional.isEmpty()) {
             throw new DataNotFoundException("Trx with id " + trxId + " not found");
         }
         return modelMapper.map(trxOptional.get(), TrxResponseDto.class);
