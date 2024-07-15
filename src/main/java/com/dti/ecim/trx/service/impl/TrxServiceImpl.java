@@ -9,6 +9,7 @@ import com.dti.ecim.discount.service.DiscountService;
 import com.dti.ecim.event.dto.EventOfferingResponseDto;
 import com.dti.ecim.event.entity.EventOffering;
 import com.dti.ecim.event.service.EventService;
+import com.dti.ecim.exceptions.DataNotFoundException;
 import com.dti.ecim.trx.entity.Tix;
 import com.dti.ecim.trx.dto.CreateTixDto;
 import com.dti.ecim.trx.dto.CreateTrxRequestDto;
@@ -29,15 +30,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
 @Log
+@Validated
 public class TrxServiceImpl implements TrxService {
     private final TrxRepository trxRepository;
     private final EventService eventService;
@@ -48,9 +52,14 @@ public class TrxServiceImpl implements TrxService {
 
     @Override
     public TrxResponseDto retrieveTrx(Long trxId) {
+        UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
         Optional<Trx> trxOptional = trxRepository.findById(trxId);
-        if (trxOptional.isEmpty()) {
-//            TODO: IMPLEMENT EXCEPTION
+        if (
+                trxOptional.isEmpty() ||
+                !Objects.equals(trxOptional.get().getAttendeeId(), userIdResponseDto.getId()) ||
+                !Objects.equals(trxOptional.get().getOrganizerId(), userIdResponseDto.getId())
+        ){
+            throw new DataNotFoundException("Trx with id " + trxId + " not found");
         }
         return modelMapper.map(trxOptional.get(), TrxResponseDto.class);
     }
