@@ -4,6 +4,7 @@ import com.dti.ecim.auth.dto.UserIdResponseDto;
 import com.dti.ecim.auth.service.AuthService;
 import com.dti.ecim.discount.dto.*;
 import com.dti.ecim.discount.entity.*;
+import com.dti.ecim.discount.exceptions.InsufficientPointException;
 import com.dti.ecim.discount.exceptions.InvalidDiscountException;
 import com.dti.ecim.discount.repository.*;
 import com.dti.ecim.discount.service.DiscountService;
@@ -48,16 +49,22 @@ public class DiscountServiceImpl implements DiscountService {
 
     @Override
     public void claimDiscount(ClaimDiscountRequestDto requestDto) {
+        UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
         Optional<Discount> discountOptional = discountRepository.findByCode(requestDto.getCode());
         if (discountOptional.isEmpty()) {
             throw new DataNotFoundException(String.format("Discount with code '%s' not found", requestDto.getCode()));
         }
+
         Discount discount = discountOptional.get();
-        UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
+        if (discount.getExpiredAt().isBefore(Instant.now())) {
+            throw new InvalidDiscountException(String.format("Discount with code '%s' is already expired", requestDto.getCode()));
+        }
+
         Optional<ClaimedDiscount> existingDiscount = claimedDiscountRepository.findByAttendeeIdAndDiscountId(userIdResponseDto.getId(), discount.getId());
         if (existingDiscount.isPresent()) {
             throw new InvalidDiscountException("Discount with id: " + requestDto.getCode() + " already claimed");
         }
+
         ClaimedDiscount claimedDiscount = new ClaimedDiscount();
         claimedDiscount.setDiscountId(discount.getId());
         claimedDiscount.setAttendeeId(userIdResponseDto.getId());
@@ -76,11 +83,17 @@ public class DiscountServiceImpl implements DiscountService {
         if (claimedDiscountOptional.isEmpty()) {
             throw new DataNotFoundException("Discount with id: " + requestDto.getRedeemedDiscountId() + " not found");
         }
+
         ClaimedDiscount claimedDiscount = claimedDiscountOptional.get();
+        if (claimedDiscount.getExpiredAt().isBefore(Instant.now())) {
+            throw new InvalidDiscountException(String.format("Discount with id '%s' is already expired", claimedDiscount.getDiscountId()));
+        }
+
         Optional<RedeemedDiscount> redeemedDiscountOptional = redeemedDiscountRepository.findById(claimedDiscount.getDiscountId());
         if (redeemedDiscountOptional.isPresent()) {
             throw new InvalidDiscountException("Discount with id: " + requestDto.getRedeemedDiscountId() + " already redeemed");
         }
+
         RedeemedDiscount redeemedDiscount = new RedeemedDiscount();
         redeemedDiscount.setClaimedDiscount(claimedDiscount);
         redeemedDiscountRepository.save(redeemedDiscount);
@@ -103,7 +116,7 @@ public class DiscountServiceImpl implements DiscountService {
         if (requestDto.isUsingPoint()) {
             int points = retrievePoints();
             if (points < 0) {
-                throw new BadRequestException("Insufficient points");
+                throw new InsufficientPointException("Insufficient points");
             }
             Point deductedPoint = new Point();
             deductedPoint.setAmount(points * -1);
