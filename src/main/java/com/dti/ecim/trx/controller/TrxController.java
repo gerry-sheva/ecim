@@ -4,12 +4,14 @@ import com.dti.ecim.trx.dto.CreateTrxRequestDto;
 import com.dti.ecim.trx.dto.TrxResponseDto;
 import com.dti.ecim.trx.enums.TimeSpecifier;
 import com.dti.ecim.trx.service.TrxService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
@@ -23,10 +25,9 @@ public class TrxController {
     private final TrxService trxService;
 
     @PostMapping
-    public TrxResponseDto createTrx(@RequestBody CreateTrxRequestDto createTrxRequestDto) throws NoSuchAlgorithmException, BadRequestException {
+    public TrxResponseDto createTrx(@Valid @RequestBody CreateTrxRequestDto createTrxRequestDto) throws NoSuchAlgorithmException, BadRequestException {
         log.info("Creating new trx");
-        TrxResponseDto trx = trxService.createTrx(createTrxRequestDto);
-        return trx;
+        return trxService.createTrx(createTrxRequestDto);
     }
 
     @GetMapping("/{id}")
