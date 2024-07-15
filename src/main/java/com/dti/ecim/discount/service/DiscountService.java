@@ -9,4 +9,5 @@ public interface DiscountService {
     void claimDiscount(ClaimDiscountRequestDto requestDto);
     ProcessDiscountResponseDto processDiscount(ProcessDiscountRequestDto requestDto) throws BadRequestException;
     void addPoint(Long referralId);
+    int retrievePoints();
 }

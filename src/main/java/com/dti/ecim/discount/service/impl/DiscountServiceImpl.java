@@ -4,12 +4,8 @@ import com.dti.ecim.auth.dto.UserIdResponseDto;
 import com.dti.ecim.auth.service.AuthService;
 import com.dti.ecim.discount.dto.*;
 import com.dti.ecim.discount.entity.*;
-import com.dti.ecim.discount.exceptions.InsufficientPointException;
 import com.dti.ecim.discount.exceptions.InvalidDiscountException;
-import com.dti.ecim.discount.repository.RedeemedDiscountRepository;
-import com.dti.ecim.discount.repository.DiscountRepository;
-import com.dti.ecim.discount.repository.PointRepository;
-import com.dti.ecim.discount.repository.ClaimedDiscountRepository;
+import com.dti.ecim.discount.repository.*;
 import com.dti.ecim.discount.service.DiscountService;
 import com.dti.ecim.exceptions.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +26,7 @@ public class DiscountServiceImpl implements DiscountService {
     private final RedeemedDiscountRepository redeemedDiscountRepository;
     private final ClaimedDiscountRepository claimedDiscountRepository;
     private final PointRepository pointRepository;
+    private final PointRedisRepository pointRedisRepository;
     private final AuthService authService;
     private final ModelMapper modelMapper;
 
@@ -104,15 +101,7 @@ public class DiscountServiceImpl implements DiscountService {
             }
         }
         if (requestDto.isUsingPoint()) {
-            Instant lastUsed = pointRepository.getLastResetDate(userIdResponseDto.getId());
-            int points;
-            if (lastUsed != null && lastUsed.isAfter(Instant.now().minus(90, ChronoUnit.DAYS))) {
-                points = pointRepository.getCurrentPoints(userIdResponseDto.getId(), Instant.now(), lastUsed);
-                processDiscountResponseDto.addDiscountValue(points);
-            } else {
-                points = pointRepository.getCurrentPoints(userIdResponseDto.getId(), Instant.now(), Instant.now().minus(90, ChronoUnit.DAYS));
-                processDiscountResponseDto.addDiscountValue(points);
-            }
+            int points = retrievePoints();
             if (points < 0) {
                 throw new BadRequestException("Insufficient points");
             }
@@ -121,7 +110,7 @@ public class DiscountServiceImpl implements DiscountService {
             deductedPoint.setAttendeeId(userIdResponseDto.getId());
             deductedPoint.setExpiredAt(Instant.now());
             pointRepository.save(deductedPoint);
-
+            pointRedisRepository.delete(userIdResponseDto.getEmail());
         }
         if (requestDto.getTotalPrice() < processDiscountResponseDto.getDiscountValue()) {
             processDiscountResponseDto.setDiscountValue(requestDto.getTotalPrice());
@@ -138,7 +127,22 @@ public class DiscountServiceImpl implements DiscountService {
         point.setAttendeeId(referralId);
         point.setAmount(10000);
         point.setExpiredAt(Instant.now().plus(90, ChronoUnit.DAYS));
-//        point.setExpiredAt(Instant.now().minus(80, ChronoUnit.DAYS));
         pointRepository.save(point);
+    }
+
+    @Override
+    public int retrievePoints() {
+        UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
+        Optional<Integer> pointOptional = pointRedisRepository.getPoints(userIdResponseDto.getEmail());
+        if (pointOptional.isPresent()) {
+            return pointOptional.get();
+        } else {
+            Instant lastUsed = pointRepository.getLastResetDate(userIdResponseDto.getId());
+            if (lastUsed != null && lastUsed.isAfter(Instant.now().minus(90, ChronoUnit.DAYS))) {
+                return pointRepository.getCurrentPoints(userIdResponseDto.getId(), Instant.now(), lastUsed);
+            } else {
+                return pointRepository.getCurrentPoints(userIdResponseDto.getId(), Instant.now(), Instant.now().minus(90, ChronoUnit.DAYS));
+            }
+        }
     }
 }
