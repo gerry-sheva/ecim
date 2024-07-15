@@ -112,13 +112,12 @@ public class TrxServiceImpl implements TrxService {
     @Override
     public Page<TrxResponseDto> retrieveAllTrx(Pageable pageable) {
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
-        if (userIdResponseDto.getRole().equals(Role.ATTENDEE)) {
-            Page<Trx> trxPage = trxRepository.findAllByAttendeeId(userIdResponseDto.getId(), pageable);
-            return trxPage.map(trx -> modelMapper.map(trx, TrxResponseDto.class));
-        } else if (userIdResponseDto.getRole().equals(Role.ORGANIZER)) {
-            Page<Trx> trxPage = trxRepository.findAllByOrganizerId(userIdResponseDto.getId(), pageable);
-            return trxPage.map(trx -> modelMapper.map(trx, TrxResponseDto.class));
-        }
-        return null;
+        Page<Trx> trxPage = switch (userIdResponseDto.getRole()) {
+            case ATTENDEE -> trxRepository.findAllByAttendeeId(userIdResponseDto.getId(), pageable);
+            case ORGANIZER -> trxRepository.findAllByOrganizerId(userIdResponseDto.getId(), pageable);
+            default -> throw new IllegalStateException("Unexpected role: " + userIdResponseDto.getRole());
+        };
+
+        return trxPage.map(trx -> modelMapper.map(trx, TrxResponseDto.class));
     }
 }
