@@ -132,6 +132,7 @@ public class DiscountServiceImpl implements DiscountService {
             if (points < 0) {
                 throw new InsufficientPointException("Insufficient points");
             }
+            processDiscountResponseDto.addDiscountValue(points);
             Point deductedPoint = new Point();
             deductedPoint.setAmount(points * -1);
             deductedPoint.setAttendeeId(userIdResponseDto.getId());
