@@ -2,6 +2,7 @@ package com.dti.ecim.auth.service.impl;
 
 import com.dti.ecim.auth.dto.*;
 import com.dti.ecim.auth.entity.UserAuth;
+import com.dti.ecim.auth.enums.Role;
 import com.dti.ecim.auth.repository.AuthRedisRepository;
 import com.dti.ecim.auth.repository.UserAuthRepository;
 import com.dti.ecim.auth.service.AuthService;
@@ -15,6 +16,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +27,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -144,5 +148,29 @@ public class AuthServiceImpl implements AuthService {
             throw new DataNotFoundException("User not found");
         }
         return userAuthOptional.get();
+    }
+
+    @Override
+    public String addRole(Role role) {
+//        Add role to db
+        UserAuth userAuth = getCurrentUser();
+        userAuth.setRole(role);
+        userAuthRepository.save(userAuth);
+
+//        Update security context with new role
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(role.name()));
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(
+                auth.getName(),
+                auth.getCredentials(),
+                authorities
+        );
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+//        Generate new JWT
+        String token = generateToken(newAuth);
+        authRedisRepository.saveJwtKey(auth.getName(), token);
+        return token;
     }
 }

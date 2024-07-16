@@ -23,4 +23,6 @@ public class CreateAttendeeResponseDto {
     private String referralCode;
 
     private String role;
+
+    private String token;
 }

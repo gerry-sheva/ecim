@@ -1,5 +1,6 @@
 package com.dti.ecim.user.service.impl;
 
+import com.dti.ecim.auth.enums.Role;
 import com.dti.ecim.auth.service.AuthService;
 import com.dti.ecim.discount.dto.ClaimDiscountRequestDto;
 import com.dti.ecim.discount.service.DiscountService;
@@ -71,13 +72,16 @@ public class UserServiceImpl implements UserService {
             }
         }
 
+        String token = authService.addRole(Role.ATTENDEE);
+
         CreateAttendeeResponseDto responseDto = new CreateAttendeeResponseDto();
         responseDto.setFname(newAttendee.getFname());
         responseDto.setLname(newAttendee.getLname());
         responseDto.setDob(newAttendee.getDob());
         responseDto.setContact(newAttendee.getContact());
         responseDto.setReferralCode(newAttendee.getRefCode());
-        responseDto.setRole("ATTENDEE");
+        responseDto.setRole(Role.ATTENDEE.name());
+        responseDto.setToken(token);
 
         return responseDto;
     }
@@ -92,9 +96,13 @@ public class UserServiceImpl implements UserService {
         newOrganizer.setAvatar(requestDto.getAvatar());
         organizerRepository.save(newOrganizer);
 
+        String token = authService.addRole(Role.ORGANIZER);
+
         CreateOrganizerResponseDto responseDto = new CreateOrganizerResponseDto();
         responseDto.setName(newOrganizer.getName());
-        responseDto.setRole("ORGANIZER");
+        responseDto.setRole(Role.ORGANIZER.name());
+        responseDto.setToken(token);
+
         return responseDto;
     }
 
