@@ -3,12 +3,14 @@ package com.dti.ecim.event.controller;
 import com.dti.ecim.event.dto.AddReviewRequestDto;
 import com.dti.ecim.event.dto.CreateEventRequestDto;
 import com.dti.ecim.event.service.EventService;
+import com.dti.ecim.response.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.apache.coyote.BadRequestException;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +24,7 @@ public class EventController {
     private final EventService eventService;
 
     @GetMapping
-    public ResponseEntity<?> displayEvents(
+    public ResponseEntity<?> retrieveAllEvents (
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String interest,
@@ -40,19 +42,19 @@ public class EventController {
                 city,
                 state
         );
-        return ResponseEntity.ok(res);
+        return Response.success(HttpStatus.OK.value(), "Events retrieved successfully", res);
     }
 
     @PostMapping
     public ResponseEntity<?> createEvent(@RequestBody CreateEventRequestDto createEventRequestDto) throws BadRequestException {
         var res = eventService.createEvent(createEventRequestDto);
-        return ResponseEntity.ok(res);
+        return Response.success(HttpStatus.CREATED.value(), "Event created successfully", res);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> displayEvent(@PathVariable Long id) {
+    public ResponseEntity<?> retrieveEventDetails(@PathVariable Long id) {
         var res = eventService.findEventById(id);
-        return ResponseEntity.ok(res);
+        return Response.success(HttpStatus.OK.value(), "Event retrieved successfully", res);
     }
 
     @GetMapping("/organizer/{id}")
@@ -62,7 +64,7 @@ public class EventController {
             @RequestParam(defaultValue = "20") int size
     ) {
         var res = eventService.displayOrganizerEvents(id,PageRequest.of(page, size));
-        return ResponseEntity.ok(res);
+        return Response.success(HttpStatus.OK.value(), "Organizer events retrieved successfully", res);
     }
 
     @PostMapping("/review")
