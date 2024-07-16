@@ -1,5 +1,6 @@
 package com.dti.ecim.trx.controller;
 
+import com.dti.ecim.response.Response;
 import com.dti.ecim.trx.dto.CreateTrxRequestDto;
 import com.dti.ecim.trx.dto.TrxResponseDto;
 import com.dti.ecim.trx.enums.TimeSpecifier;
@@ -10,6 +11,7 @@ import lombok.extern.java.Log;
 import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,15 +27,15 @@ public class TrxController {
     private final TrxService trxService;
 
     @PostMapping
-    public TrxResponseDto createTrx(@Valid @RequestBody CreateTrxRequestDto createTrxRequestDto) throws NoSuchAlgorithmException, BadRequestException {
-        log.info("Creating new trx");
-        return trxService.createTrx(createTrxRequestDto);
+    public ResponseEntity<?> createTrx(@Valid @RequestBody CreateTrxRequestDto createTrxRequestDto) throws NoSuchAlgorithmException, BadRequestException {
+        var res = trxService.createTrx(createTrxRequestDto);
+        return Response.success(HttpStatus.CREATED.value(), "Transactions created successfully", res);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getTrxById(@PathVariable Long id) throws NoSuchAlgorithmException, BadRequestException {
         var res = trxService.retrieveTrx(id);
-        return ResponseEntity.ok(res);
+        return Response.success(HttpStatus.OK.value(), "Transaction retrieved successfully", res);
     }
 
     @GetMapping
@@ -42,6 +44,6 @@ public class TrxController {
             @RequestParam(defaultValue = "20") int size
     ) {
         var res = trxService.retrieveAllTrx(PageRequest.of(page, size));
-        return ResponseEntity.ok(res);
+        return Response.success(HttpStatus.OK.value(), "Transactions retrieved successfully", res);
     }
 }
