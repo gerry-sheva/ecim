@@ -58,18 +58,22 @@ public class RetrieveEventResponseDto {
 
     @Data
     public static class CategoryDto {
+        private Long id;
         private String name;
 
         public CategoryDto() {
+            this.id = null;
             this.name = "";
         }
     }
 
     @Data
     public static class InterestDto {
+        private Long id;
         private String name;
 
         public InterestDto() {
+            this.id = null;
             this.name = "";
         }
     }
