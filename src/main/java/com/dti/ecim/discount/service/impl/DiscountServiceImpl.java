@@ -91,9 +91,11 @@ public class DiscountServiceImpl implements DiscountService {
         }
 
         if (claimedDiscount.getDiscount().getType().equals("EVENT")) {
-            EventDiscount eventDiscount = (EventDiscount) claimedDiscount.getDiscount();
-            if (!Objects.equals(eventDiscount.getEventId(), requestDto.getEventId())) {
-                throw new InvalidDiscountException(String.format("Discount with id '%s' is invalid for event with id '%s", eventDiscount.getId(), requestDto.getEventId()));
+            log.info("It's an event discount");
+            var eventDiscountDao = discountRepository.retrieveEventDiscount(claimedDiscount.getDiscountId());
+            log.info(eventDiscountDao.getEventId().toString());
+            if (!Objects.equals(eventDiscountDao.getEventId(), requestDto.getEventId())) {
+                throw new InvalidDiscountException("Discount is invalid");
             }
         }
 
