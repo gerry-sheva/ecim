@@ -5,8 +5,11 @@ import com.dti.ecim.discount.dto.CreateEventDiscountRequestDto;
 import com.dti.ecim.discount.dto.CreateGlobalDiscountRequestDto;
 import com.dti.ecim.discount.dto.ClaimDiscountRequestDto;
 import com.dti.ecim.discount.service.DiscountService;
+import com.dti.ecim.response.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -16,18 +19,9 @@ import org.springframework.web.bind.annotation.*;
 public class DiscountController {
     private final DiscountService discountService;
 
-    @PostMapping("/global")
-    public void globalDiscount(@RequestBody CreateGlobalDiscountRequestDto createGlobalDiscountRequestDto) {
-        discountService.createGlobalDiscount(createGlobalDiscountRequestDto);
-    }
-
     @PostMapping("/event")
-    public void eventDiscount(@RequestBody CreateEventDiscountRequestDto createEventDiscountRequestDto) {
-        discountService.createEventDiscount(createEventDiscountRequestDto);
-    }
-
-    @PostMapping("/claim")
-    public void claimDiscount(@RequestBody ClaimDiscountRequestDto claimDiscountRequestDto) {
-        discountService.claimDiscount(claimDiscountRequestDto);
+    public ResponseEntity<?> eventDiscount(@RequestBody CreateEventDiscountRequestDto createEventDiscountRequestDto) {
+        var res =  discountService.createEventDiscount(createEventDiscountRequestDto);
+        return Response.success(HttpStatus.CREATED.value(), "Event discount successfully created", res);
     }
 }
