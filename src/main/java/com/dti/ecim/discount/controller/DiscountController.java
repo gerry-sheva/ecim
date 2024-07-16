@@ -30,9 +30,4 @@ public class DiscountController {
     public void claimDiscount(@RequestBody ClaimDiscountRequestDto claimDiscountRequestDto) {
         discountService.claimDiscount(claimDiscountRequestDto);
     }
-
-    @PostMapping("/{id}")
-    public void addPoint(@PathVariable Long id) {
-        discountService.addPoint(id);
-    }
 }
