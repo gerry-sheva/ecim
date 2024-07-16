@@ -18,6 +18,8 @@ public class RetrieveEventResponseDto {
 
     private Instant endingDate;
 
+    private int price;
+
     private OrganizerDto organizer;
 
     private LocationDto location;

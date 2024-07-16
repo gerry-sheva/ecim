@@ -55,6 +55,9 @@ public class Event {
     @Column(name = "deleted_at")
     private Instant deletedAt;
 
+    @Column(name = "price")
+    private int price;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organizer_id", insertable = false, updatable = false)
     private Organizer organizer;

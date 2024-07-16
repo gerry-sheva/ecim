@@ -66,6 +66,7 @@ public class EventServiceImpl implements EventService {
         event.setInterest(interest);
         event.setStartingDate(start);
         event.setEndingDate(end);
+        event.setPrice(0);
 
         List<CreateEventRequestDto.CreateEventOfferingDto> createEventOfferingDtoList = createEventRequestDto.getOfferings();
         if (createEventOfferingDtoList == null || createEventOfferingDtoList.isEmpty()) {
@@ -75,6 +76,11 @@ public class EventServiceImpl implements EventService {
             EventOffering eventOffering = modelMapper.map(createEventOfferingDto, EventOffering.class);
             eventOffering.setAvailability(createEventOfferingDto.getCapacity());
             event.addOffering(eventOffering);
+            if (eventOffering.getPrice() < event.getPrice()) {
+                event.setPrice(eventOffering.getPrice());
+            } else if (event.getPrice() <= 0){
+                event.setPrice(eventOffering.getPrice());
+            }
         }
         EventLocation eventLocation = modelMapper.map(createEventRequestDto.getLocation(), EventLocation.class);
         event.addLocation(eventLocation);
