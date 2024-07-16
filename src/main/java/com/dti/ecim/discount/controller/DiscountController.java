@@ -1,9 +1,6 @@
 package com.dti.ecim.discount.controller;
 
-import com.dti.ecim.discount.dto.RedeemDiscountRequestDto;
 import com.dti.ecim.discount.dto.CreateEventDiscountRequestDto;
-import com.dti.ecim.discount.dto.CreateGlobalDiscountRequestDto;
-import com.dti.ecim.discount.dto.ClaimDiscountRequestDto;
 import com.dti.ecim.discount.service.DiscountService;
 import com.dti.ecim.response.Response;
 import lombok.RequiredArgsConstructor;
