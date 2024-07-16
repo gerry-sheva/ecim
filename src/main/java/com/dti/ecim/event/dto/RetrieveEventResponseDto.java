@@ -20,6 +20,8 @@ public class RetrieveEventResponseDto {
 
     private int price;
 
+    private String imageSrc;
+
     private OrganizerDto organizer;
 
     private LocationDto location;
