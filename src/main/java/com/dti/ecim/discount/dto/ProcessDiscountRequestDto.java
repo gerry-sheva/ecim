@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProcessDiscountRequestDto {
     private Long discountId;
+    private Long eventId;
     private boolean isUsingPoint;
     private int totalPrice;
 }

@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RedeemDiscountRequestDto {
     private Long redeemedDiscountId;
+    private Long eventId;
 }

@@ -28,6 +28,9 @@ public class Discount {
     @SequenceGenerator(name = "discount_id_gen", sequenceName = "discount_id_seq", allocationSize = 1)
     private Long id;
 
+    @Column(name = "type", insertable = false, updatable = false)
+    private String type;
+
     @NotBlank
     @Column(name = "name")
     private String name;

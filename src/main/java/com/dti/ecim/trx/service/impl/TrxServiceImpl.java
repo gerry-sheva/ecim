@@ -95,6 +95,7 @@ public class TrxServiceImpl implements TrxService {
             ProcessDiscountResponseDto processDiscountResponseDto = discountService.processDiscount(
                     new ProcessDiscountRequestDto(
                             createTrxRequestDto.getDiscountId(),
+                            createTrxRequestDto.getEventId(),
                             createTrxRequestDto.isPoint(),
                             totalPrice
                     ));

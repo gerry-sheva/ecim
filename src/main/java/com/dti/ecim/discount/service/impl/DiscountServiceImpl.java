@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -89,7 +90,14 @@ public class DiscountServiceImpl implements DiscountService {
             throw new InvalidDiscountException(String.format("Discount with id '%s' is already expired", claimedDiscount.getDiscountId()));
         }
 
-        Optional<RedeemedDiscount> redeemedDiscountOptional = redeemedDiscountRepository.findById(claimedDiscount.getDiscountId());
+        if (claimedDiscount.getDiscount().getType().equals("EVENT")) {
+            EventDiscount eventDiscount = (EventDiscount) claimedDiscount.getDiscount();
+            if (!Objects.equals(eventDiscount.getEventId(), requestDto.getEventId())) {
+                throw new InvalidDiscountException(String.format("Discount with id '%s' is invalid for event with id '%s", eventDiscount.getId(), requestDto.getEventId()));
+            }
+        }
+
+        Optional<RedeemedDiscount> redeemedDiscountOptional = redeemedDiscountRepository.findById(claimedDiscount.getId());
         if (redeemedDiscountOptional.isPresent()) {
             throw new InvalidDiscountException("Discount with id: " + requestDto.getRedeemedDiscountId() + " already redeemed");
         }
@@ -105,7 +113,7 @@ public class DiscountServiceImpl implements DiscountService {
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
         ProcessDiscountResponseDto processDiscountResponseDto = new ProcessDiscountResponseDto();
         if (requestDto.getDiscountId() != null) {
-            RedeemDiscountResponseDto redeemDiscountResponseDto = redeemDiscount(new RedeemDiscountRequestDto(requestDto.getDiscountId()));
+            RedeemDiscountResponseDto redeemDiscountResponseDto = redeemDiscount(new RedeemDiscountRequestDto(requestDto.getDiscountId(), requestDto.getEventId()));
             if (redeemDiscountResponseDto.getAmountFlat() > 0) {
                 processDiscountResponseDto.addDiscountValue(redeemDiscountResponseDto.getAmountFlat());
             } else {
