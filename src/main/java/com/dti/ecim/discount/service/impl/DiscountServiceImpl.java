@@ -81,24 +81,26 @@ public class DiscountServiceImpl implements DiscountService {
     private RedeemDiscountResponseDto redeemDiscount(RedeemDiscountRequestDto requestDto) {
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
         Optional<ClaimedDiscount> claimedDiscountOptional = claimedDiscountRepository.findByAttendeeIdAndDiscountId(userIdResponseDto.getId(), requestDto.getRedeemedDiscountId());
+//        If discount is not found, throw DataNotFoundException
         if (claimedDiscountOptional.isEmpty()) {
             throw new DataNotFoundException("Discount with id: " + requestDto.getRedeemedDiscountId() + " not found");
         }
 
+//        If discount is already expired, invalidate it
         ClaimedDiscount claimedDiscount = claimedDiscountOptional.get();
         if (claimedDiscount.getExpiredAt().isBefore(Instant.now())) {
             throw new InvalidDiscountException(String.format("Discount with id '%s' is already expired", claimedDiscount.getDiscountId()));
         }
 
+//        If discount is an event discount and the event id is not match, invalidate it
         if (claimedDiscount.getDiscount().getType().equals("EVENT")) {
-            log.info("It's an event discount");
             var eventDiscountDao = discountRepository.retrieveEventDiscount(claimedDiscount.getDiscountId());
-            log.info(eventDiscountDao.getEventId().toString());
             if (!Objects.equals(eventDiscountDao.getEventId(), requestDto.getEventId())) {
                 throw new InvalidDiscountException("Discount is invalid");
             }
         }
 
+//        If discount is already redeemed, invalidate it
         Optional<RedeemedDiscount> redeemedDiscountOptional = redeemedDiscountRepository.findById(claimedDiscount.getId());
         if (redeemedDiscountOptional.isPresent()) {
             throw new InvalidDiscountException("Discount with id: " + requestDto.getRedeemedDiscountId() + " already redeemed");
@@ -114,6 +116,7 @@ public class DiscountServiceImpl implements DiscountService {
     public ProcessDiscountResponseDto processDiscount(ProcessDiscountRequestDto requestDto) throws BadRequestException {
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
         ProcessDiscountResponseDto processDiscountResponseDto = new ProcessDiscountResponseDto();
+
         if (requestDto.getDiscountId() != null) {
             RedeemDiscountResponseDto redeemDiscountResponseDto = redeemDiscount(new RedeemDiscountRequestDto(requestDto.getDiscountId(), requestDto.getEventId()));
             if (redeemDiscountResponseDto.getAmountFlat() > 0) {
@@ -123,6 +126,7 @@ public class DiscountServiceImpl implements DiscountService {
                 processDiscountResponseDto.addDiscountValue(discountValue);
             }
         }
+
         if (requestDto.isUsingPoint()) {
             int points = retrievePoints();
             if (points < 0) {
@@ -138,8 +142,7 @@ public class DiscountServiceImpl implements DiscountService {
         if (requestDto.getTotalPrice() < processDiscountResponseDto.getDiscountValue()) {
             processDiscountResponseDto.setDiscountValue(requestDto.getTotalPrice());
         }
-        log.info(String.valueOf(requestDto.getTotalPrice()));
-        log.info(String.valueOf(processDiscountResponseDto.getDiscountValue()));
+
         processDiscountResponseDto.setFinalPrice(requestDto.getTotalPrice() - processDiscountResponseDto.getDiscountValue());
         return processDiscountResponseDto;
     }
