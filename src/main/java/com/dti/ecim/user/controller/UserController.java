@@ -28,12 +28,12 @@ public class UserController {
     @PostMapping("/organizer")
     public ResponseEntity<?> createOrganizer(@RequestBody CreateOrganizerRequestDto createOrganizerRequestDto) throws BadRequestException {
         CreateOrganizerResponseDto res = userService.createOrganizer(createOrganizerRequestDto);
-        return Response.success(HttpStatus.CREATED.value(), "Organizer created successfully", res);
+        return ResponseEntity.status(HttpStatus.OK).headers(res.getHeaders()).body(res);
     }
 
     @PostMapping("/attendee")
     public ResponseEntity<?> createAttendee(@RequestBody CreateAttendeeRequestDto createAttendeeRequestDto) throws NoSuchAlgorithmException, BadRequestException {
         CreateAttendeeResponseDto res = userService.createAttendee(createAttendeeRequestDto);
-        return Response.success(HttpStatus.CREATED.value(), "Attendee created successfully", res);
+        return ResponseEntity.status(HttpStatus.OK).headers(res.getHeaders()).body(res);
     }
 }

@@ -18,6 +18,7 @@ import com.dti.ecim.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.apache.coyote.BadRequestException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,7 +73,7 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        String token = authService.addRole(Role.ATTENDEE);
+        HttpHeaders headers = authService.addRole(Role.ATTENDEE);
 
         CreateAttendeeResponseDto responseDto = new CreateAttendeeResponseDto();
         responseDto.setFname(newAttendee.getFname());
@@ -81,7 +82,7 @@ public class UserServiceImpl implements UserService {
         responseDto.setContact(newAttendee.getContact());
         responseDto.setReferralCode(newAttendee.getRefCode());
         responseDto.setRole(Role.ATTENDEE.name());
-        responseDto.setToken(token);
+        responseDto.setHeaders(headers);
 
         return responseDto;
     }
@@ -96,12 +97,12 @@ public class UserServiceImpl implements UserService {
         newOrganizer.setAvatar(requestDto.getAvatar());
         organizerRepository.save(newOrganizer);
 
-        String token = authService.addRole(Role.ORGANIZER);
+        HttpHeaders headers = authService.addRole(Role.ORGANIZER);
 
         CreateOrganizerResponseDto responseDto = new CreateOrganizerResponseDto();
         responseDto.setName(newOrganizer.getName());
         responseDto.setRole(Role.ORGANIZER.name());
-        responseDto.setToken(token);
+        responseDto.setHeaders(headers);
 
         return responseDto;
     }

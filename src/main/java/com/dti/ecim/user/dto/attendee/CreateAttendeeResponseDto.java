@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpHeaders;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -24,5 +25,5 @@ public class CreateAttendeeResponseDto {
 
     private String role;
 
-    private String token;
+    private HttpHeaders headers;
 }

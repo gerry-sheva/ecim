@@ -15,5 +15,5 @@ public interface AuthService {
     ResponseDto resetPassword(ResetPasswordRequestDto requestDto) throws BadRequestException;
     UserIdResponseDto getCurrentUserId();
     UserAuth getCurrentUser();
-    String addRole(Role role);
+    HttpHeaders addRole(Role role);
 }

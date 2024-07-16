@@ -151,7 +151,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String addRole(Role role) {
+    public HttpHeaders addRole(Role role) {
 //        Add role to db
         UserAuth userAuth = getCurrentUser();
         userAuth.setRole(role);
@@ -171,6 +171,10 @@ public class AuthServiceImpl implements AuthService {
 //        Generate new JWT
         String token = generateToken(newAuth);
         authRedisRepository.saveJwtKey(auth.getName(), token);
-        return token;
+
+        Cookie cookie = new Cookie("sid", token);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Set-Cookie", cookie.getName() + "=" + cookie.getValue() + "; Path=/; HttpOnly");
+        return headers;
     }
 }
