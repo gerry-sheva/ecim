@@ -55,7 +55,20 @@ public class EventServiceTest {
         offeringDto.setDescription("Sample Offering Description");
         offeringDto.setPrice(100);
         offeringDto.setCapacity(50);
-        createEventRequestDto.setOfferings(List.of(offeringDto));
+
+        CreateEventRequestDto.CreateEventOfferingDto offeringDto2 = new CreateEventRequestDto.CreateEventOfferingDto();
+        offeringDto2.setName("Sample Offering 2");
+        offeringDto2.setDescription("Sample Offering Description");
+        offeringDto2.setPrice(1000);
+        offeringDto2.setCapacity(100);
+
+        CreateEventRequestDto.CreateEventOfferingDto offeringDto3 = new CreateEventRequestDto.CreateEventOfferingDto();
+        offeringDto3.setName("Sample Offering 3");
+        offeringDto3.setDescription("Sample Offering Description");
+        offeringDto3.setPrice(10);
+        offeringDto3.setCapacity(10);
+
+        createEventRequestDto.setOfferings(List.of(offeringDto, offeringDto2, offeringDto3));
     }
 
 //    CREATE EVENT
