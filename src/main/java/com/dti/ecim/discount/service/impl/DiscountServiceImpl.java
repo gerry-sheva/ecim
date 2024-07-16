@@ -38,14 +38,14 @@ public class DiscountServiceImpl implements DiscountService {
     }
 
     @Override
-    public void createEventDiscount(CreateEventDiscountRequestDto requestDto) {
-        createDiscount(modelMapper.map(requestDto, EventDiscount.class));
+    public Discount createEventDiscount(CreateEventDiscountRequestDto requestDto) {
+        return createDiscount(modelMapper.map(requestDto, EventDiscount.class));
     }
 
-    private void createDiscount(Discount discount) {
+    private Discount createDiscount(Discount discount) {
         discount.setExpiredAt(Instant.now().plus(discount.getExpiresInDays(), ChronoUnit.DAYS));
         discount.setCode(discount.getCode().toUpperCase());
-        discountRepository.save(discount);
+        return discountRepository.save(discount);
     }
 
     @Override
