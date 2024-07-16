@@ -58,6 +58,9 @@ public class Event {
     @Column(name = "price")
     private int price;
 
+    @Column(name = "imageSrc")
+    private String imageSrc;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organizer_id", insertable = false, updatable = false)
     private Organizer organizer;

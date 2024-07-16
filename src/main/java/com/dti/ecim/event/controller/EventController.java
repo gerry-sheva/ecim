@@ -6,6 +6,7 @@ import com.dti.ecim.event.service.EventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.apache.coyote.BadRequestException;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Log
 @RequestMapping("/api/v1/event")
+@CrossOrigin(origins = "http://localhost:3000")
 public class EventController {
     private final EventService eventService;
 
