@@ -178,4 +178,16 @@ public class EventServiceImpl implements EventService {
     public void updateOffering(EventOffering eventOffering) {
         eventOfferingRepository.save(eventOffering);
     }
+
+    @Override
+    public List<RetrieveEventResponseDto.CategoryDto> retrieveCategories() {
+        List<Category> categories = categoryRepository.findAll();
+        return categories.stream().map(category -> modelMapper.map(category, RetrieveEventResponseDto.CategoryDto.class)).toList();
+    }
+
+    @Override
+    public List<RetrieveEventResponseDto.InterestDto> retrieveInterests() {
+        List<Interest> interests = interestRepository.findAll();
+        return interests.stream().map(interest -> modelMapper.map(interest, RetrieveEventResponseDto.InterestDto.class)).toList();
+    }
 }

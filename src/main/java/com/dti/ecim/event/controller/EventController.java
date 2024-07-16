@@ -69,4 +69,16 @@ public class EventController {
     public void addReview(@RequestBody AddReviewRequestDto requestDto) {
         eventService.addReview(requestDto);
     }
+
+    @GetMapping("/category")
+    public ResponseEntity<?> retrieveCategories() {
+        var res = eventService.retrieveCategories();
+        return Response.success(HttpStatus.OK.value(), "Categories retrieved successfully", res);
+    }
+
+    @GetMapping("/interest")
+    public ResponseEntity<?> retrieveInterests() {
+        var res = eventService.retrieveInterests();
+        return Response.success(HttpStatus.OK.value(), "Interests retrieved successfully", res);
+    }
 }
