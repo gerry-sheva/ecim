@@ -29,22 +29,29 @@ public class Discount {
     private Long id;
 
     @NotBlank
+    @Column(name = "name")
     private String name;
 
     @NotBlank
+    @Column(name = "description")
     private String description;
 
+    @Column(name = "amountFlat")
     private int amountFlat;
 
+    @Column(name = "amountPercent")
     private int amountPercent;
 
     @NotBlank
+    @Column(name = "code")
     private String code;
 
     @Positive
+    @Column(name = "expiresInDays")
     private int expiresInDays;
 
     @NotNull
+    @Column(name = "expiredAt")
     private Instant expiredAt;
 
     @Column(name = "created_at")
