@@ -48,6 +48,6 @@ public class DashboardController {
     ) {
         TimeSpecifier timeSpecifierEnum = TimeSpecifier.valueOf(timeSpecifier.toUpperCase());
         var res = dashboardService.summarizeTrxs(PageRequest.of(page, size), date, timeSpecifierEnum);
-        return ResponseEntity.ok(res);
+        return Response.success(HttpStatus.OK.value(), "Successfuly retrieved trxs", res);
     }
 }
