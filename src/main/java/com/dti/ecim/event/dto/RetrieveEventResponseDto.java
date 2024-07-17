@@ -84,6 +84,7 @@ public class RetrieveEventResponseDto {
 
     @Data
     public static class OfferingDto {
+        private Long id;
         private String name;
         private String description;
         private int price;
@@ -91,6 +92,7 @@ public class RetrieveEventResponseDto {
         private int availability;
 
         public OfferingDto() {
+            this.id = null;
             this.name = "";
             this.description = "";
             this.price = 0;

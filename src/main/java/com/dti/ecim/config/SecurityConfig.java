@@ -95,7 +95,7 @@ public class SecurityConfig {
 //                    auth.requestMatchers("/api/v1/attendee/**").hasRole("ATTENDEE");
 //                    auth.requestMatchers("/api/v1/organizer").authenticated();
 //                    auth.requestMatchers("/api/v1/organizer/**").hasRole("ORGANIZER");
-                    auth.anyRequest().authenticated();
+                    auth.anyRequest().permitAll();
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer(oauth2 -> {

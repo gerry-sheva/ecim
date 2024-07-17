@@ -22,12 +22,13 @@ public class DashboardController {
     private final DashboardService dashboardService;
 
     @GetMapping("/stats")
-    public void getStatistics(
+    public ResponseEntity<?> getStatistics(
             @RequestParam(defaultValue = "DAY") String timeSpecifier,
             @RequestParam() @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Instant date
     ) {
         TimeSpecifier timeSpecifierEnum = TimeSpecifier.valueOf(timeSpecifier.toUpperCase());
-        dashboardService.getStatistics(Instant.now(), timeSpecifierEnum);
+        var res = dashboardService.getStatistics(Instant.now(), timeSpecifierEnum);
+        return Response.success(HttpStatus.OK.value(), "Successfuly retrieved stats", res);
     }
 
     @GetMapping("/events")
