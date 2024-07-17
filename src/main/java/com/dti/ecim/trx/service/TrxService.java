@@ -13,5 +13,5 @@ import java.time.Instant;
 public interface TrxService {
     TrxResponseDto retrieveTrx(Long trxId) throws BadRequestException, NoSuchAlgorithmException;
     TrxResponseDto createTrx(CreateTrxRequestDto createTrxRequestDto) throws NoSuchAlgorithmException, BadRequestException;
-    Page<TrxResponseDto> retrieveAllTrx(Pageable pageable);
+    Page<TrxResponseDto> retrieveAllTrx(Pageable pageable, Instant date, TimeSpecifier timeSpecifier);
 }

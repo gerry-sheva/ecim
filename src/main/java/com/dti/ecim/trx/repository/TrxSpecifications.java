@@ -2,21 +2,15 @@ package com.dti.ecim.trx.repository;
 
 import com.dti.ecim.trx.entity.Trx;
 import com.dti.ecim.trx.enums.TimeSpecifier;
-import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.Subquery;
-import org.hibernate.query.Query;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.Instant;
-import java.util.List;
 
 public class TrxSpecifications {
     public static Specification<Trx> byTime(Instant date, TimeSpecifier timeSpecifier) {
-//        if (year < 0 || month < 0) {
-//            return (root, query, cb) -> cb.conjunction();
-//        }
         if (timeSpecifier == TimeSpecifier.DAY) {
             return (root, query, cb) -> cb.equal(cb.function("DATE", Instant.class, root.get("createdAt")), date);
         } else if (timeSpecifier == TimeSpecifier.WEEK) {
@@ -43,9 +37,15 @@ public class TrxSpecifications {
         }
         return ((root, query, criteriaBuilder) -> criteriaBuilder.conjunction());
     }
+
     public static Specification<Trx> byOrganizerId(Long organizerId) {
         return (root, query, cb) -> cb.equal(root.get("organizerId"), organizerId);
     }
+
+    public static Specification<Trx> byAttendeeId(Long attendeeId) {
+        return ((root, query, cb) -> cb.equal(root.get("attendeeId"), attendeeId));
+    }
+
     public static Specification<Trx> sumFinalPrice() {
         return (root, query, cb) -> {
             // Check if we're in a count query

@@ -40,10 +40,13 @@ public class TrxController {
 
     @GetMapping
     public ResponseEntity<?> retrieveTrxs(
+            @RequestParam(defaultValue = "DAY") String timeSpecifier,
+            @RequestParam() @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Instant date,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
     ) {
-        var res = trxService.retrieveAllTrx(PageRequest.of(page, size));
+        TimeSpecifier timeSpecifierEnum = TimeSpecifier.valueOf(timeSpecifier.toUpperCase());
+        var res = trxService.retrieveAllTrx(PageRequest.of(page, size), date, timeSpecifierEnum);
         return Response.success(HttpStatus.OK.value(), "Transactions retrieved successfully", res);
     }
 }
