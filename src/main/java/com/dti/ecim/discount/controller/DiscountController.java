@@ -21,4 +21,10 @@ public class DiscountController {
         var res =  discountService.createEventDiscount(createEventDiscountRequestDto);
         return Response.success(HttpStatus.CREATED.value(), "Event discount successfully created", res);
     }
+
+    @GetMapping("/available")
+    public ResponseEntity<?> getAvailableDiscounts(@RequestParam Long eventId) {
+        var res = discountService.retrieveAvailableDiscounts(eventId);
+        return Response.success(HttpStatus.OK.value(), "Successfully retrieved available discount", res);
+    }
 }

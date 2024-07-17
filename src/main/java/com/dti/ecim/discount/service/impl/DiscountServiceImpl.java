@@ -2,6 +2,7 @@ package com.dti.ecim.discount.service.impl;
 
 import com.dti.ecim.auth.dto.UserIdResponseDto;
 import com.dti.ecim.auth.service.AuthService;
+import com.dti.ecim.discount.dao.AvailableDiscountDao;
 import com.dti.ecim.discount.dto.*;
 import com.dti.ecim.discount.entity.*;
 import com.dti.ecim.discount.exceptions.InsufficientPointException;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -171,5 +174,17 @@ public class DiscountServiceImpl implements DiscountService {
                 return pointRepository.getCurrentPoints(userIdResponseDto.getId(), Instant.now(), Instant.now().minus(90, ChronoUnit.DAYS));
             }
         }
+    }
+
+    @Override
+    public List<AvailableDiscountResponseDto> retrieveAvailableDiscounts(Long eventId) {
+        var userId = authService.getCurrentUserId();
+        var res = claimedDiscountRepository.retrieveAvailableDiscount(userId.getId(), eventId);
+        List<AvailableDiscountResponseDto> availableDiscountResponseDtos = new ArrayList<>();
+        res.forEach(discount -> {
+            var dto = modelMapper.map(discount, AvailableDiscountResponseDto.class);
+            availableDiscountResponseDtos.add(dto);
+        });
+        return availableDiscountResponseDtos;
     }
 }
