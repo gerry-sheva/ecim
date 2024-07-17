@@ -14,6 +14,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -88,18 +89,23 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfig))
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/error/**").permitAll();
+//                    auth.requestMatchers("/error/**").permitAll();
                     auth.requestMatchers("/api/v1/auth/**").permitAll();
-                    auth.requestMatchers("/api/v1/attendee").authenticated();
-                    auth.requestMatchers("/api/v1/attendee/**").hasRole("ATTENDEE");
-                    auth.requestMatchers("/api/v1/organizer").authenticated();
-                    auth.requestMatchers("/api/v1/organizer/**").hasRole("ORGANIZER");
-                    auth.anyRequest().permitAll();
+//                    auth.requestMatchers("/api/v1/attendee").authenticated();
+//                    auth.requestMatchers("/api/v1/attendee/**").hasRole("ATTENDEE");
+//                    auth.requestMatchers("/api/v1/organizer").authenticated();
+//                    auth.requestMatchers("/api/v1/organizer/**").hasRole("ORGANIZER");
+                    auth.anyRequest().authenticated();
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer(oauth2 -> {
                     oauth2.jwt(jwt -> jwt.decoder(jwtDecoder()));
                     oauth2.bearerTokenResolver(request -> {
+                        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+                        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                            return authHeader.substring(7);
+                        }
+
                         Cookie[] cookies = request.getCookies();
                         if (cookies != null) {
                             for (Cookie cookie : cookies) {
