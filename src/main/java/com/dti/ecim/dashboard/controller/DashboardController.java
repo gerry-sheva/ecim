@@ -41,7 +41,7 @@ public class DashboardController {
     }
 
     @GetMapping("/trxs")
-    public ResponseEntity<?> sumTrxs(
+    public ResponseEntity<?> retrieveTrxs(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "DAY") String timeSpecifier,
