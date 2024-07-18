@@ -63,15 +63,16 @@ public class DiscountServiceImpl implements DiscountService {
     public void claimDiscount(ClaimDiscountRequestDto requestDto) {
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
         Optional<Discount> discountOptional = discountRepository.findByCode(requestDto.getCode());
+//        if discount is not found, invalidate it
         if (discountOptional.isEmpty()) {
             throw new DataNotFoundException(String.format("Discount with code '%s' not found", requestDto.getCode()));
         }
-
+//        if discount is already expired, invalidate it
         Discount discount = discountOptional.get();
         if (discount.getExpiredAt().isBefore(Instant.now())) {
             throw new InvalidDiscountException(String.format("Discount with code '%s' is already expired", requestDto.getCode()));
         }
-
+//        if discount is already claimed, invalidate it
         Optional<ClaimedDiscount> existingDiscount = claimedDiscountRepository.findByAttendeeIdAndDiscountId(userIdResponseDto.getId(), discount.getId());
         if (existingDiscount.isPresent()) {
             throw new InvalidDiscountException("Discount with id: " + requestDto.getCode() + " already claimed");
@@ -81,6 +82,7 @@ public class DiscountServiceImpl implements DiscountService {
         claimedDiscount.setDiscountId(discount.getId());
         claimedDiscount.setAttendeeId(userIdResponseDto.getId());
         Instant expiredAt = Instant.now().plus(discount.getExpiresInDays(), ChronoUnit.DAYS);
+//        if expiredAt is later than the default, set it to default
         if (discount.getExpiredAt().isBefore(expiredAt)) {
             claimedDiscount.setExpiredAt(discount.getExpiredAt());
         } else {
