@@ -42,15 +42,19 @@ public class DiscountServiceImpl implements DiscountService {
 
     @Override
     public CreatedDiscountResponseDto createEventDiscount(CreateEventDiscountRequestDto requestDto) {
-        Discount created = createDiscount(modelMapper.map(requestDto, EventDiscount.class));
+        var discount = modelMapper.map(requestDto, EventDiscount.class);
+        discount.setExpiredAt(Instant.parse(requestDto.getExpiredAt()));
+        var created = createDiscount(discount);
         return modelMapper.map(created, CreatedDiscountResponseDto.class);
     }
 
     private Discount createDiscount(Discount discount) {
-        discount.setExpiredAt(Instant.now().plus(discount.getExpiresInDays(), ChronoUnit.DAYS));
         discount.setCode(discount.getCode().toUpperCase());
         if (discount.getAmountFlat() == 0 && discount.getAmountPercent() == 0) {
             discount.setAmountFlat(10000);
+        }
+        if (discount.getExpiredAt().isBefore(Instant.now())) {
+            throw new IllegalStateException("Cannot create discount that is expired in the past: " + discount.getExpiredAt());
         }
         return discountRepository.save(discount);
     }
