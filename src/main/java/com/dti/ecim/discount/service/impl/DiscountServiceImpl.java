@@ -49,6 +49,9 @@ public class DiscountServiceImpl implements DiscountService {
     private Discount createDiscount(Discount discount) {
         discount.setExpiredAt(Instant.now().plus(discount.getExpiresInDays(), ChronoUnit.DAYS));
         discount.setCode(discount.getCode().toUpperCase());
+        if (discount.getAmountFlat() == 0 && discount.getAmountPercent() == 0) {
+            discount.setAmountFlat(10000);
+        }
         return discountRepository.save(discount);
     }
 
