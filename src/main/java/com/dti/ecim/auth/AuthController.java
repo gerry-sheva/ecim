@@ -7,13 +7,16 @@ import com.dti.ecim.auth.dto.ResetPasswordRequestDto;
 import com.dti.ecim.auth.service.AuthService;
 import com.dti.ecim.dto.ResponseDto;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Validated
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -22,14 +25,14 @@ public class AuthController {
 
     @PostMapping("/register")
     @Transactional
-    public ResponseEntity<AuthResponseDto> register(@RequestBody RegisterRequestDto registerRequestDto) throws BadRequestException {
+    public ResponseEntity<AuthResponseDto> register(@Valid @RequestBody RegisterRequestDto registerRequestDto) throws BadRequestException {
         AuthResponseDto res =  authService.registerUser(registerRequestDto);
         HttpHeaders headers = authService.saveTokenToCookie(res);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(res);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
+    public ResponseEntity<AuthResponseDto> login(@Valid @RequestBody LoginRequestDto loginRequestDto) {
         AuthResponseDto res = authService.authenticateUser(loginRequestDto);
         HttpHeaders headers = authService.saveTokenToCookie(res);
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(res);
@@ -43,7 +46,7 @@ public class AuthController {
     }
 
     @PostMapping("/reset")
-    public ResponseEntity<ResponseDto> resetPassword(@RequestBody ResetPasswordRequestDto resetPasswordRequestDto) throws BadRequestException {
+    public ResponseEntity<ResponseDto> resetPassword(@Valid @RequestBody ResetPasswordRequestDto resetPasswordRequestDto) throws BadRequestException {
         ResponseDto res = authService.resetPassword(resetPasswordRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }

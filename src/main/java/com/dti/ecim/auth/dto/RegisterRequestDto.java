@@ -1,9 +1,7 @@
 package com.dti.ecim.auth.dto;
 
-import com.dti.ecim.auth.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,15 +10,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RegisterRequestDto {
 
-    @Email
+    @Email(message = "Must be valid email address")
+    @NotBlank(message = "Email must not be null")
     private String email;
 
-    @Size(min = 8)
+    @Size(min = 8, message = "Password must not be less than 8 characters")
+    @NotBlank(message = "Password must not be null")
     private String password;
 
-    @Size(min = 8)
+    @Size(min = 8, message = "Password must not be less than 8 characters")
+    @NotBlank(message = "Password must not be null")
     private String confirmPassword;
-
-    @NotNull
-    private Role role;
 }
