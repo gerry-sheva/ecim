@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface DiscountService {
     void createGlobalDiscount(CreateGlobalDiscountRequestDto requestDto);
-    Discount createEventDiscount(CreateEventDiscountRequestDto requestDto);
+    CreatedDiscountResponseDto createEventDiscount(CreateEventDiscountRequestDto requestDto);
     void claimDiscount(ClaimDiscountRequestDto requestDto);
     ProcessDiscountResponseDto processDiscount(ProcessDiscountRequestDto requestDto) throws BadRequestException;
     void addPoint(Long referralId);

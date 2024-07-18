@@ -1,6 +1,7 @@
 package com.dti.ecim.unit.discount;
 
 import com.dti.ecim.discount.dto.CreateEventDiscountRequestDto;
+import com.dti.ecim.discount.dto.CreatedDiscountResponseDto;
 import com.dti.ecim.discount.entity.Discount;
 import com.dti.ecim.discount.service.DiscountService;
 import org.assertj.core.api.Assertions;
@@ -27,10 +28,10 @@ public class DiscountServiceTest {
         requestDto.setExpiredAt("07:00:00 PM, Thu 01/1/2026");
         requestDto.setDescription("Testing Discount description");
 
-        Discount discount = discountService.createEventDiscount(requestDto);
+        CreatedDiscountResponseDto discount = discountService.createEventDiscount(requestDto);
 
         Assertions.assertThat(discount).isNotNull();
-        Assertions.assertThat(discount.getId()).isNotNull();
+        Assertions.assertThat(discount.getCode()).isNotNull();
         Assertions.assertThat(discount.getCode()).isEqualTo("WHAM");
     }
 }

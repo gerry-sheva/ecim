@@ -3,6 +3,7 @@ package com.dti.ecim.discount.controller;
 import com.dti.ecim.discount.dto.CreateEventDiscountRequestDto;
 import com.dti.ecim.discount.service.DiscountService;
 import com.dti.ecim.response.Response;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,7 @@ public class DiscountController {
     private final DiscountService discountService;
 
     @PostMapping("/event")
-    public ResponseEntity<?> eventDiscount(@RequestBody CreateEventDiscountRequestDto createEventDiscountRequestDto) {
+    public ResponseEntity<?> eventDiscount(@Valid @RequestBody CreateEventDiscountRequestDto createEventDiscountRequestDto) {
         var res =  discountService.createEventDiscount(createEventDiscountRequestDto);
         return Response.success(HttpStatus.CREATED.value(), "Event discount successfully created", res);
     }

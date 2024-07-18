@@ -46,7 +46,7 @@ public class Discount {
     private int amountPercent;
 
     @NotBlank
-    @Column(name = "code")
+    @Column(name = "code", unique = true)
     private String code;
 
     @Positive

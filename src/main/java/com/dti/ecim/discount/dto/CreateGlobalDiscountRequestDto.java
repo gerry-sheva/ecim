@@ -12,22 +12,22 @@ import java.time.Instant;
 @Data
 @NoArgsConstructor
 public class CreateGlobalDiscountRequestDto {
-    @NotBlank
+    @NotBlank(message = "Name must not be null")
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "Description must not be null")
     private String description;
 
     private int amountFlat;
 
     private int amountPercent;
 
-    @NotBlank
+    @NotBlank(message = "Code must not be null")
     private String code;
 
-    @Positive
+    @Positive(message = "Expires in days must not be null")
     private int expiresInDays;
 
-    @NotBlank
+    @NotBlank(message = "Expired at must not be null")
     private String expiredAt;
 }
