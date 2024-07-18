@@ -48,4 +48,13 @@ public class EventSpecifications {
             return cb.equal(cb.lower(root.get("location").get("state")), state.toLowerCase());
         }));
     }
+
+    public static Specification<Event> isFree(boolean free) {
+        return ((((root, query, cb) -> {
+            if (free) {
+                return cb.equal(root.get("price"), 0);
+            } else
+                return cb.conjunction();
+        })));
+    }
 }

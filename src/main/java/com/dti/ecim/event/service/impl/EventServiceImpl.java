@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -189,5 +190,12 @@ public class EventServiceImpl implements EventService {
     public List<RetrieveEventResponseDto.InterestDto> retrieveInterests() {
         List<Interest> interests = interestRepository.findAll();
         return interests.stream().map(interest -> modelMapper.map(interest, RetrieveEventResponseDto.InterestDto.class)).toList();
+    }
+
+    @Override
+    public List<FindSuggestionsResponseDto> findSuggestions(String search) {
+        var res = eventRepository.findSuggestions(String.format("%s%%", search));
+        res.forEach(r -> log.info(r.getTitle()));
+        return res.stream().map(dao -> modelMapper.map(dao, FindSuggestionsResponseDto.class)).toList();
     }
 }

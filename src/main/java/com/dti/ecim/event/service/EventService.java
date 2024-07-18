@@ -28,4 +28,5 @@ public interface EventService {
     void updateOffering(EventOffering eventOffering);
     List<RetrieveEventResponseDto.CategoryDto> retrieveCategories();
     List<RetrieveEventResponseDto.InterestDto> retrieveInterests();
+    List<FindSuggestionsResponseDto> findSuggestions(String search);
 }

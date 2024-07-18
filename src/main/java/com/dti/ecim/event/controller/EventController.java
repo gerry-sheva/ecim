@@ -81,4 +81,10 @@ public class EventController {
         var res = eventService.retrieveInterests();
         return Response.success(HttpStatus.OK.value(), "Interests retrieved successfully", res);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> findSuggestions(@RequestParam String search) {
+        var res = eventService.findSuggestions(search);
+        return Response.success(HttpStatus.OK.value(), "Suggestions retrieved successfully", res);
+    }
 }
