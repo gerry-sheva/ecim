@@ -3,6 +3,7 @@ package com.dti.ecim.unit.event;
 import com.dti.ecim.auth.service.AuthService;
 import com.dti.ecim.event.dto.CreateEventRequestDto;
 import com.dti.ecim.event.dto.RetrieveEventResponseDto;
+import com.dti.ecim.event.dto.RetrieveEventWithoutOfferingResponseDto;
 import com.dti.ecim.event.entity.Interest;
 import com.dti.ecim.event.exceptions.InvalidDateException;
 import com.dti.ecim.event.service.EventService;
@@ -181,7 +182,7 @@ public class EventServiceTest {
     @Disabled
     public void test_display_event() {
         Pageable pageable = PageRequest.of(0, 5);
-        Page<RetrieveEventResponseDto> res = eventService.displayEvents(
+        Page<RetrieveEventWithoutOfferingResponseDto> res = eventService.displayEvents(
                 pageable,
                 null,
                 null,

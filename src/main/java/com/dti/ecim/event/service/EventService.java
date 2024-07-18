@@ -14,7 +14,7 @@ public interface EventService {
     RetrieveEventResponseDto createEvent(CreateEventRequestDto createEventRequestDto) throws BadRequestException;
     RetrieveEventResponseDto findEventById(Long id);
     RetrieveEventResponseDto updateEvent(Long id, UpdateEventDto updateEventDto);
-    Page<RetrieveEventResponseDto> displayEvents(
+    Page<RetrieveEventWithoutOfferingResponseDto> displayEvents(
             Pageable pageable,
             String title,
             String category,
