@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,11 +25,14 @@ public class CreateEventRequestDto {
     @NotBlank
     private String endingDate;
 
-    @NotBlank
+    @NotNull
     private Long categoryId;
 
-    @NotBlank
+    @NotNull
     private Long interestId;
+
+//    @NotNull
+    private MultipartFile img;
 
     @NotNull
     private CreateEventLocationDto location;

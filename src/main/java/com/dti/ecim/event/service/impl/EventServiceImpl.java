@@ -8,6 +8,8 @@ import com.dti.ecim.event.exceptions.InvalidDateException;
 import com.dti.ecim.event.repository.*;
 import com.dti.ecim.event.service.EventService;
 import com.dti.ecim.exceptions.DataNotFoundException;
+import com.dti.ecim.imageBucket.service.ImageBucketService;
+import com.dti.ecim.imageBucket.service.impl.AsyncImageUploadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.apache.coyote.BadRequestException;
@@ -18,10 +20,15 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static com.dti.ecim.event.helper.EventHelper.stringToInstant;
 
@@ -36,6 +43,8 @@ public class EventServiceImpl implements EventService {
     private final ModelMapper modelMapper;
 
     private final AuthService authService;
+//    private final ImageBucketService imageBucketService;
+    private final AsyncImageUploadService asyncImageUploadService;
 
     @Override
     @Transactional
@@ -85,6 +94,67 @@ public class EventServiceImpl implements EventService {
         EventLocation eventLocation = modelMapper.map(createEventRequestDto.getLocation(), EventLocation.class);
         event.addLocation(eventLocation);
         Event createdEvent = eventRepository.save(event);
+
+        return modelMapper.map(createdEvent, RetrieveEventResponseDto.class);
+    }
+
+    @Override
+    public RetrieveEventResponseDto createEventWithImage(CreateEventRequestDto createEventRequestDto) throws IOException {
+        UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
+        Instant start = stringToInstant(createEventRequestDto.getStartingDate());
+        Instant end = stringToInstant(createEventRequestDto.getEndingDate());
+
+        if (end.isBefore(start)) {
+            throw new InvalidDateException("Start date cannot be after end date");
+        }
+        if (end.isBefore(Instant.now())) {
+            throw new InvalidDateException("End date cannot be in the past");
+        }
+
+        Category category = findCategoryById(createEventRequestDto.getCategoryId());
+        Interest interest = findInterestById(createEventRequestDto.getInterestId());
+
+        if (!Objects.equals(interest.getCategory().getId(), category.getId())) {
+            throw new BadRequestException("Category id does not match interest id");
+        }
+
+        CompletableFuture<String> imageFuture = asyncImageUploadService.uploadImageAsync(createEventRequestDto.getImg(), "event");
+
+        Event event = new Event();
+        event.setOrganizerId(userIdResponseDto.getId());
+        event.setTitle(createEventRequestDto.getTitle());
+        event.setDescription(createEventRequestDto.getDescription());
+        event.setCategory(category);
+        event.setInterest(interest);
+        event.setStartingDate(start);
+        event.setEndingDate(end);
+        event.setPrice(0);
+
+        List<CreateEventRequestDto.CreateEventOfferingDto> createEventOfferingDtoList = createEventRequestDto.getOfferings();
+        if (createEventOfferingDtoList == null || createEventOfferingDtoList.isEmpty()) {
+            throw new BadRequestException("No offerings provided");
+        }
+        for (CreateEventRequestDto.CreateEventOfferingDto createEventOfferingDto : createEventOfferingDtoList) {
+            EventOffering eventOffering = modelMapper.map(createEventOfferingDto, EventOffering.class);
+            eventOffering.setAvailability(createEventOfferingDto.getCapacity());
+            event.addOffering(eventOffering);
+            if (eventOffering.getPrice() < event.getPrice()) {
+                event.setPrice(eventOffering.getPrice());
+            } else if (event.getPrice() <= 0){
+                event.setPrice(eventOffering.getPrice());
+            }
+        }
+        EventLocation eventLocation = modelMapper.map(createEventRequestDto.getLocation(), EventLocation.class);
+        event.addLocation(eventLocation);
+        Event createdEvent = eventRepository.save(event);
+
+        try {
+            String imageSrc = imageFuture.get(30, TimeUnit.SECONDS); // Wait up to 30 seconds
+            createdEvent.setImageSrc(imageSrc);
+            createdEvent = eventRepository.save(createdEvent);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            // Handle exceptions, maybe set a default image or log the error
+        }
 
         return modelMapper.map(createdEvent, RetrieveEventResponseDto.class);
     }

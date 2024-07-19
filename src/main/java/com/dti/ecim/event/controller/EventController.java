@@ -4,6 +4,7 @@ import com.dti.ecim.event.dto.AddReviewRequestDto;
 import com.dti.ecim.event.dto.CreateEventRequestDto;
 import com.dti.ecim.event.service.EventService;
 import com.dti.ecim.response.Response;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.apache.coyote.BadRequestException;
@@ -47,6 +48,12 @@ public class EventController {
 
     @PostMapping
     public ResponseEntity<?> createEvent(@RequestBody CreateEventRequestDto createEventRequestDto) throws BadRequestException {
+        var res = eventService.createEvent(createEventRequestDto);
+        return Response.success(HttpStatus.CREATED.value(), "Event created successfully", res);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<?> createEventWithImg(@Valid @ModelAttribute CreateEventRequestDto createEventRequestDto) throws BadRequestException {
         var res = eventService.createEvent(createEventRequestDto);
         return Response.success(HttpStatus.CREATED.value(), "Event created successfully", res);
     }
