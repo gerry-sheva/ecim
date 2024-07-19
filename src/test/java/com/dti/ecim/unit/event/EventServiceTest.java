@@ -188,7 +188,9 @@ public class EventServiceTest {
                 null,
                 null,
                 null,
-                null);
+                null,
+                false
+                );
 
         assertNotNull(res);
         assertEquals(5, res.getSize());

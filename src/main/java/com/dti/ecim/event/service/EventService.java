@@ -19,7 +19,9 @@ public interface EventService {
             String category,
             String interest,
             String city,
-            String state);
+            String state,
+            boolean isValid
+            );
     EventOffering getEventOffering(Long eventOfferingId);
     Interest findInterestById(Long id);
     Page<RetrieveEventResponseDto> displayOrganizerEvents(Long organizerId, Pageable pageable);

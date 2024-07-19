@@ -28,6 +28,7 @@ public class EventController {
             @RequestParam(required = false) String interest,
             @RequestParam(required = false) String city,
             @RequestParam(required = false) String state,
+            @RequestParam(required = false) boolean isValid,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
     ) {
@@ -38,7 +39,8 @@ public class EventController {
                 category,
                 interest,
                 city,
-                state
+                state,
+                isValid
         );
         return Response.success(HttpStatus.OK.value(), "Events retrieved successfully", res);
     }

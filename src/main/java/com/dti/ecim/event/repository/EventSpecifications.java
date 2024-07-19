@@ -3,6 +3,8 @@ package com.dti.ecim.event.repository;
 import com.dti.ecim.event.entity.Event;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.time.Instant;
+
 public class EventSpecifications {
     public static Specification<Event> byTitle(String title) {
         return ((root, query, cb) -> {
@@ -53,6 +55,15 @@ public class EventSpecifications {
         return ((((root, query, cb) -> {
             if (free) {
                 return cb.equal(root.get("price"), 0);
+            } else
+                return cb.conjunction();
+        })));
+    }
+
+    public static Specification<Event> isValid(boolean valid) {
+        return ((((root, query, cb) -> {
+            if (valid) {
+                return cb.greaterThanOrEqualTo(root.get("endingDate"), cb.function("now", Instant.class));
             } else
                 return cb.conjunction();
         })));

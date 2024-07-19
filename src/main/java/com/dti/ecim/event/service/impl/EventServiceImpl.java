@@ -116,12 +116,13 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Page<RetrieveEventWithoutOfferingResponseDto> displayEvents(Pageable pageable, String title, String category, String interest, String city, String state) {
+    public Page<RetrieveEventWithoutOfferingResponseDto> displayEvents(Pageable pageable, String title, String category, String interest, String city, String state, boolean isValid) {
         Specification<Event> specification = Specification.where(EventSpecifications.byTitle(title))
                 .and(EventSpecifications.byCategory(category))
                 .and(EventSpecifications.byInterest(interest))
                 .and(EventSpecifications.byCity(city))
-                .and(EventSpecifications.byState(state));
+                .and(EventSpecifications.byState(state))
+                .and(EventSpecifications.isValid(isValid));
         Page<Event> events = eventRepository.findAll(specification, pageable);
         return events.map(event -> modelMapper.map(event, RetrieveEventWithoutOfferingResponseDto.class));
     }
