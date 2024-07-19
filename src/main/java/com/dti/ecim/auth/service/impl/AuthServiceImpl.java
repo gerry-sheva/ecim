@@ -49,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
         }
         String password = passwordEncoder.encode(requestDto.getPassword());
         UserAuth userAuth = new UserAuth();
-        userAuth.setEmail(requestDto.getEmail());
+        userAuth.setEmail(requestDto.getEmail().toLowerCase());
         userAuth.setPassword(password);
         userAuthRepository.save(userAuth);
         AuthResponseDto res = authenticateUser(new LoginRequestDto(requestDto.getEmail(), requestDto.getPassword()));
@@ -61,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponseDto authenticateUser(LoginRequestDto requestDto) {
         var auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        requestDto.getEmail(),
+                        requestDto.getEmail().toLowerCase(),
                         requestDto.getPassword())
         );
 
