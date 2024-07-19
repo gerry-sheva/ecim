@@ -31,6 +31,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -75,6 +76,9 @@ public class TrxServiceImpl implements TrxService {
             var eventOffering = eventService.getEventOffering(tixDto.getOfferingId());
             if (eventOffering.getAvailability() < tixDto.getQuantity()) {
                 throw new BadRequestException("Offering is not available");
+            }
+            if (!Objects.equals(eventOffering.getEvent().getId(), createTrxRequestDto.getEventId())) {
+                throw new BadRequestException("Invalid event offering");
             }
             for (int i = 0; i < tixDto.getQuantity(); i++) {
                 Tix tix = new Tix();
