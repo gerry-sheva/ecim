@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface ClaimedDiscountRepository extends JpaRepository<ClaimedDiscount, Long> {
     Optional<ClaimedDiscount> findByAttendeeIdAndDiscountId(Long attendeeId,  Long discountId);
-
+    Optional<ClaimedDiscount> findByAttendeeIdAndId(Long attendeeId,  Long id);
     @Query(value = """
         SELECT c.id as id, d.name as name, d.description as description, d.amount_flat as amount_flat, d.amount_percent as amount_percent
         FROM claimed_discount AS c

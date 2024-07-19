@@ -1,5 +1,6 @@
 package com.dti.ecim.discount.controller;
 
+import com.dti.ecim.discount.dto.ClaimDiscountRequestDto;
 import com.dti.ecim.discount.dto.CreateEventDiscountRequestDto;
 import com.dti.ecim.discount.service.DiscountService;
 import com.dti.ecim.response.Response;
@@ -27,5 +28,11 @@ public class DiscountController {
     public ResponseEntity<?> getAvailableDiscounts(@RequestParam Long eventId) {
         var res = discountService.retrieveAvailableDiscounts(eventId);
         return Response.success(HttpStatus.OK.value(), "Successfully retrieved available discount", res);
+    }
+
+    @PostMapping("/claim")
+    public ResponseEntity<?> claimDiscount(@Valid @RequestBody ClaimDiscountRequestDto claimDiscountRequestDto) {
+        discountService.claimDiscount(claimDiscountRequestDto);
+        return Response.success("Discount successfully claimed", HttpStatus.CREATED);
     }
 }

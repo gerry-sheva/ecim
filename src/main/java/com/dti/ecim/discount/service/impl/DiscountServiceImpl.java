@@ -61,7 +61,7 @@ public class DiscountServiceImpl implements DiscountService {
     @Override
     public void claimDiscount(ClaimDiscountRequestDto requestDto) {
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
-        Optional<Discount> discountOptional = discountRepository.findByCode(requestDto.getCode());
+        Optional<Discount> discountOptional = discountRepository.findByCode(requestDto.getCode().toUpperCase());
 //        if discount is not found, invalidate it
         if (discountOptional.isEmpty()) {
             throw new DataNotFoundException(String.format("Discount with code '%s' not found", requestDto.getCode()));
@@ -92,7 +92,9 @@ public class DiscountServiceImpl implements DiscountService {
 
     private RedeemDiscountResponseDto redeemDiscount(RedeemDiscountRequestDto requestDto) {
         UserIdResponseDto userIdResponseDto = authService.getCurrentUserId();
-        Optional<ClaimedDiscount> claimedDiscountOptional = claimedDiscountRepository.findByAttendeeIdAndDiscountId(userIdResponseDto.getId(), requestDto.getRedeemedDiscountId());
+        log.info(userIdResponseDto.getId().toString());
+        log.info(requestDto.getRedeemedDiscountId().toString());
+        Optional<ClaimedDiscount> claimedDiscountOptional = claimedDiscountRepository.findByAttendeeIdAndId(userIdResponseDto.getId(), requestDto.getRedeemedDiscountId());
 //        If discount is not found, throw DataNotFoundException
         if (claimedDiscountOptional.isEmpty()) {
             throw new DataNotFoundException("Discount with id: " + requestDto.getRedeemedDiscountId() + " not found");
