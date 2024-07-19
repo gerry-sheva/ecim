@@ -1,12 +1,10 @@
 package com.dti.ecim.user.dto.attendee;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpHeaders;
 
-import java.time.Instant;
 import java.time.LocalDate;
 
 @Data

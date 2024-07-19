@@ -1,13 +1,10 @@
 package com.dti.ecim.trx.service.impl;
 
 import com.dti.ecim.auth.dto.UserIdResponseDto;
-import com.dti.ecim.auth.enums.Role;
 import com.dti.ecim.auth.service.AuthService;
 import com.dti.ecim.discount.dto.ProcessDiscountRequestDto;
 import com.dti.ecim.discount.dto.ProcessDiscountResponseDto;
 import com.dti.ecim.discount.service.DiscountService;
-import com.dti.ecim.event.dto.EventOfferingResponseDto;
-import com.dti.ecim.event.entity.EventOffering;
 import com.dti.ecim.event.service.EventService;
 import com.dti.ecim.exceptions.DataNotFoundException;
 import com.dti.ecim.trx.entity.Tix;
@@ -34,7 +31,6 @@ import org.springframework.validation.annotation.Validated;
 
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 

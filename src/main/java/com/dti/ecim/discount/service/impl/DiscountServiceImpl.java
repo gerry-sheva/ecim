@@ -2,7 +2,6 @@ package com.dti.ecim.discount.service.impl;
 
 import com.dti.ecim.auth.dto.UserIdResponseDto;
 import com.dti.ecim.auth.service.AuthService;
-import com.dti.ecim.discount.dao.AvailableDiscountDao;
 import com.dti.ecim.discount.dto.*;
 import com.dti.ecim.discount.entity.*;
 import com.dti.ecim.discount.exceptions.InsufficientPointException;

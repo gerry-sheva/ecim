@@ -2,7 +2,6 @@ package com.dti.ecim.trx.controller;
 
 import com.dti.ecim.response.Response;
 import com.dti.ecim.trx.dto.CreateTrxRequestDto;
-import com.dti.ecim.trx.dto.TrxResponseDto;
 import com.dti.ecim.trx.enums.TimeSpecifier;
 import com.dti.ecim.trx.service.TrxService;
 import jakarta.validation.Valid;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;

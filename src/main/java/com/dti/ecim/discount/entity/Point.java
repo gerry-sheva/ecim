@@ -1,8 +1,6 @@
 package com.dti.ecim.discount.entity;
 
-import com.dti.ecim.trx.entity.Trx;
 import com.dti.ecim.user.entity.Attendee;
-import com.dti.ecim.user.entity.Referral;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

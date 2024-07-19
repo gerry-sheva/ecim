@@ -1,7 +1,6 @@
 package com.dti.ecim.event.service;
 
 import com.dti.ecim.event.dto.*;
-import com.dti.ecim.event.entity.Event;
 import com.dti.ecim.event.entity.EventOffering;
 import com.dti.ecim.event.entity.Interest;
 import org.apache.coyote.BadRequestException;

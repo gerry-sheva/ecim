@@ -1,8 +1,6 @@
 package com.dti.ecim.auth.entity;
 
 import com.dti.ecim.auth.enums.Role;
-import com.dti.ecim.user.entity.Attendee;
-import com.dti.ecim.user.entity.Organizer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

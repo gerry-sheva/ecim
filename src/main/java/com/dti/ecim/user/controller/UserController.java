@@ -1,6 +1,5 @@
 package com.dti.ecim.user.controller;
 
-import com.dti.ecim.response.Response;
 import com.dti.ecim.user.dto.attendee.CreateAttendeeRequestDto;
 import com.dti.ecim.user.dto.attendee.CreateAttendeeResponseDto;
 import com.dti.ecim.user.dto.organizer.CreateOrganizerRequestDto;
