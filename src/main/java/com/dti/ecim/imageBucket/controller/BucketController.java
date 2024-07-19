@@ -18,8 +18,13 @@ import java.io.IOException;
 public class BucketController {
     private final ImageBucketService imageBucketService;
 
-    @PostMapping
-    public ResponseEntity<?> upload(MultipartFile file) throws IOException {
+    @PostMapping("/avatar")
+    public ResponseEntity<?> uploadAvatar(MultipartFile file) throws IOException {
         return ResponseEntity.ok(imageBucketService.uploadImage(file, "avatar"));
+    }
+
+    @PostMapping("/event")
+    public ResponseEntity<?> uploadEvent(MultipartFile file) throws IOException {
+        return ResponseEntity.ok(imageBucketService.uploadImage(file, "event"));
     }
 }
